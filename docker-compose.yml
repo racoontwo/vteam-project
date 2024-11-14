@@ -1,0 +1,49 @@
+networks:
+  elsparkcyklar:
+    driver: bridge
+
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
+    networks:
+      - elsparkcyklar
+
+  admin-webclient:
+    container_name: admin-webclient
+    build:
+      context: ./admin-webclient
+    ports:
+      - "3000:3000"
+    networks:
+      - elsparkcyklar
+
+  webclient:
+    container_name: webclient
+    build:
+      context: ./webclient
+    ports:
+      - "3001:3001"
+    networks:
+      - elsparkcyklar
+
+  mobileclient:
+    container_name: mobileclient
+    build:
+      context: ./mobileclient
+    ports:
+      - "3002:3002"
+    networks:
+      - elsparkcyklar
+ 
+  simulation:
+    container_name: simulation
+    build:
+      context: ./simulation
+    depends_on:
+      - backend
+    networks:
+      - elsparkcyklar
