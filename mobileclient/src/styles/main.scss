@@ -1,0 +1,58 @@
+@use 'variables';
+
+@use 'navbar';
+@use 'home';
+
+html {
+    font-family: "Roboto", sans-serif;
+    background-color: variables.$background;
+    color: variables.$text-primary;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+}
+
+.center {
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+a {
+    text-decoration: inherit;
+    color: variables.$text-link;
+}
+
+button {
+    background-color: variables.$button-color;
+    color: variables.$button-text;
+    font-size: 1rem;
+    border: none;
+    border-radius: 2rem;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: variables.$button-hover-color;
+    }
+}
+
+.login-button {
+    color: variables.$text-light;
+    font-weight: 700;
+}
