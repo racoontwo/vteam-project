@@ -6,7 +6,7 @@ function Home({ isLoggedIn, handleLogin, handleLogout }) {
             <div className="home-container">
                 {isLoggedIn ? (
                     <>
-                        <h1>Go to your profile</h1>
+                        <h1>Go to your profile<br />to see activity</h1>
                         <Link to="/profile">
                             <button className="login-button">Profile</button>
                         </Link>
