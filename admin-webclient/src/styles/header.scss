@@ -19,11 +19,6 @@
     
     a {
         color: variables.$text-primary;
-
-        &:hover {
-            text-decoration: underline;
-            cursor: pointer;
-        }
     }
 
     .buttons {
@@ -33,5 +28,23 @@
         button {
             margin-left: 1rem;
         }
+    }
+}
+
+.logout-button {
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+    &:hover {
+        background-color: variables.$color-dark3;
+    }
+}
+.profile-icon {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    color: variables.$icon-color !important;
+    &:hover {
+        color: variables.$icon-hover-color !important;
     }
 }

@@ -1,8 +1,12 @@
 @use 'variables';
 
-@use 'navbar';
+@use 'header';
 @use 'sidebar';
 @use 'home';
+@use 'login';
+@use 'scooters';
+@use 'customers';
+@use 'map';
 
 html {
     font-family: "Roboto", sans-serif;
@@ -39,7 +43,7 @@ button {
     font-size: 1rem;
     border: none;
     border-radius: 2rem;
-    padding: 1rem 2rem;
+    padding: 0.5rem 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
 
@@ -51,5 +55,4 @@ button {
 .login-button {
     color: variables.$text-light;
     font-weight: 500;
-    padding: 0.5rem 1rem;
 }
