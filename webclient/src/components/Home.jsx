@@ -1,7 +1,10 @@
 const Home = () => {
     return (
-        <div class="center">
-            <h1>hello world</h1>
+        <div className="home">
+            <div className="home-container">
+                <h1>Log in to see <br />your activity</h1>
+                <button className="login-button">Log in</button>
+            </div>
         </div>
     );
 }

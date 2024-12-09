@@ -1,2 +1,29 @@
 @use 'variables';
 
+.home {
+    background-image: url('../public/home.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: variables.$text-light;
+
+    .home-container {        
+        background-color: rgba(22, 22, 22, 0.8);
+        margin: 1rem;
+        padding: 2rem;
+        border-radius: 2rem;
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 8rem);
+            margin: 0 0 1rem;
+        }
+
+        button {
+            font-size: clamp(1rem, 2.5vw, 2rem);
+        }
+    }
+}
+
