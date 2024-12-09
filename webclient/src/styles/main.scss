@@ -1,8 +1,11 @@
 @use 'variables';
 
-@use 'navbar';
+@use 'header';
 @use 'footer';
 @use 'home';
+@use 'profile';
+@use 'login';
+@use 'signup';
 
 html {
     font-family: "Roboto", sans-serif;
@@ -44,10 +47,9 @@ button {
     font-size: 1rem;
     border: none;
     border-radius: 2rem;
-    padding: 1rem 2rem;
+    padding: 0.8rem 1.5rem;
     cursor: pointer;
     transition: background-color 0.3s;
-
     &:hover {
         background-color: variables.$button-hover-color;
     }
@@ -56,5 +58,4 @@ button {
 .login-button {
     color: variables.$color-white;
     font-weight: 700;
-    padding: 0.8rem 1.5rem;
 }

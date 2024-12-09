@@ -4,11 +4,9 @@
     background-color: variables.$background-navbar;
     color: variables.$text-primary;
     padding: 1rem 2rem;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
     h1 {
@@ -19,7 +17,6 @@
         color: variables.$text-primary;
 
         &:hover {
-            text-decoration: underline;
             cursor: pointer;
         }
     }
@@ -31,5 +28,26 @@
         button {
             margin-left: 1rem;
         }
+    }
+}
+
+.logout-button {
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+
+    &:hover {
+        background-color: variables.$color-light2;
+    }
+}
+
+.profile-icon {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    color: variables.$icon-color !important;
+
+    &:hover {
+        color: variables.$icon-hover-color !important;
     }
 }

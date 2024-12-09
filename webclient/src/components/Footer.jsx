@@ -5,7 +5,6 @@ function Footer() {
                 <p>Copyright © 2024 The Rollin’ Devs AB.</p>
             </div>
         </div>
-            
     );
 }
 
