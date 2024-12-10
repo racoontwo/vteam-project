@@ -8,7 +8,7 @@ describe("Database Connection", function () {
         try {
             const connection = await db.connectDB();
             expect(connection).to.be.an("object");
-            expect(connection.databaseName).to.equal("test");
+            expect(connection.db.databaseName).to.equal("test");
         } catch (error) {
             throw new Error("Failed to connect to the database: " + error.message);
         }
@@ -18,7 +18,7 @@ describe("Database Connection", function () {
         try {
             const collection = await db.getCollection("testCollection");
             expect(collection).to.be.an("object");
-            expect(collection.collectionName).to.equal("testCollection");
+            expect(collection.collection.collectionName).to.equal("testCollection");
         } catch (error) {
             throw new Error("Failed to fetch the collection: " + error.message);
         }

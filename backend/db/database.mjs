@@ -12,14 +12,21 @@ async function connectDB() {
     const client = await MongoClient.connect(dsn);
     const db = client.db()
 
-    return db;
+    return {
+        db: db,
+        client: client
+    };
 }
 
 // Get the collection you want from the database
 async function getCollection(collectionName) {
     const database = await connectDB();
-
-    return database.collection(collectionName);
+    const collection = database.db.collection(collectionName) 
+    // return database.collection(collectionName);
+    return {
+        collection: collection,
+        client: database.client
+    };
 }
 
 export default { connectDB, getCollection };
