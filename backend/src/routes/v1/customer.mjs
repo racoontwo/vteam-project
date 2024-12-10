@@ -3,7 +3,7 @@ import customers from '../../controllers/customerController.mjs'
 
 const router = express.Router();
 
-// Fetch data for all users
+// Fetch data for all customers
 router.get('/all-customers', async (req, res) => {
     try {
         const data = await customers.getAllCustomers();
@@ -13,6 +13,7 @@ router.get('/all-customers', async (req, res) => {
     }
 })
 
+// Add a customer to the database
 router.post('/add-customer', async (req, res) => {
     const { firstName, lastName } = req.body;
     if (!firstName || !lastName) {
