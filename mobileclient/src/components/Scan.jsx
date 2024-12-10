@@ -1,6 +1,6 @@
 function Scan() {
     return (
-        <div className="center">
+        <div className="scan">
             <h1>Scan</h1>
         </div>
     );
