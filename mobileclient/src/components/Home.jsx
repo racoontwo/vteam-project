@@ -1,6 +1,6 @@
-const Home = () => {
+function Home() {
     return (
-        <div className="center">
+        <div className="home">
             <h1>Map</h1>
         </div>
     );

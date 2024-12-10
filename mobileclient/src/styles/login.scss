@@ -1,0 +1,42 @@
+@use 'variables';
+
+.login {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 400px;
+
+
+    img, button, input {
+        width: 100%;
+    }
+
+    img {
+        max-height: 50vh;
+        width: 60%;
+    }
+
+    button {
+        margin-bottom: 1rem;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .signup-link {
+        margin-top: 1rem;
+        color: variables.$text-link;
+        text-decoration: none;
+    }
+
+    a {
+        color: variables.$text-primary !important;
+        text-decoration: none;
+    }
+
+    h2 {
+        margin: 0 0 1rem 0;
+    }
+}

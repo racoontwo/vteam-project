@@ -1,22 +1,21 @@
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { FaMapMarkedAlt } from "react-icons/fa";
-import { BiQrScan } from "react-icons/bi";
-import { FaCircleUser } from "react-icons/fa6";
+import { TbMap2 } from "react-icons/tb";
+import { MdOutlineQrCode } from "react-icons/md";
+import { MdOutlineAccountCircle } from "react-icons/md";
 
 function Navbar() {
     return (
         <div className="navbar">
             <nav className="nav">
                 <Link to="/" className="nav-item">
-                    <FaMapMarkedAlt className="nav-icon" />
+                    <TbMap2 className="nav-icon" />
                     <span>Map</span>
                 </Link>
                 <Link to="/scan" className="nav-item">
-                    <BiQrScan className="nav-icon" />
-                    <span>Scan</span>
+                    <MdOutlineQrCode className="nav-icon qr" />
                 </Link>
                 <Link to="/profile" className="nav-item">
-                    <FaCircleUser className="nav-icon" />
+                    <MdOutlineAccountCircle className="nav-icon" />
                     <span>Profile</span>
                 </Link>
             </nav>

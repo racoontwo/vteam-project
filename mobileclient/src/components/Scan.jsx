@@ -1,4 +1,4 @@
-const Scan = () => {
+function Scan() {
     return (
         <div className="center">
             <h1>Scan</h1>

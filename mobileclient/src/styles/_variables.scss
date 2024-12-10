@@ -4,31 +4,33 @@ $color-dark2: #212121;
 $color-dark3: #313131;
 $color-dark4: #414141;
 $color-dark5: #515151;
-$color-light: #aaa;
-$color-light2: #bbb;
+$color-light: #eee;
+$color-light2: #ddd;
 $color-light3: #ccc;
-$color-light4: #ddd;
-$color-light5: #eee;
+$color-light4: #bbb;
+$color-light5: #aaa;
 $color-white: #FFFFFF;
-$color-accent: #7dc392;
+$color-accent: #5a8f6a;
+$color-accent2: #437054;
+$color-blue: #2d60a7;
 
 // text
 $text-primary: $color-dark2;
 $text-secondary: $color-dark4;
-$text-link: #2d60a7;
+$text-link: $color-blue;
 $text-dark: $color-dark3;
 $text-light: $color-white;
 
 // background
 $background-navbar: $color-light;
-$background: #fcfafb;
-$background2: $color-light3;
-$background3: $color-light4;
-$background4: $color-light5;
+$background: $color-white;
+$background2: $color-light;
+$background3: $color-light2;
+$background4: $color-light3;
 
 // button
-$button-color: #2d649e;
-$button-hover-color: #24486e;
+$button-color: $color-accent;
+$button-hover-color: $color-accent2;
 $button-outline-color: $color-dark5;
 $button-text: $color-white;
 
@@ -37,5 +39,5 @@ $table-outline: $color-light5;
 $table-background: $color-light3;
 
 // icons
-$icon-color: $color-dark4;
+$icon-color: $color-dark5;
 $icon-hover-color: $color-dark;
