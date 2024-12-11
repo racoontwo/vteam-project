@@ -1,0 +1,27 @@
+@use 'variables';
+
+.sidebar {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    height: 100%;
+    width: 200px;
+    background-color: variables.$background-sidebar;
+    ul {
+        list-style: none;
+        padding-left: 2rem;
+    
+    }
+    
+    li {
+        margin: 10px 0;
+    }
+
+    a {
+        color: variables.$text-primary;
+        font-size: large;
+        &:hover {
+            color: variables.$text-secondary;
+        }
+    };
+}

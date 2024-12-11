@@ -1,0 +1,50 @@
+@use 'variables';
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background-color: variables.$background-navbar;
+    color: variables.$text-primary;
+    padding: 0.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+        margin: 0;
+    }
+    
+    a {
+        color: variables.$text-primary;
+    }
+
+    .buttons {
+        display: flex;
+        align-items: center;
+
+        button {
+            margin-left: 1rem;
+        }
+    }
+}
+
+.logout-button {
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+    &:hover {
+        background-color: variables.$color-dark3;
+    }
+}
+.profile-icon {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    color: variables.$icon-color !important;
+    &:hover {
+        color: variables.$icon-hover-color !important;
+    }
+}
