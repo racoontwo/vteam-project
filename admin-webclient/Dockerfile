@@ -1,9 +1,13 @@
-FROM node:16
+FROM node:22
 
 WORKDIR /admin-webclient
+
+COPY package*.json ./
+
+RUN npm install
 
 COPY . .
 
 EXPOSE 3000
 
-CMD echo "Hello from admin-webclient"
+CMD ["npm", "run", "dev"]
