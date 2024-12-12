@@ -1,8 +1,12 @@
 {
+    "type": "module",
     "name": "simulation",
     "version": "1.0.0",
     "scripts": {
-      "start": "node app.js"
+        "start": "node app.js"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.7",
+        "mongodb": "^6.12.0"
     }
-  }
-  
+}

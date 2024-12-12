@@ -1,0 +1,12 @@
+
+
+gps modul för att hantera koordinater.att
+databas-interface - kommunicera med mongodb.
+ - lokalisera scooter (specifik)
+ - lokalisera scooter (alla, findAll)
+ - uppdatera trip
+ - uppdatera status
+ - radera alla scootrar (drop)
+ - uppdatera data (put)
+ - hämta data   (fetch)
+bygga någon modul för att hantera uppdateringen till databsen
