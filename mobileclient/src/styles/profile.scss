@@ -1,5 +1,34 @@
 @use 'variables';
 
 .profile {
-    text-align: center;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    margin-top: 2rem;
+
+    a {
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0 0 1.5rem;
+        padding: 1.5rem;
+        font-size: 1.2rem;
+        background-color: variables.$background2;
+        color: variables.$text-primary;
+        border-radius: 0.5rem;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        
+    }
+    .icon {
+        font-size: 2rem;
+        margin-right: 1.5rem;
+    }
+
+    .angle {
+        margin-left: auto;
+        font-size: 1.5rem;
+        color: variables.$icon-inactive-color
+    }
 }

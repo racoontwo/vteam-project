@@ -4,6 +4,7 @@ $color-dark2: #212121;
 $color-dark3: #313131;
 $color-dark4: #414141;
 $color-dark5: #515151;
+$color-dark-inactive: #989898;
 $color-light: #eee;
 $color-light2: #ddd;
 $color-light3: #ccc;
@@ -22,9 +23,9 @@ $text-dark: $color-dark3;
 $text-light: $color-white;
 
 // background
-$background-navbar: $color-light;
-$background: $color-white;
-$background2: $color-light;
+$background-navbar: $color-white;
+$background: $color-light;
+$background2: $color-white;
 $background3: $color-light2;
 $background4: $color-light3;
 
@@ -41,3 +42,4 @@ $table-background: $color-light3;
 // icons
 $icon-color: $color-dark5;
 $icon-hover-color: $color-dark;
+$icon-inactive-color: $color-dark-inactive;
