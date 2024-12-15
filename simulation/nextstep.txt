@@ -1,4 +1,5 @@
-
+docker-compose up --build
+docker-compose down
 
 
 databas-interface - kommunicera med mongodb.
@@ -15,3 +16,8 @@ next week:
 
 bygga en uppdatering av location för en specifik scooter
 gps modul för att hantera koordinater.att
+
+
+//next step would maybe be to put all these functions into the scooter-object.
+//setting up the location-component so that the location data is updated/given randomly.
+//creating connection in the backend to handle the scooter-data

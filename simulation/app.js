@@ -3,8 +3,14 @@ dotenv.config();
 
 import database from './modules/scooter_db.js';
 import Scooter from './scooter.js';
-import {getRandomCoordinates, getRandomBatteryLevel} from './simulation.js'
+import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates } from './simulation.js'
 import { ObjectId } from 'mongodb';
+
+//next step would maybe be to put all these functions into the scooter-object.
+//setting up the location-component so that the location data is updated/given randomly.
+//creating connection in the backend to handle the scooter-data
+
+//vem tar ansvar för cities, parkingzones, 
 
 
 async function addOne() {
@@ -14,18 +20,16 @@ async function addOne() {
     return newScooter
 }
 
-async function addWithCoordinates() {
-    const randomCoordinates = getRandomCoordinates();
-    const scooter = new Scooter(randomCoordinates);
-    let added = await database.addScooter(scooter);
-    console.log(added);
-    return scooter
-}
 
 async function pullScooter(input) {
     let scooterID = new ObjectId(input)
     let scooter = await database.getScooter(scooterID)
     return scooter
+}
+
+async function updateLocation(scooterID, location) {
+    let updated = await database.updateLocation(scooterID, location);
+    return updated
 }
 
 
@@ -40,15 +44,26 @@ async function deleteScooter(id) {
     console.log(deleted);
 }
 
+async function deleteAll() {
+    let deleted = await database.dropScooters();
+    console.log(deleted);
+}
+
 async function main() {    
     // let aScooter = await addOne();
-    let allScooters = await showAll();
-    console.log(allScooters);
-    
-    
-    let aScooter = await pullScooter("675f220ef2c7b0371746870e");
-    console.log(aScooter.battery);
-    // aScooter.printInfo();
+    // let result = addTen();
+    // let allScooters = await showAll();
+    // let allScooters = await deleteAll();
+    // console.log(allScooters);
+
+    let randomLocation = getRandomCoordinates();
+
+    await database.updateLocation("675f347fc5f69112b668a879", randomLocation);
+    let aScooter = await pullScooter("675f347fc5f69112b668a879");
+    console.log(aScooter);
+
+    // let newOne = new Scooter();
+    // newOne.printInfo();
 }
 
 main();

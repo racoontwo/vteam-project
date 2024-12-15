@@ -7,6 +7,10 @@ export default function Scooter(location = {}) {
     this.battery = Math.floor(Math.random() * 101); // Battery level is random as default
     this.tripLog = ": [ObjectId], (referens till Trips";
 
+    this.updateLocation = function(location) {
+        this.location = location
+    }
+
     // Ensure status can only be one of the specified values
     this.setStatus = function(newStatus) {
         const validStatuses = ["available", "rented", "maintenance", "charging"];
@@ -16,15 +20,14 @@ export default function Scooter(location = {}) {
         this.status = newStatus;
     };
 
-    this.getStatus = function () {
+    this.getBatteryLevel = function () {
         if (this.battery <= 0) {
-            this.status = "Off";
+            return "Off";
         } else if (this.battery <= 10) {
-            this.status = "Low battery";
+            return "Low battery";
         } else {
-            this.status = "On";
+            return "On";
         }
-        return this.status;
     };
 
     this.setBattery = function(newBattery) {

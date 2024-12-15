@@ -106,6 +106,54 @@ async function removeScooter(scooterId) {
     }
 }
 
+async function dropScooters() {
+    try {
+        const { collection, client } = await getCollection('scooters');
+
+        const result = await collection.deleteMany({});
+
+        await client.close();
+
+        return result;
+    } catch (error) {
+        console.error('Failed to remove all scooters from database:', error);
+        throw new Error('Database removal failed: ' + error.message);
+    }
+}
+
+import { ObjectId } from "mongodb";
+
+async function updateLocation(scooterID, location) {
+    try {
+        const { collection, client } = await getCollection('scooters');
+
+        // Convert scooterID to ObjectId
+        const result = await collection.updateOne(
+            { _id: new ObjectId(scooterID) }, // Convert to ObjectId
+            { $set: { location: location } }
+        );
+
+        await client.close(); // Ensure the client is closed
+
+        if (result.matchedCount !== 1) {
+            throw new Error("Error updating location.");
+        }
+
+        return true;
+    } catch (e) {
+        console.error('Failed to update location:', e);
+        return false;
+    }
+}
 
 
-export default { connectDB, getCollection, getAllScooters, addScooter, removeScooter, getScooter };
+export default { 
+    connectDB, 
+    getCollection, 
+    getAllScooters, 
+    addScooter, 
+    removeScooter, 
+    getScooter, 
+    dropScooters,
+    updateLocation
+};
