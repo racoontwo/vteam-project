@@ -49,11 +49,30 @@ async function getAllScooters(collectionName) {
     }
 }
 
+async function getScooter(scooterId) {
+    try {
+        const { collection, client } = await getCollection('scooters');
+
+        const scooter = await collection.findOne({ _id: scooterId });
+
+        await client.close();
+
+        if (!scooter) {
+            throw new Error(`No scooter found with ID: ${scooterId}`);
+        }
+
+        return scooter;
+    } catch (error) {
+        console.error('Error fetching scooter:', error);
+        throw new Error('Failed to fetch scooter');
+    }
+}
+
 async function addScooter(scooter) {
     try {
         const { collection, client } = await getCollection('scooters');
         const result = await collection.insertOne({
-            _id: scooter._id,
+            // _id: The mongodb will give the scooter an ID with ObjectID
             location: scooter.location,
             status: scooter.status,
             battery: scooter.battery,
@@ -89,4 +108,4 @@ async function removeScooter(scooterId) {
 
 
 
-export default { connectDB, getCollection, getAllScooters, addScooter, removeScooter };
+export default { connectDB, getCollection, getAllScooters, addScooter, removeScooter, getScooter };
