@@ -68,5 +68,24 @@ async function addScooter(scooter) {
     }
 }
 
+async function removeScooter(scooter) {
+    try {
+        const { collection, client } = await getCollection('scooters');
+        const result = await collection.insertOne({
+            _id: scooter._id,
+            location: scooter.location,
+            status: scooter.getStatus(),
+            rented: scooter.rented,
+            battery: scooter.battery,
+        });
+
+        await client.close();
+        return result;
+    } catch (error) {
+        console.error('Failed to insert scooter into database:', error);
+        throw new Error('Database insertion failed: ' + error.message);
+    }
+}
+
 
 export default { connectDB, getCollection, getAllScooters };

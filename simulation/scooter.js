@@ -23,7 +23,7 @@ export default function Scooter(id = currentId++, location = {}) {
     };
     
 
-    this.getAllInfo = function () {
+    this.printInfo = function () {
         console.log("Scooter Id", this._id);
         console.log("Battery:", this.battery);
         console.log("Location:", this.location);
