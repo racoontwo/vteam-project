@@ -3,17 +3,28 @@ dotenv.config();
 
 import database from './modules/scooter_db.js';
 import Scooter from './scooter.js';
-import getRandomCoordinates from './simulation.js';
+import {getRandomCoordinates, getRandomBatteryLevel} from './simulation.js'
 
 
 
 async function main() {
-    let result = await database.getAllScooters('scooters');
-    console.log(result);
-    const randomCoordinates = getRandomCoordinates();
-    console.log(`Generated Coordinates: Latitude = ${randomCoordinates.latitude}, Longitude = ${randomCoordinates.longitude}`);
-    const scooter = new Scooter(3, randomCoordinates);
-    scooter.printInfo();
+    let showAll = await database.getAllScooters('scooters');
+    console.log(showAll);
+    
+    let deleted = await database.removeScooter(1);
+    console.log(deleted);
+
+
+    // const randomCoordinates = getRandomCoordinates();
+    // console.log(`Generated Coordinates: Latitude = ${randomCoordinates.latitude}, Longitude = ${randomCoordinates.longitude}`);
+    // const scooter = new Scooter(randomCoordinates);
+    let newScooter = new Scooter();
+    newScooter.printInfo();
+
+
+
+    // let added = await database.addScooter(newScooter);
+    // console.log(added);
 
 }
 

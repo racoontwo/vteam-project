@@ -55,9 +55,9 @@ async function addScooter(scooter) {
         const result = await collection.insertOne({
             _id: scooter._id,
             location: scooter.location,
-            status: scooter.getStatus(),
-            rented: scooter.rented,
+            status: scooter.status,
             battery: scooter.battery,
+            tripLog: scooter.tripLog,
         });
 
         await client.close();
@@ -68,24 +68,25 @@ async function addScooter(scooter) {
     }
 }
 
-async function removeScooter(scooter) {
+async function removeScooter(scooterId) {
     try {
         const { collection, client } = await getCollection('scooters');
-        const result = await collection.insertOne({
-            _id: scooter._id,
-            location: scooter.location,
-            status: scooter.getStatus(),
-            rented: scooter.rented,
-            battery: scooter.battery,
-        });
+
+        const result = await collection.deleteOne({ _id: scooterId });
 
         await client.close();
+        
+        if (result.deletedCount === 0) {
+            throw new Error(`No scooter found with ID: ${scooterId}`);
+        }
+
         return result;
     } catch (error) {
-        console.error('Failed to insert scooter into database:', error);
-        throw new Error('Database insertion failed: ' + error.message);
+        console.error('Failed to remove scooter from database:', error);
+        throw new Error('Database removal failed: ' + error.message);
     }
 }
 
 
-export default { connectDB, getCollection, getAllScooters };
+
+export default { connectDB, getCollection, getAllScooters, addScooter, removeScooter };
