@@ -9,8 +9,36 @@ export default class Scooter {
         this.tripLog = ": [ObjectId], (referens till Trips)";
     }
 
-    updateLocation(location) {
-        this.location = location;
+    
+    static async loadScooter(scooterID) {
+        try {
+            let scooter = await database.getScooter(scooterID);
+            if (!scooter) {
+                throw new Error(`No scooter found with ID: ${scooterID}`);
+            }
+            return scooter;
+        } catch (error) {
+            console.error('Error loading scooter:', error);
+            throw new Error('Failed to load scooter');
+        }
+    }
+
+    static async updateLocation(scooterID, newLocation) {
+        try {
+            let scooter = await Scooter.loadScooter(scooterID);
+            
+            if (!scooter) {
+                throw new Error(`No scooter found with ID: ${scooterID}`);
+            }
+
+            scooter.location = newLocation;
+
+            let updatedScooter = await database.updateLocation(scooterID, scooter.location);
+            return updatedScooter;
+        } catch (error) {
+            console.error('Error updating scooter location:', error);
+            throw new Error('Failed to update scooter location');
+        }
     }
 
     setStatus(newStatus) {

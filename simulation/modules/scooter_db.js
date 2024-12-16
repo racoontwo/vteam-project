@@ -1,9 +1,9 @@
 
-
 import dotenv from 'dotenv';
 dotenv.config();
 
 import { MongoClient } from "mongodb";
+import { ObjectId } from 'mongodb';
 
 const collectionName = "scooters";
 
@@ -53,7 +53,7 @@ async function getScooter(scooterId) {
     try {
         const { collection, client } = await getCollection('scooters');
 
-        const scooter = await collection.findOne({ _id: scooterId });
+        const scooter = await collection.findOne({ _id: new ObjectId(scooterId) });
 
         await client.close();
 
@@ -75,6 +75,7 @@ async function addScooter(scooter) {
             // _id: The mongodb will give the scooter an ID with ObjectID
             location: scooter.location,
             status: scooter.status,
+            speed: scooter.speed,
             battery: scooter.battery,
             tripLog: scooter.tripLog,
         });
@@ -121,15 +122,12 @@ async function dropScooters() {
     }
 }
 
-import { ObjectId } from "mongodb";
-
 async function updateLocation(scooterID, location) {
     try {
         const { collection, client } = await getCollection('scooters');
 
-        // Convert scooterID to ObjectId
         const result = await collection.updateOne(
-            { _id: new ObjectId(scooterID) }, // Convert to ObjectId
+            { _id: new ObjectId(scooterID) },
             { $set: { location: location } }
         );
 

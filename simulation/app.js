@@ -30,8 +30,7 @@ async function countScooters() {
     }
 }
 
-async function pullScooter(input) {
-    let scooterID = new ObjectId(input)
+async function pullScooter(scooterID) {
     let scooter = await database.getScooter(scooterID)
     return scooter
 }
@@ -62,11 +61,26 @@ async function main() {
     // let aScooter = await addOne();
     // let result = addTenWithCoordinates();
     // console.log(result);
-    let number = await countScooters();
-    console.log(number);
+    // let number = await countScooters();
+    // console.log(number);
+
+    let pullID = "67601629812c4fb1ce02d565";
+    let randomCoordinates = getRandomCoordinates();
+
+    let updated = await Scooter.updateLocation(pullID, randomCoordinates);
+    console.log(updated);
+
+    let pulled = await pullScooter(pullID);
+    console.log(pulled);
+
+    // let deleted = await deleteAll();
+    // console.log(deleted);
+
     // let allScooters = await showAll();
-    // let allScooters = await deleteAll();
     // console.log(allScooters);
+
+
+    // let allScooters = await deleteAll();
 
     // let randomLocation = getRandomCoordinates();
 
@@ -74,8 +88,6 @@ async function main() {
     // let aScooter = await pullScooter("675f347fc5f69112b668a879");
     // console.log(aScooter);
 
-    // let newOne = new Scooter();
-    // newOne.printInfo();
 }
 
 main();
