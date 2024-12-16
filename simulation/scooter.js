@@ -2,13 +2,58 @@ import database from './modules/scooter_db.js';
 import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './simulation.js'
 
 export default class Scooter {
-    constructor(location = {}) {
+    constructor(location = {}, scooterID = null) {
+        this.scooterID = scooterID; // the scooter recieves an ObjectID when imported in the db.
         this.location = location;
         this.user = "[ObjectID], referens till User";
         this.status = "Off";
         this.speed = 0;
         this.battery = Math.floor(Math.random() * 101);
         this.tripLog = ": [ObjectId], (referens till Trips)";
+    }
+
+    static async loadObjectScooter(scooterID) {
+        try {
+            const scooterData = await database.getScooter(scooterID);
+            if (!scooterData) {
+                throw new Error(`No scooter found with ID: ${scooterID}`);
+            }
+    
+            const scooter = new Scooter(scooterData.location);
+            scooter.scooterID = scooterData._id
+            scooter.user = scooterData.user;
+            scooter.status = scooterData.status;
+            scooter.speed = scooterData.speed;
+            scooter.battery = scooterData.battery;
+            scooter.tripLog = scooterData.tripLog;
+    
+            return scooter;
+        } catch (error) {
+            console.error('Error loading scooter:', error);
+            throw new Error('Failed to load scooter');
+        }
+    }
+
+    async save() {
+        try {
+            const updatedScooterData = {
+                location: this.location,
+                user: this.user,
+                status: this.status,
+                speed: this.speed,
+                battery: this.battery,
+                tripLog: this.tripLog
+            };
+
+            const result = await database.updateScooter(this.scooterID, updatedScooterData);
+
+            if (result) {
+                console.log('Scooter updated successfully.');
+            }
+        } catch (error) {
+            console.error('Error saving scooter:', error.message);
+            throw new Error('Failed to save scooter');
+        }
     }
 
     
@@ -42,6 +87,7 @@ export default class Scooter {
             throw new Error('Failed to update scooter location');
         }
     }
+
 
     static async updateStatus(scooterID) {
 

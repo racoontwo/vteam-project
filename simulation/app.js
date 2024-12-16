@@ -85,7 +85,14 @@ async function main() {
 
     switch (command) {
         case 'custom':
-            await Scooter.updateStatus("676072699bbf8ed45f57d2d4");
+            let scooter = await Scooter.loadObjectScooter("676072689bbf8ed45f57d2d3");
+            // console.log(scooter);
+            scooter.battery = 37;
+            scooter.printInfo();
+            scooter.save();
+            let again = await Scooter.loadObjectScooter("676072689bbf8ed45f57d2d3");
+            again.printInfo();
+
             break;
         case 'showAll':
             await showAll();
