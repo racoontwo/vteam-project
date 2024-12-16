@@ -3,7 +3,7 @@ dotenv.config();
 
 import database from './modules/scooter_db.js';
 import Scooter from './scooter.js';
-import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates } from './simulation.js'
+import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './simulation.js'
 import { ObjectId } from 'mongodb';
 
 //next step would maybe be to put all these functions into the scooter-object.
@@ -20,6 +20,15 @@ async function addOne() {
     return newScooter
 }
 
+async function countScooters() {
+    try {
+        const count = await database.countScooters();
+        console.log(`Total number of scooters: ${count}`);
+        return count;
+    } catch (error) {
+        console.error("Error counting scooters:", error);
+    }
+}
 
 async function pullScooter(input) {
     let scooterID = new ObjectId(input)
@@ -49,18 +58,21 @@ async function deleteAll() {
     console.log(deleted);
 }
 
-async function main() {    
+async function main() {
     // let aScooter = await addOne();
-    // let result = addTen();
+    // let result = addTenWithCoordinates();
+    // console.log(result);
+    let number = await countScooters();
+    console.log(number);
     // let allScooters = await showAll();
     // let allScooters = await deleteAll();
     // console.log(allScooters);
 
-    let randomLocation = getRandomCoordinates();
+    // let randomLocation = getRandomCoordinates();
 
-    await database.updateLocation("675f347fc5f69112b668a879", randomLocation);
-    let aScooter = await pullScooter("675f347fc5f69112b668a879");
-    console.log(aScooter);
+    // await database.updateLocation("675f347fc5f69112b668a879", randomLocation);
+    // let aScooter = await pullScooter("675f347fc5f69112b668a879");
+    // console.log(aScooter);
 
     // let newOne = new Scooter();
     // newOne.printInfo();

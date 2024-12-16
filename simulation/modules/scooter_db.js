@@ -146,6 +146,20 @@ async function updateLocation(scooterID, location) {
     }
 }
 
+async function countScooters() {
+    try {
+        const { collection, client } = await getCollection('scooters');
+
+        const count = await collection.countDocuments(); // count documents in the 'scooters' collection
+
+        await client.close();
+
+        return count;
+    } catch (error) {
+        console.error('Error counting scooters:', error);
+        throw new Error('Failed to count scooters');
+    }
+}
 
 export default { 
     connectDB, 
@@ -155,5 +169,6 @@ export default {
     removeScooter, 
     getScooter, 
     dropScooters,
-    updateLocation
+    updateLocation,
+    countScooters
 };

@@ -34,3 +34,15 @@ export async function addWithCoordinates() {
     console.log(added);
     return scooter
 }
+
+export async function addTenWithCoordinates() {
+    let scooters = [];
+    for (let i = 0; i < 10; i++) {
+        const randomCoordinates = getRandomCoordinates();
+        const newScooter = new Scooter(randomCoordinates);
+        let added = await database.addScooter(newScooter);
+        console.log(`Scooter ${i + 1} with coordinates added:`, added);
+        scooters.push(newScooter);
+    }
+    return scooters;
+}
