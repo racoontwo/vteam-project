@@ -1,5 +1,5 @@
 import database from './modules/scooter_db.js';
-import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './simulation.js'
+import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
 
 export default class Scooter {
     constructor(location = {}, scooterID = null) {
@@ -10,6 +10,12 @@ export default class Scooter {
         this.speed = 0;
         this.battery = Math.floor(Math.random() * 101);
         this.tripLog = ": [ObjectId], (referens till Trips)";
+    }
+
+    static async createNewScooter() {
+        let newScooter = new Scooter();
+        let added = await database.addScooter(newScooter);
+        console.log(added);
     }
 
     static async loadObjectScooter(scooterID) {
@@ -119,15 +125,6 @@ export default class Scooter {
         this.speed = newStatus === "rented" ? Math.floor(Math.random() * 26) : 0;
     }
 
-    getBatteryLevel() {
-        if (this.battery <= 0) {
-            return "Off";
-        } else if (this.battery <= 10) {
-            return "Low battery";
-        } else {
-            return "On";
-        }
-    }
 
     setBattery(newBattery) {
         if (typeof newBattery !== 'number' || newBattery < 0 || newBattery > 100) {
