@@ -6,12 +6,6 @@ import Scooter from './scooter.js';
 import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './simulation.js'
 import { ObjectId } from 'mongodb';
 
-//next step would maybe be to put all these functions into the scooter-object.
-//setting up the location-component so that the location data is updated/given randomly.
-//creating connection in the backend to handle the scooter-data
-
-//vem tar ansvar för cities, parkingzones, 
-
 
 async function addOne() {
     let newScooter = new Scooter();
@@ -91,7 +85,7 @@ async function main() {
 
     switch (command) {
         case 'custom':
-            await updateStatus();
+            await Scooter.updateStatus("676072699bbf8ed45f57d2d4");
             break;
         case 'showAll':
             await showAll();
@@ -101,6 +95,9 @@ async function main() {
             break;
         case 'addOne':
             await addOne();
+            break;
+        case 'addTen':
+            await addTenWithCoordinates();
             break;
         case 'pullScooter':
             if (args.length < 2) {

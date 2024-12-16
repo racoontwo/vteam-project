@@ -1,8 +1,10 @@
 import database from './modules/scooter_db.js';
+import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './simulation.js'
 
 export default class Scooter {
     constructor(location = {}) {
         this.location = location;
+        this.user = "[ObjectID], referens till User";
         this.status = "Off";
         this.speed = 0;
         this.battery = Math.floor(Math.random() * 101);
@@ -41,6 +43,26 @@ export default class Scooter {
         }
     }
 
+    static async updateStatus(scooterID) {
+
+        const updatedStats = {
+            location: getRandomCoordinates(),
+            status: "rented",
+            speed: 20,
+            battery: 75,
+            tripLog: ["Trip A", "Trip B", "Trip C"]
+        };
+        
+        try {
+            const result = await database.updateScooterStats(scooterID, updatedStats);
+            if (result) {
+                console.log("Scooter stats updated successfully.");
+            }
+        } catch (error) {
+            console.error("Error updating scooter stats:", error.message);
+        }
+    }
+
 
     setStatus(newStatus) {
         const validStatuses = ["available", "rented", "maintenance", "charging"];
@@ -69,9 +91,10 @@ export default class Scooter {
     }
 
     printInfo() {
-        console.log("Battery:", this.battery);
         console.log("Location:", this.location);
+        console.log("UserID:", this.user);
         console.log("Status:", this.status);
+        console.log("Battery:", this.battery);
         console.log("Speed:", this.speed);
         console.log("TripLog:", this.tripLog);
     }

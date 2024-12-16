@@ -74,6 +74,7 @@ async function addScooter(scooter) {
         const result = await collection.insertOne({
             // _id: The mongodb will give the scooter an ID with ObjectID
             location: scooter.location,
+            user: scooter.user,
             status: scooter.status,
             speed: scooter.speed,
             battery: scooter.battery,
