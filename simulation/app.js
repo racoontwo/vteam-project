@@ -58,37 +58,54 @@ async function deleteAll() {
 }
 
 async function main() {
-    // let aScooter = await addOne();
-    // let result = addTenWithCoordinates();
-    // console.log(result);
-    // let number = await countScooters();
-    // console.log(number);
+    const args = process.argv.slice(2);
 
-    let pullID = "67601629812c4fb1ce02d565";
-    let randomCoordinates = getRandomCoordinates();
+    if (args.length === 0) {
+        console.log('Please provide a command (showAll, deleteAll, etc.).');
+        process.exit(1);
+    }
 
-    let updated = await Scooter.updateLocation(pullID, randomCoordinates);
-    console.log(updated);
+    const command = args[0];
 
-    let pulled = await pullScooter(pullID);
-    console.log(pulled);
-
-    // let deleted = await deleteAll();
-    // console.log(deleted);
-
-    // let allScooters = await showAll();
-    // console.log(allScooters);
-
-
-    // let allScooters = await deleteAll();
-
-    // let randomLocation = getRandomCoordinates();
-
-    // await database.updateLocation("675f347fc5f69112b668a879", randomLocation);
-    // let aScooter = await pullScooter("675f347fc5f69112b668a879");
-    // console.log(aScooter);
-
+    switch (command) {
+        case 'custom':
+            await showAll();
+            break;
+        case 'showAll':
+            await showAll();
+            break;
+        case 'deleteAll':
+            await deleteAll();
+            break;
+        case 'addOne':
+            await addOne();
+            break;
+        case 'pullScooter':
+            if (args.length < 2) {
+                console.log('Please provide a scooter ID.');
+                process.exit(1);
+            }
+            await pullScooter(args[1]);
+            break;
+        case 'updateLocation':
+            if (args.length < 3) {
+                console.log('Please provide a scooter ID and location.');
+                process.exit(1);
+            }
+            const scooterID = args[1];
+            const location = args.slice(2).join(' '); // Get the location from the rest of the arguments
+            await updateLocation(scooterID, location);
+            break;
+        case 'count':
+            await countScooters();
+            break;
+        default:
+            console.log(`Unknown command: ${command}`);
+            console.log('Available commands: showAll, deleteAll, addOne, pullScooter, updateLocation');
+            process.exit(1);
+    }
 }
+
 
 main();
 

@@ -41,6 +41,7 @@ export default class Scooter {
         }
     }
 
+
     setStatus(newStatus) {
         const validStatuses = ["available", "rented", "maintenance", "charging"];
         if (!validStatuses.includes(newStatus)) {
@@ -75,11 +76,4 @@ export default class Scooter {
         console.log("TripLog:", this.tripLog);
     }
 
-    // static async loadScooter(scooterID) {
-
-    // }
-
-    // async saveScooter() {
-
-    // }
 }
