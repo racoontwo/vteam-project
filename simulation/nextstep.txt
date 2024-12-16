@@ -21,4 +21,5 @@ gps modul för att hantera koordinater.att
 //next step would maybe be to put all these functions into the scooter-object.
 //setting up the location-component so that the location data is updated/given randomly.
 //creating connection in the backend to handle the scooter-data
-//vem tar ansvar för cities, parkingzones, 
+//vem tar ansvar för cities, parkingzones, laddningsstationer.
+//kan vi börja skriva tester?
