@@ -144,6 +144,29 @@ async function updateLocation(scooterID, location) {
     }
 }
 
+async function updateScooterStats(scooterID, updatedStats) {
+    try {
+        const { collection, client } = await getCollection('scooters');
+
+        const result = await collection.updateOne(
+            { _id: new ObjectId(scooterID) },
+            { $set: updatedStats }
+        );
+
+        await client.close();
+
+        if (result.matchedCount !== 1) {
+            throw new Error("Error updating scooter stats. Scooter not found.");
+        }
+
+        return true;
+    } catch (e) {
+        console.error('Failed to update scooter stats:', e);
+        return false;
+    }
+}
+
+
 async function countScooters() {
     try {
         const { collection, client } = await getCollection('scooters');
@@ -168,5 +191,6 @@ export default {
     getScooter, 
     dropScooters,
     updateLocation,
-    countScooters
+    countScooters,
+    updateScooterStats
 };

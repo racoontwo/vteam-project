@@ -57,6 +57,28 @@ async function deleteAll() {
     console.log(deleted);
 }
 
+async function updateStatus() {
+
+    let scooterID = "67601629812c4fb1ce02d565";
+
+    const updatedStats = {
+        location: getRandomCoordinates(),
+        status: "maintenance",
+        speed: 20,
+        battery: 75,
+        tripLog: ["Trip A", "Trip B", "Trip C"]
+    };
+    
+    try {
+        const result = await database.updateScooterStats(scooterID, updatedStats);
+        if (result) {
+            console.log("Scooter stats updated successfully.");
+        }
+    } catch (error) {
+        console.error("Error updating scooter stats:", error.message);
+    }
+}
+
 async function main() {
     const args = process.argv.slice(2);
 
@@ -69,7 +91,7 @@ async function main() {
 
     switch (command) {
         case 'custom':
-            await showAll();
+            await updateStatus();
             break;
         case 'showAll':
             await showAll();
@@ -93,7 +115,7 @@ async function main() {
                 process.exit(1);
             }
             const scooterID = args[1];
-            const location = args.slice(2).join(' '); // Get the location from the rest of the arguments
+            const location = args.slice(2).join(' ');
             await updateLocation(scooterID, location);
             break;
         case 'count':
