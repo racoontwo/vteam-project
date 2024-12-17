@@ -151,7 +151,24 @@ router.get('/customer/:id', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch data', error: error.message});
     }
-})
+});
+
+router.put('/update-customer/:id', async (req, res) => {
+    const customerId = req.params.id;
+    const updatedData = req.body;
+
+    try {
+        if (!updatedData || Object.keys(updatedData).length === 0) {
+            return res.status(400).json({ error: 'No data was provided.' });
+        }
+
+        const result = await customers.updateCustomer(customerId, updatedData);
+        res.status(200).json({ result });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to update customer information', error: error.message });
+    }
+});
+
 
 /**
  * @swagger
