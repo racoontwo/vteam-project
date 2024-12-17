@@ -127,7 +127,7 @@ router.get('/all-customers', async (req, res) => {
  *                 details:
  *                   type: string
  */
-router.post('/add-customer', async (req, res) => {
+router.post('/new-customer', async (req, res) => {
     const data = req.body;
     // if (!data.firstName || !data.lastName) {
     //     return res.status(400).json({ error: 'Full name is required' });
@@ -141,6 +141,17 @@ router.post('/add-customer', async (req, res) => {
         res.status(500).json({ error: 'Failed to insert data into database', details: error.message });
     }
 });
+
+router.get('/customer/:id', async (req, res) => {
+    const customerId = req.params.id;
+
+    try {
+        const data = await customers.getCustomer(customerId);
+        res.status(200).json({ data });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch data', error: error.message});
+    }
+})
 
 /**
  * @swagger

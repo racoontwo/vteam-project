@@ -4,14 +4,15 @@ import { ObjectId } from 'mongodb';
 const customers = {
     getAllCustomers: async function getAllCustomers() {
         let db;
+
         try {
             const db = await database.getCollection('customers');
             const result = await db.collection.find({}).toArray();
 
             return result;
         } catch (error) {
-        console.error('Error fetching customers:', error);
-        throw new Error('Failed to fetch customers');
+            console.error('Error fetching customers:', error);
+            throw new Error('Failed to fetch customers');
         } finally {
             if (db) {
                 await db.client.close(); // Ensure the client is always closed
@@ -19,8 +20,39 @@ const customers = {
         }
     },
 
+    getCustomer: async function getCustomer(id) {
+        let db;
+
+        try {
+            const db = await database.getCollection('customers');
+            const result = await db.collection.aggregate([
+                {
+                    $match: { _id: new ObjectId(id) }
+                },
+                {
+                    $lookup: {
+                        from: 'rentals',
+                        localField: '_id',
+                        foreignField: 'customerId',
+                        as: 'rentals'
+                    }
+                }
+            ]).toArray();
+
+            return result;
+        } catch (error) {
+            console.error('Error fetching customer:', error);
+            throw new Error('Failed to fetch customer');
+            } finally {
+                if (db) {
+                    await db.client.close(); // Ensure the client is always closed
+                }
+            }
+    },
+
     addCustomer: async function addCustomer(data) {
         let db;
+
         try {
             const db = await database.getCollection('customers');
             const result = await db.collection.insertOne(data);
@@ -55,6 +87,7 @@ const customers = {
 
     deleteAllCustomers: async function deleteAllCustomers() {
         let db;
+
         try {
             const db = await database.getCollection('customers');
             const result = await db.collection.deleteMany({});

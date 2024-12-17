@@ -16,7 +16,7 @@ describe('POST /add-customer', () => {
         };
 
         const res = await request(app)
-            .post('/api/v1/customers/add-customer')
+            .post('/api/v1/customers/new-customer')
             .send(newCustomer)
             .expect(200);
 
@@ -43,7 +43,7 @@ describe('GET /all-customers', () => {
         const newCustomer = { firstName: 'Jane', lastName: 'Doe' };
     
         await request(app)
-            .post('/api/v1/customers/add-customer')
+            .post('/api/v1/customers/new-customer')
             .send(newCustomer)
             .expect(200);
     
