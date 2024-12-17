@@ -3,7 +3,6 @@ process.env.NODE_ENV = 'test';
 import request from 'supertest';
 import { expect } from 'chai';
 import appdata from '../app.mjs'; // Adjust the path to your app file
-import { ObjectId } from 'mongodb';
 import database from '../db/database.mjs'
 
 const app = appdata.app;
