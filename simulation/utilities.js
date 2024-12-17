@@ -1,0 +1,178 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+import database from './modules/scooter_db.js';
+import Scooter from './scooter.js';
+import { ObjectId } from 'mongodb';
+
+
+export function getRandomCoordinates() {
+    const latitude = (Math.random() * 180 - 90).toFixed(6); // Latitude range: -90 to +90
+    const longitude = (Math.random() * 360 - 180).toFixed(6); // Longitude range: -180 to +180
+    return { latitude, longitude };
+}
+
+export function getRandomBatteryLevel() {
+        return Math.floor(Math.random() * 100) + 1;
+    }
+
+export async function addTen() {
+    let scooters = [];
+    for (let i = 0; i < 10; i++) {
+        let newScooter = new Scooter();
+        let added = await database.addScooter(newScooter);
+        console.log(`Scooter ${i + 1} added:`, added);
+        scooters.push(newScooter);
+    }
+    return scooters;
+}
+
+export async function addWithCoordinates() {
+    const randomCoordinates = getRandomCoordinates();
+    const scooter = new Scooter(randomCoordinates);
+    let added = await database.addScooter(scooter);
+    console.log(added);
+    return scooter
+}
+
+export async function addTenWithCoordinates() {
+    let scooters = [];
+    for (let i = 0; i < 10; i++) {
+        const randomCoordinates = getRandomCoordinates();
+        const newScooter = new Scooter(randomCoordinates);
+        let added = await database.addScooter(newScooter);
+        console.log(`Scooter ${i + 1} with coordinates added:`, added);
+        scooters.push(newScooter);
+    }
+    return scooters;
+}
+
+
+export async function addOne() {
+    await Scooter.createNewScooter();
+}
+
+export async function countScooters() {
+    try {
+        const count = await database.countScooters();
+        console.log(`Total number of scooters: ${count}`);
+        return count;
+    } catch (error) {
+        console.error("Error counting scooters:", error);
+    }
+}
+
+export async function pullScooter(scooterID) {
+    let scooter = await database.getScooter(scooterID)
+    console.log(scooter);
+    return scooter
+}
+
+export async function updateLocation(scooterID, location) {
+    let updated = await database.updateLocation(scooterID, location);
+    return updated
+}
+
+
+export async function showAll() {
+    let showAll = await database.getAllScooters('scooters');
+    console.log(showAll);
+    return showAll;
+}
+
+export async function deleteScooter(id) {
+    let deleted = await database.removeScooter(id);
+    console.log(deleted);
+}
+
+export async function deleteAll() {
+    let deleted = await database.dropScooters();
+    console.log(deleted);
+}
+
+export async function updateStatus() {
+
+    let scooterID = "67601629812c4fb1ce02d565";
+
+    const updatedStats = {
+        location: getRandomCoordinates(),
+        status: "maintenance",
+        speed: 20,
+        battery: 75,
+        tripLog: ["Trip A", "Trip B", "Trip C"]
+    };
+    
+    try {
+        const result = await database.updateScooterStats(scooterID, updatedStats);
+        if (result) {
+            console.log("Scooter stats updated successfully.");
+        }
+    } catch (error) {
+        console.error("Error updating scooter stats:", error.message);
+    }
+}
+
+
+async function main() {
+    const args = process.argv.slice(2);
+
+    if (args.length === 0) {
+        console.log('Please provide a command (showAll, deleteAll, etc.).');
+        process.exit(1);
+    }
+
+    const command = args[0];
+
+    switch (command) {
+        case 'custom':
+            let scooter = await Scooter.loadObjectScooter("676072689bbf8ed45f57d2d3");
+            // console.log(scooter);
+            scooter.battery = 37;
+            scooter.printInfo();
+            scooter.save();
+            let again = await Scooter.loadObjectScooter("676072689bbf8ed45f57d2d3");
+            again.printInfo();
+
+            break;
+        case 'addScooter':
+            await util.addOne();
+            break;
+        case 'showAll':
+            await showAll();
+            break;
+        case 'deleteAll':
+            await deleteAll();
+            break;
+        case 'addOne':
+            await addOne();
+            break;
+        case 'addTen':
+            await addTenWithCoordinates();
+            break;
+        case 'pullScooter':
+            if (args.length < 2) {
+                console.log('Please provide a scooter ID.');
+                process.exit(1);
+            }
+            await pullScooter(args[1]);
+            break;
+        case 'updateLocation':
+            if (args.length < 3) {
+                console.log('Please provide a scooter ID and location.');
+                process.exit(1);
+            }
+            const scooterID = args[1];
+            const location = args.slice(2).join(' ');
+            await updateLocation(scooterID, location);
+            break;
+        case 'count':
+            await countScooters();
+            break;
+        default:
+            console.log(`Unknown command: ${command}`);
+            console.log('Available commands: showAll, deleteAll, addOne, pullScooter, updateLocation');
+            process.exit(1);
+    }
+}
+
+main()
