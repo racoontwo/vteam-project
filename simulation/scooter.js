@@ -10,13 +10,48 @@ export default class Scooter {
         this.speed = 0;
         this.battery = Math.floor(Math.random() * 101);
         this.tripLog = ": [ObjectId], (referens till Trips)";
+    };
+
+    printLiveLocation() {
+        console.log(this.location);
+    };
+
+    startPrintingLocation() {
+        setInterval(() => {
+            this.printLiveLocation();
+        }, 30000);
     }
 
-    static async createNewScooter() {
-        let newScooter = new Scooter();
-        let added = await database.addScooter(newScooter);
-        console.log(added);
+    static createFromDb(jsonObject) {
+        try {
+            if (!jsonObject || typeof jsonObject !== "object") {
+                throw new Error("Invalid JSON object provided.");
+            }
+
+            const {
+                _id = null,
+                location = {},
+                user = "[ObjectID], referens till User",
+                status = "Off",
+                speed = 0,
+                battery = 100,
+                tripLog = [],
+            } = jsonObject;
+
+            const newScooter = new Scooter(location, _id);
+            newScooter.user = user;
+            newScooter.status = status;
+            newScooter.speed = speed;
+            newScooter.battery = battery;
+            newScooter.tripLog = tripLog;
+
+            return newScooter;
+        } catch (error) {
+            console.error("Error creating scooter from JSON:", error.message);
+            throw error;
+        }
     }
+
 
     static async loadObjectScooter(scooterID) {
         try {

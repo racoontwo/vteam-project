@@ -113,7 +113,7 @@ export async function updateStatus() {
 }
 
 
-async function main() {
+async function utils() {
     const args = process.argv.slice(2);
 
     if (args.length === 0) {
@@ -175,4 +175,8 @@ async function main() {
     }
 }
 
-main()
+if (import.meta.url === `file://${process.argv[1]}`) {
+    utils();
+} else if (process.argv[1] === new URL(import.meta.url).pathname) {
+    utils();
+}

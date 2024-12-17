@@ -8,19 +8,16 @@ import { ObjectId } from 'mongodb';
 
 // create update function that writes to the database.
 
-async function monitorScooters() {
+async function liveFeed() {
+    let scooters = [];
     try {
-        // Fetch all scooters
         const scootersData = await database.getAllScooters('scooters');
-        const scooters = scootersData.map(scooterData => new Scooter(scooterData)); // Create Scooter objects
+        scooters = scootersData.map(scooterData => Scooter.createFromDb(scooterData));
 
-        function printScooterLocations() {
-            scooters.forEach(scooter => {
-                console.log(`Scooter Location: ${JSON.stringify(scooter.location)}`);
-            });
-        }
+        scooters.forEach(scooter => {
+            scooter.startPrintingLocation();
+        });
 
-        setInterval(printScooterLocations, 30000);
 
     } catch (error) {
         console.error('Error loading scooters or monitoring:', error.message);
@@ -28,4 +25,4 @@ async function monitorScooters() {
 }
 
 // Run the function
-monitorScooters();
+liveFeed();
