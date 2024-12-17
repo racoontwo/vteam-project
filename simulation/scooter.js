@@ -2,6 +2,8 @@ import database from './modules/scooter_db.js';
 import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
 
 export default class Scooter {
+    static updateInterval = 3000;
+
     constructor(location = {}, scooterID = null) {
         this.scooterID = scooterID; // the scooter recieves an ObjectID when imported in the db.
         this.location = location;
@@ -14,12 +16,13 @@ export default class Scooter {
 
     printLiveLocation() {
         console.log(this.location);
+        return this.location;
     };
 
     startPrintingLocation() {
         setInterval(() => {
             this.printLiveLocation();
-        }, 30000);
+        }, Scooter.updateInterval);
     }
 
     static createFromDb(jsonObject) {
@@ -51,7 +54,6 @@ export default class Scooter {
             throw error;
         }
     }
-
 
     static async loadObjectScooter(scooterID) {
         try {
