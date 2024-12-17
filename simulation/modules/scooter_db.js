@@ -1,9 +1,9 @@
 
-
 import dotenv from 'dotenv';
 dotenv.config();
 
 import { MongoClient } from "mongodb";
+import { ObjectId } from 'mongodb';
 
 const collectionName = "scooters";
 
@@ -49,15 +49,36 @@ async function getAllScooters(collectionName) {
     }
 }
 
+async function getScooter(scooterId) {
+    try {
+        const { collection, client } = await getCollection('scooters');
+
+        const scooter = await collection.findOne({ _id: new ObjectId(scooterId) });
+
+        await client.close();
+
+        if (!scooter) {
+            throw new Error(`No scooter found with ID: ${scooterId}`);
+        }
+
+        return scooter;
+    } catch (error) {
+        console.error('Error fetching scooter:', error);
+        throw new Error('Failed to fetch scooter');
+    }
+}
+
 async function addScooter(scooter) {
     try {
         const { collection, client } = await getCollection('scooters');
         const result = await collection.insertOne({
-            _id: scooter._id,
+            // _id: The mongodb will give the scooter an ID with ObjectID
             location: scooter.location,
-            status: scooter.getStatus(),
-            rented: scooter.rented,
+            user: scooter.user,
+            status: scooter.status,
+            speed: scooter.speed,
             battery: scooter.battery,
+            tripLog: scooter.tripLog,
         });
 
         await client.close();
@@ -68,5 +89,132 @@ async function addScooter(scooter) {
     }
 }
 
+async function removeScooter(scooterId) {
+    try {
+        const { collection, client } = await getCollection('scooters');
 
-export default { connectDB, getCollection, getAllScooters };
+        const result = await collection.deleteOne({ _id: scooterId });
+
+        await client.close();
+        
+        if (result.deletedCount === 0) {
+            throw new Error(`No scooter found with ID: ${scooterId}`);
+        }
+
+        return result;
+    } catch (error) {
+        console.error('Failed to remove scooter from database:', error);
+        throw new Error('Database removal failed: ' + error.message);
+    }
+}
+
+async function dropScooters() {
+    try {
+        const { collection, client } = await getCollection('scooters');
+
+        const result = await collection.deleteMany({});
+
+        await client.close();
+
+        return result;
+    } catch (error) {
+        console.error('Failed to remove all scooters from database:', error);
+        throw new Error('Database removal failed: ' + error.message);
+    }
+}
+
+async function updateLocation(scooterID, location) {
+    try {
+        const { collection, client } = await getCollection('scooters');
+
+        const result = await collection.updateOne(
+            { _id: new ObjectId(scooterID) },
+            { $set: { location: location } }
+        );
+
+        await client.close(); // Ensure the client is closed
+
+        if (result.matchedCount !== 1) {
+            throw new Error("Error updating location.");
+        }
+
+        return true;
+    } catch (e) {
+        console.error('Failed to update location:', e);
+        return false;
+    }
+}
+
+async function updateScooter(scooterID, updatedStats) {
+    try {
+        const { collection, client } = await getCollection('scooters');
+
+        const result = await collection.updateOne(
+            { _id: new ObjectId(scooterID) },
+            { $set: updatedStats }
+        );
+
+        await client.close();
+
+        if (result.matchedCount !== 1) {
+            throw new Error("Error updating scooter stats. Scooter not found.");
+        }
+
+        return true;
+    } catch (e) {
+        console.error('Failed to update scooter stats:', e);
+        return false;
+    }
+}
+
+async function updateScooterStats(scooterID, updatedStats) {
+    try {
+        const { collection, client } = await getCollection('scooters');
+
+        const result = await collection.updateOne(
+            { _id: new ObjectId(scooterID) },
+            { $set: updatedStats }
+        );
+
+        await client.close();
+
+        if (result.matchedCount !== 1) {
+            throw new Error("Error updating scooter stats. Scooter not found.");
+        }
+
+        return true;
+    } catch (e) {
+        console.error('Failed to update scooter stats:', e);
+        return false;
+    }
+}
+
+
+async function countScooters() {
+    try {
+        const { collection, client } = await getCollection('scooters');
+
+        const count = await collection.countDocuments(); // count documents in the 'scooters' collection
+
+        await client.close();
+
+        return count;
+    } catch (error) {
+        console.error('Error counting scooters:', error);
+        throw new Error('Failed to count scooters');
+    }
+}
+
+export default { 
+    connectDB, 
+    getCollection, 
+    getAllScooters, 
+    addScooter, 
+    removeScooter, 
+    getScooter, 
+    dropScooters,
+    updateLocation,
+    countScooters,
+    updateScooterStats,
+    updateScooter
+};
