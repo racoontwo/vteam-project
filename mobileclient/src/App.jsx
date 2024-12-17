@@ -7,6 +7,8 @@ import Scan from './components/Scan';
 import Profile from './components/Profile';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import Account from './components/Account';
+import Wallet from './components/Wallet';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,9 +32,12 @@ function App() {
                         {isLoggedIn ? (
                             <>
                                 <Route path="/" element={<Home />} />
-                                <Route path="/scan" element={<Scan />} />
-                                <Route path="/profile" element={<Profile onLogout={handleLogout} />} />
                                 <Route path="*" element={<Home />} />
+                                <Route path="/scan" element={<Scan />} />
+                                <Route path="/profile" element={<Profile />} />
+                                <Route path="/account" element={<Account onLogout={handleLogin}/>} />
+                                <Route path="/wallet" element={<Wallet />} />
+
                             </>
                         ) : (
                             <>

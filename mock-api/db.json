@@ -1,0 +1,28 @@
+{
+  "customers": [
+    {
+      "id": "1",
+      "name": "test",
+      "email": "test",
+      "balance": 100
+    },
+    {
+      "id": "2",
+      "name": "test2",
+      "email": "test2",
+      "balance": 200
+    }
+    ],
+    "Scooters": [
+      {
+        "id": "1",
+        "status": "available",
+        "battery": 100
+        },
+        {
+          "id": "2",
+          "status": "available",
+          "battery": 100
+        }
+    ]
+}
