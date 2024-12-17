@@ -10,7 +10,7 @@ import Scooters from './components/Scooters';
 import Customers from './components/Customers';
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(true); // Change to false to test login
     const handleLogin = () => {
         setIsLoggedIn(true);
         console.log('Logged in');

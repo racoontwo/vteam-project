@@ -2,4 +2,24 @@
 
 .customers {
     text-align: center;
+    padding: 2rem;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th, td {
+            border-bottom: 2px solid variables.$table-outline;
+            padding: 0.5rem;
+        }
+
+        tr:hover {
+            background-color: variables.$table-outline;
+            cursor: pointer;
+        }
+
+        th, td {
+            text-align: left;
+        }
+    }
 }
