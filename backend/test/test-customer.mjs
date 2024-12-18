@@ -6,7 +6,8 @@ import appdata from '../app.mjs'; // Adjust the path to your app file
 import database from '../db/database.mjs'
 
 const app = appdata.app;
-const apiKey = '6b00bafa-4f70-463b-a4c3-1234c317a09f';
+// const apiKey = '6b00bafa-4f70-463b-a4c3-1234c317a09f';
+const apiKey = process.env.API_KEY;
 
 describe('POST /add-customer', () => {
     it('should add a new customer when firstName and lastName are provided', async () => {

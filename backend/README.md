@@ -3,8 +3,12 @@
 In order to get access to the database you need to add a .env file in the root of /backend.
 The file should contain the following:
 
-- ATLAS_USERNAME="pokr23"
-- ATLAS_PASSWORD="ZGflIkHYako1vQiZ"
+//Connect to MongoDB Atlas
+ATLAS_USERNAME="pokr23"
+ATLAS_PASSWORD="ZGflIkHYako1vQiZ"
+
+//Used for tests
+API_KEY='6b00bafa-4f70-463b-a4c3-1234c317a09f'
 
 # API-keys
 
