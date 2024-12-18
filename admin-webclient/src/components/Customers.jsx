@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Customers({ isLoggedIn }) {
     const [customers, setCustomers] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [expandedRows, setExpandedRows] = useState([]);
     const baseUrl = "http://localhost:5001/api/v1";
-    console.log(`${baseUrl}/customers/all-customers`);
 
     useEffect(() => {
-
         const fetchCustomer = async () => {
             try {
                 const response = await fetch(`${baseUrl}/customers/all-customers`);
@@ -22,12 +22,39 @@ function Customers({ isLoggedIn }) {
             } finally {
                 setLoading(false);
             }
-        }
+        };
 
         fetchCustomer();
     }, [baseUrl]);
 
-    console.log(customers);
+    const handleExpand = (customerId) => {
+        if (expandedRows.includes(customerId)) {
+            setExpandedRows(expandedRows.filter(id => id !== customerId));
+        } else {
+            setExpandedRows([...expandedRows, customerId]);
+        }
+    };
+
+    const handleDelete = async (customerId) => {
+        try {
+            const response = await fetch(`${baseUrl}/customers/delete-one-customer`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ _id: customerId }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete customer');
+            }
+
+            setCustomers({ data: customers.data.filter(customer => customer._id !== customerId) });
+
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
     if (!isLoggedIn) {
         return (
@@ -36,10 +63,16 @@ function Customers({ isLoggedIn }) {
             </div>
         );
     }
+
     return (
         <div className="customers">
-            <h2>Customers</h2>
-            {loading && <p>Loading...</p>}
+            <div className="customer-header">
+                <h1>Customers</h1>
+                <Link to="/add-customer">
+                    <button>Add Customer</button>
+                </Link>
+            </div>
+            {loading && <h2>Loading...</h2>}
             {error && <p>{error}</p>}
             {customers && (
                 <table>
@@ -52,11 +85,23 @@ function Customers({ isLoggedIn }) {
                     </thead>
                     <tbody>
                         {customers.data.map(customer => (
-                            <tr key={customer._id}>
-                                <td>{customer._id}</td>
-                                <td>{customer.firstName}</td>
-                                <td>{customer.lastName}</td>
-                            </tr>
+                            <React.Fragment key={customer._id}>
+                                <tr onClick={() => handleExpand(customer._id)}>
+                                    <td>{customer._id}</td>
+                                    <td>{customer.firstName}</td>
+                                    <td>{customer.lastName}</td>
+                                </tr>
+                                {expandedRows.includes(customer._id) && (
+                                    <tr className="expanded">
+                                        <td colSpan="3">
+                                            <div className="expanded-content">
+                                                <p>{customer.firstName} {customer.lastName}</p>
+                                                <button onClick={() => handleDelete(customer._id)}>Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
                         ))}
                     </tbody>
                 </table>
