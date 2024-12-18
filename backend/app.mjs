@@ -5,8 +5,11 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerConfig from './config/swagger.mjs'
 import cors from 'cors';
 import customerRoutesV1 from './src/routes/v1/customer.mjs'
+
+
 import { authenticateApiKey } from './src/middleware/authApiKey.mjs';
 import { rateLimiter } from './src/middleware/rateLimit.mjs';
+
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -22,7 +25,9 @@ app.get('/', (req, res) => {
     res.json({ hej: 'Hello World' });
 });
 
+
 app.use('/api/v1/customers', authenticateApiKey, customerRoutesV1);
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
