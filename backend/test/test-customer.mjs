@@ -9,6 +9,24 @@ const app = appdata.app;
 // const apiKey = '6b00bafa-4f70-463b-a4c3-1234c317a09f';
 const apiKey = process.env.API_KEY;
 
+before(async () => {
+    // Insert the API Key into the "apiKeys" collection before running any tests
+    const db = await database.getCollection('apiKeys');
+    await db.collection.insertOne({ apiKey: apiKey });
+    await db.client.close();
+});
+
+describe('API Key Setup', () => {
+    it('should have API key inserted into apiKeys collection', async () => {
+        const db = await database.getCollection('apiKeys');
+        const apiKeyEntry = await db.collection.findOne({ apiKey: apiKey });
+        await db.client.close();
+        
+        expect(apiKeyEntry).to.not.be.null;
+        expect(apiKeyEntry).to.have.property('apiKey', apiKey);
+    });
+});
+
 describe('POST /add-customer', () => {
     it('should add a new customer when firstName and lastName are provided', async () => {
         const newCustomer = {
