@@ -6,6 +6,7 @@ import appdata from '../app.mjs'; // Adjust the path to your app file
 import database from '../db/database.mjs'
 
 const app = appdata.app;
+const apiKey = '6b00bafa-4f70-463b-a4c3-1234c317a09f';
 
 describe('POST /add-customer', () => {
     it('should add a new customer when firstName and lastName are provided', async () => {
@@ -16,6 +17,7 @@ describe('POST /add-customer', () => {
 
         const res = await request(app)
             .post('/api/v1/customers/new-customer')
+            .set('x-api-key', apiKey)
             .send(newCustomer)
             .expect(200);
 
@@ -43,12 +45,14 @@ describe('GET /all-customers', () => {
     
         await request(app)
             .post('/api/v1/customers/new-customer')
+            .set('x-api-key', apiKey)
             .send(newCustomer)
             .expect(200);
     
         // Now, fetch all customers
         const res = await request(app)
             .get('/api/v1/customers/all-customers')
+            .set('x-api-key', apiKey)
             .expect(200);
     
         // Check that the response contains 'data' and that it's an array
@@ -79,6 +83,7 @@ describe('DELETE', () => {
     it('should delete a customer successfully', async () => {
         const res = await request(app)
             .delete('/api/v1/customers/delete-one-customer') // Make sure this matches your route
+            .set('x-api-key', apiKey)
             .send({ _id: customerId.toString() })
             .expect(200);
 
@@ -106,6 +111,7 @@ describe('DELETE', () => {
     it('should delete all customers successfully', async () => {
         const res = await request(app)
             .delete('/api/v1/customers/delete-all-customers')
+            .set('x-api-key', apiKey)
             .expect(200);
 
         expect(res.body).to.have.property('message', 'All customers deleted successfully');

@@ -9,7 +9,7 @@ export const authenticateApiKey = async (req, res, next) => {
             return res.status(401).json({ error: 'API Key is missing.' });
         }
 
-        const db = await database.getCollection('api-keys'); // Get collection
+        const db = await database.getCollection('apiKeys'); // Get collection
         const validApiKeys = await db.collection.find({}).map((doc) => doc.key).toArray(); // Fetch API keys
 
         if (!validApiKeys.includes(apiKey)) {
