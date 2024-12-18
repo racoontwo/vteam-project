@@ -12,18 +12,18 @@ const apiKey = process.env.API_KEY;
 before(async () => {
     // Insert the API Key into the "apiKeys" collection before running any tests
     const db = await database.getCollection('apiKeys');
-    await db.collection.insertOne({ apiKey: apiKey });
+    await db.collection.insertOne({ key: apiKey });
     await db.client.close();
 });
 
 describe('API Key Setup', () => {
     it('should have API key inserted into apiKeys collection', async () => {
         const db = await database.getCollection('apiKeys');
-        const apiKeyEntry = await db.collection.findOne({ apiKey: apiKey });
+        const apiKeyEntry = await db.collection.findOne({ key: apiKey });
         await db.client.close();
         
         expect(apiKeyEntry).to.not.be.null;
-        expect(apiKeyEntry).to.have.property('apiKey', apiKey);
+        expect(apiKeyEntry).to.have.property('key', apiKey);
     });
 });
 
