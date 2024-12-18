@@ -13,7 +13,6 @@ const PORT = process.env.PORT || 5001;
 app.use(cors());
 app.use(express.json());
 
-// app.use(authenticateApiKey);
 app.use(rateLimiter);
 
 //Swagger documentation
