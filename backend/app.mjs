@@ -5,6 +5,8 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerConfig from './config/swagger.mjs'
 import cors from 'cors';
 import customerRoutesV1 from './src/routes/v1/customer.mjs'
+import adminRoutesV1 from './src/routes/v1/admin.mjs'
+
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -19,6 +21,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1/customers', customerRoutesV1)
+app.use('/api/v1/admins', adminRoutesV1)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
