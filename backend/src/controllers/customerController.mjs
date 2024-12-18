@@ -68,6 +68,30 @@ const customers = {
         }
     },
 
+    updateCustomer: async (customerId, updatedData) => {
+        let db;
+
+        try {
+            const db = await database.getCollection('customers')
+            const result = await db.collection.updateOne(
+                { _id: new ObjectId(customerId) },
+                { $set: updatedData }
+            );
+
+            // Check for matches and updates
+            if (result.matchedCount === 0) {
+                throw new Error('No customer found with the given ID.');
+            }
+            return result
+        } catch (error) {
+            throw error; // Rethrow the error so it can be caught in the route handler
+        } finally {
+            if (db) {
+                await db.client.close(); // Ensure the client is always closed
+            }
+        }
+    },
+
     deleteOneCustomer: async function deleteOneCustomer(id) {
         let db;
         try {
