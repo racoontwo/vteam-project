@@ -4,16 +4,19 @@ import { useNavigate, Link } from 'react-router-dom';
 function AddCustomer() {
     const [newCustomer, setNewCustomer] = useState({ firstName: '', lastName: '' });
     const [error, setError] = useState(null);
-    const baseUrl = "http://localhost:5001/api/v1";
+    const baseUrl = import.meta.env.VITE_BASE_URL;
+    const apiKey = import.meta.env.VITE_API_KEY;
     const navigate = useNavigate();
 
     const handleAddCustomer = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`${baseUrl}/customers/new-customer`, {
+            const response = await fetch(`${baseUrl}/api/v1/customers/new-customer`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'x-api-key': apiKey,
+
                 },
                 body: JSON.stringify(newCustomer),
             });

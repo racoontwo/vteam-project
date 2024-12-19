@@ -6,12 +6,18 @@ function Customers({ isLoggedIn }) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [expandedRows, setExpandedRows] = useState([]);
-    const baseUrl = "http://localhost:5001/api/v1";
+    const baseUrl = import.meta.env.VITE_BASE_URL;
+    const apiKey = import.meta.env.VITE_API_KEY;
 
     useEffect(() => {
         const fetchCustomer = async () => {
             try {
-                const response = await fetch(`${baseUrl}/customers/all-customers`);
+                const response = await fetch(`${baseUrl}/api/v1/customers/all-customers`, {
+                    headers: {  
+                        'x-api-key': apiKey,
+                    },
+                });
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch customers');
                 }
@@ -37,10 +43,11 @@ function Customers({ isLoggedIn }) {
 
     const handleDelete = async (customerId) => {
         try {
-            const response = await fetch(`${baseUrl}/customers/delete-one-customer`, {
+            const response = await fetch(`${baseUrl}/api/v1/customers/delete-one-customer`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'x-api-key': apiKey,
                 },
                 body: JSON.stringify({ _id: customerId }),
             });
