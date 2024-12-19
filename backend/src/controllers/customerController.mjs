@@ -25,29 +25,31 @@ const customers = {
 
         try {
             const db = await database.getCollection('customers');
-            const result = await db.collection.aggregate([
-                {
-                    $match: { _id: new ObjectId(id) }
-                },
-                {
-                    $lookup: {
-                        from: 'rentals',
-                        localField: '_id',
-                        foreignField: 'customerId',
-                        as: 'rentals'
+            const result = await db.collection
+                .aggregate([
+                    {
+                        $match: { _id: new ObjectId(id) }
+                    },
+                    {
+                        $lookup: {
+                            from: 'rentals',
+                            localField: '_id',
+                            foreignField: 'customerId',
+                            as: 'rentals'
+                        }
                     }
-                }
-            ]).toArray();
+                ])
+                .toArray();
 
             return result;
         } catch (error) {
             console.error('Error fetching customer:', error);
             throw new Error('Failed to fetch customer');
-            } finally {
-                if (db) {
-                    await db.client.close();
-                }
+        } finally {
+            if (db) {
+                await db.client.close();
             }
+        }
     },
 
     addCustomer: async function addCustomer(data) {
@@ -72,7 +74,7 @@ const customers = {
         let db;
 
         try {
-            const db = await database.getCollection('customers')
+            const db = await database.getCollection('customers');
             const result = await db.collection.updateOne(
                 { _id: new ObjectId(customerId) },
                 { $set: updatedData }
@@ -82,7 +84,7 @@ const customers = {
             if (result.matchedCount === 0) {
                 throw new Error('No customer found with the given ID.');
             }
-            return result
+            return result;
         } finally {
             if (db) {
                 await db.client.close();
@@ -94,7 +96,9 @@ const customers = {
         let db;
         try {
             const db = await database.getCollection('customers');
-            const result = await db.collection.deleteOne({ _id: new ObjectId(id) });
+            const result = await db.collection.deleteOne({
+                _id: new ObjectId(id)
+            });
 
             return result;
         } catch (error) {
@@ -123,6 +127,6 @@ const customers = {
             }
         }
     }
-}
+};
 
 export default customers;

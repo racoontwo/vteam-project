@@ -100,6 +100,6 @@ const rentals = {
             }
         }
     }
-}
+};
 
 export default rentals;

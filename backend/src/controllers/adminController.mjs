@@ -31,11 +31,11 @@ const admins = {
         } catch (error) {
             console.error('Error fetching data:', error);
             throw new Error('Failed to fetch admin data');
-            } finally {
-                if (db) {
-                    await db.client.close();
-                }
+        } finally {
+            if (db) {
+                await db.client.close();
             }
+        }
     },
 
     newAdmin: async function newAdmin(data) {
@@ -60,7 +60,7 @@ const admins = {
         let db;
 
         try {
-            const db = await database.getCollection('admins')
+            const db = await database.getCollection('admins');
             const result = await db.collection.updateOne(
                 { _id: new ObjectId(customerId) },
                 { $set: updatedData }
@@ -70,7 +70,7 @@ const admins = {
             if (result.matchedCount === 0) {
                 throw new Error('No admin found with the given ID.');
             }
-            return result
+            return result;
         } finally {
             if (db) {
                 await db.client.close();
@@ -83,7 +83,9 @@ const admins = {
 
         try {
             const db = await database.getCollection('admins');
-            const result = await db.collection.deleteOne({ _id: new ObjectId(id) });
+            const result = await db.collection.deleteOne({
+                _id: new ObjectId(id)
+            });
 
             return result;
         } catch (error) {
@@ -112,6 +114,6 @@ const admins = {
             }
         }
     }
-}
+};
 
 export default admins;
