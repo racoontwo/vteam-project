@@ -1,4 +1,4 @@
-import database from "../../db/database.mjs";
+import database from '../../db/database.mjs';
 
 export const authenticateApiKey = async (req, res, next) => {
     let db;
@@ -10,7 +10,10 @@ export const authenticateApiKey = async (req, res, next) => {
         }
 
         const db = await database.getCollection('apiKeys'); // Get collection
-        const validApiKeys = await db.collection.find({}).map((doc) => doc.key).toArray(); // Fetch API keys
+        const validApiKeys = await db.collection
+            .find({})
+            .map((doc) => doc.key)
+            .toArray(); // Fetch API keys
 
         if (!validApiKeys.includes(apiKey)) {
             return res.status(403).json({ error: 'Invalid API Key.' });
@@ -26,5 +29,3 @@ export const authenticateApiKey = async (req, res, next) => {
         }
     }
 };
-
-
