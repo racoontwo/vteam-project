@@ -26,7 +26,7 @@ router.get('/all-rentals', async (req, res) => {
 
 router.delete('/delete-all-rentals', async (req, res) => {
     try {
-        const result = await customers.deleteAllRentals();
+        const result = await rentals.deleteAllRentals();
         res.status(200).json({ message: 'All rental history deleted successfully', result });
     } catch (error) {
         res.status(500).json({ message: 'Failed to delete rentals', error: error.message });

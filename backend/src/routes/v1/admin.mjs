@@ -71,7 +71,7 @@ router.delete('/delete-admin', async (req, res) => {
             res.status(404).json({ message: "Admin not found" });
         }
     } catch (error) {
-        res.status(500).json({ error: "Failed to delete admin" });
+        res.status(500).json({ message: 'Failed to delete admin', error: error.message });
     }
 });
 

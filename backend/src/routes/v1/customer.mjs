@@ -258,7 +258,7 @@ router.delete('/delete-one-customer', async (req, res) => {
             res.status(404).json({ message: "Customer not found" });
         }
     } catch (error) {
-        res.status(500).json({ error: "Failed to delete customer" });
+        res.status(500).json({ message: "Failed to delete customer", error: error.message });
     }
 });
 

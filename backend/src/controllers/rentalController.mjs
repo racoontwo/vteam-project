@@ -1,5 +1,4 @@
 import database from '../../db/database.mjs';
-import { ObjectId } from 'mongodb';
 
 const rentals = {
     getAllRentals: async function getAllRentals() {

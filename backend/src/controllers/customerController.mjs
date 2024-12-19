@@ -83,8 +83,6 @@ const customers = {
                 throw new Error('No customer found with the given ID.');
             }
             return result
-        } catch (error) {
-            throw error; // Rethrow the error so it can be caught in the route handler
         } finally {
             if (db) {
                 await db.client.close();
