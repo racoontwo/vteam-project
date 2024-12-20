@@ -9,6 +9,9 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Account from './components/Account';
 import Wallet from './components/Wallet';
+import History from './components/History';
+import AddFunds from './components/AddFunds';
+import { CustomerProvider } from './context/CustomerContext';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(true); // Change to false to test login
@@ -25,19 +28,20 @@ function App() {
     };
 
     return (
-        <Router>
-            <div className="main">
-                {isLoggedIn && <Navbar onLogout={handleLogout} />}
-                <div className="main-content">
+        <CustomerProvider customerId={customerId}>
+            <Router>
+                <div className="main">
                     <Routes>
                         {isLoggedIn ? (
                             <>
-                                <Route path="/" element={<Home />} />
-                                <Route path="*" element={<Home />} />
-                                <Route path="/scan" element={<Scan />} />
-                                <Route path="/profile" element={<Profile />} />
-                                <Route path="/account" element={<Account onLogout={handleLogout}/>} />
-                                <Route path="/wallet" element={<Wallet customerId={customerId} />} />
+                                <Route path="/" element={<><Home /><Navbar /></>} />
+                                <Route path="*" element={<><Home /><Navbar /></>} />
+                                <Route path="/scan" element={<><Scan /><Navbar /></>} />
+                                <Route path="/profile" element={<><Profile /><Navbar /></>} />
+                                <Route path="/account" element={<Account onLogout={handleLogout} />} />
+                                <Route path="/wallet" element={<Wallet />} />
+                                <Route path="/history" element={<History />} />
+                                <Route path="/add-funds" element={<AddFunds />} />
                             </>
                         ) : (
                             <>
@@ -48,8 +52,8 @@ function App() {
                         )}
                     </Routes>
                 </div>
-            </div>
-        </Router>
+            </Router>
+        </CustomerProvider>
     );
 }
 

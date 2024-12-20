@@ -1,47 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useCustomer } from '../context/CustomerContext';
+import { Link } from 'react-router-dom';
+import { FaArrowLeft } from "react-icons/fa6";
 
-function Wallet({ customerId }) {
-    const [customer, setCustomer] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
-    useEffect(() => {
-        if (!customerId) {
-            setError('Customer ID is required');
-            setLoading(false);
-            return;
-        }
-
-        const fetchCustomer = async () => {
-            try {
-                const response = await fetch(`${baseUrl}/customers/${customerId}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch customer');
-                }
-                const data = await response.json();
-                setCustomer(data);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchCustomer();
-    }
-    , [customerId, baseUrl]);
+function Wallet() {
+    const { customer, error, loading } = useCustomer();
 
     return (
-        <div className="wallet">
-            <h2>Wallet</h2>
-            {loading && <p>Loading...</p>}
-            {error && <p>{error}</p>}
-            {customer && (
-                <div>
-                    <h1>{customer.balance} Kr</h1>
+        <div className="main-content">
+            <div className="page-header">
+                <Link to="/profile">
+                    <FaArrowLeft className="back" />
+                </Link>
+                <h1>Wallet</h1>
+            </div>
+            <div className="wallet">
+                {loading && <p>Loading...</p>}
+                {error && <p>{error}</p>}
+                {customer && (
+                    <div className="wallet-content">
+                        <h1 className='balance'>{customer.balance} Kr</h1>
+                        <p>Available balance</p>
+                    </div>
+                )}
+            </div>
+            <div className="page-footer">
+                <div className="footer-content">
+                    <Link to="/add-funds">
+                        <button>Add funds</button>
+                    </Link>
                 </div>
-            )}
+            </div>
         </div>
     );
 }

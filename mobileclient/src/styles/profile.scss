@@ -32,3 +32,34 @@
         color: variables.$icon-inactive-color
     }
 }
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+    font-size: 1.5rem;
+
+    h1 {
+        margin: 0;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .back {
+        color: variables.$icon-color;
+        font-size: 1.5rem;
+        padding: 1rem;
+        cursor: pointer;
+    }
+}
+
+.page-footer {
+    margin-top: auto;
+    padding: 1rem 0 2rem;
+
+    button {
+        margin-top: 1rem;
+    }
+}

@@ -1,5 +1,9 @@
 @use 'variables';
 
-.account {
-    text-align: center;
+.delete-button {
+    background-color: variables.$color-red;
+    
+    &:hover {
+        background-color: darken(variables.$color-red, 10%);
+    }
 }

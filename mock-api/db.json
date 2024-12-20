@@ -1,28 +1,116 @@
 {
   "customers": [
     {
-      "id": "1",
-      "name": "test",
-      "email": "test",
-      "balance": 100
+        "id": "1",
+        "firstName": "test",
+        "lastName": "test",
+        "email": "test.test@test.com",
+        "balance": 100,
+        "rentalHistory": [
+            {
+                "id": "1",
+                "scooterId": "1",
+                "startTime": "2021-09-01T12:00:00",
+                "endTime": "2021-09-01T13:00:00",
+                "durationMinutes": 60,
+                "startLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "endLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "cost": 10
+            },
+            {
+                "id": "2",
+                "scooterId": "2",
+                "startTime": "2021-09-01T14:00:00",
+                "endTime": "2021-09-01T15:00:00",
+                "durationMinutes": 60,
+                "startLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "endLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "cost": 20
+            }
+        ]
     },
     {
-      "id": "2",
-      "name": "test2",
-      "email": "test2",
-      "balance": 200
+        "id": "2",
+        "firstName": "test2",
+        "lastName": "test2",
+        "email": "test2.test2@test.com",
+        "balance": 200,
+        "rentalHistory": [
+            {
+                "id": "1",
+                "scooterId": "1",
+                "startTime": "2021-09-01T12:00:00",
+                "endTime": "2021-09-01T13:00:00",
+                "durationMinutes": 60,
+                "startLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "endLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "cost": 10
+            },
+            {
+                "id": "2",
+                "scooterId": "2",
+                "startTime": "2021-09-01T14:00:00",
+                "endTime": "2021-09-01T15:00:00",
+                "durationMinutes": 60,
+                "startLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "endLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "cost": 20
+            }
+        ]
     }
     ],
     "Scooters": [
-      {
-        "id": "1",
-        "status": "available",
-        "battery": 100
+        {
+            "id": {
+            "$oid": "67608d8aaddddcc3e6c17274"
+            },
+            "location": {
+                "latitude": "-61.475072",
+                "longitude": "-103.978585"
+            },
+            "user": "[ObjectID], referens till User",
+            "status": "Off",
+            "speed": 0,
+            "battery": 63,
+            "tripLog": ": [ObjectId], (referens till Trips)"
         },
         {
-          "id": "2",
-          "status": "available",
-          "battery": 100
+            "id": {
+            "$oid": "67608d8aaddddcc3e6c17275"
+            },
+            "location": {
+                "latitude": "-41.944542",
+                "longitude": "-25.827162"
+            },
+            "user": "[ObjectID], referens till User",
+            "status": "Off",
+            "speed": 0,
+            "battery": 20,
+            "tripLog": ": [ObjectId], (referens till Trips)"
         }
     ]
 }
