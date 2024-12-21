@@ -28,7 +28,9 @@ function App() {
     };
 
     return (
-        <CustomerProvider customerId={customerId}>
+        <CustomerProvider 
+            customerId={customerId}
+        >
             <Router>
                 <div className="main">
                     <Routes>

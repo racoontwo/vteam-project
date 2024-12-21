@@ -1,6 +1,6 @@
-import { useCustomer } from '../context/CustomerContext';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft } from "react-icons/fa6";
+import { useCustomer } from '../context/CustomerContext';
 
 function Wallet() {
     const { customer, error, loading } = useCustomer();

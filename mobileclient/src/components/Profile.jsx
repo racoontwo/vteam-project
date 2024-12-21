@@ -12,17 +12,17 @@ function Profile() {
                 <h1>Profile</h1>
                 <Link to="/account">
                     <MdOutlineAccountCircle className="icon" />
-                    Account
+                    <h3>Account</h3>
                     <FaAngleRight className="angle" />
                 </Link>
                 <Link to="/wallet">
                     <IoWalletOutline className="icon" />
-                    Wallet
+                    <h3>Wallet</h3>
                     <FaAngleRight className="angle" />
                 </Link>
                 <Link to="/history">
                     <MdHistory className="icon" />
-                    History
+                    <h3>History</h3>
                     <FaAngleRight className="angle" />
                 </Link>
             </div>

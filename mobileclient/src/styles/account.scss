@@ -1,9 +1,24 @@
 @use 'variables';
 
+.account {
+    input {
+        width: 100%;
+    }
+
+    .name-inputs {
+        display: flex;
+        gap: 1rem;
+
+        input {
+            flex: 1;
+        }
+    }
+}
+
 .delete-button {
     background-color: variables.$color-red;
     
     &:hover {
-        background-color: darken(variables.$color-red, 10%);
+        background-color: variables.$color-red2;
     }
 }
