@@ -11,7 +11,8 @@ import Account from './components/Account';
 import Wallet from './components/Wallet';
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(true); // Change to false to test login
+    const customerId = 1;
 
     const handleLogin = () => {
         setIsLoggedIn(true);
@@ -35,9 +36,8 @@ function App() {
                                 <Route path="*" element={<Home />} />
                                 <Route path="/scan" element={<Scan />} />
                                 <Route path="/profile" element={<Profile />} />
-                                <Route path="/account" element={<Account onLogout={handleLogin}/>} />
-                                <Route path="/wallet" element={<Wallet />} />
-
+                                <Route path="/account" element={<Account onLogout={handleLogout}/>} />
+                                <Route path="/wallet" element={<Wallet customerId={customerId} />} />
                             </>
                         ) : (
                             <>

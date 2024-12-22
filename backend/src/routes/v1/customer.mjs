@@ -1,5 +1,5 @@
 import express from 'express';
-import customers from '../../controllers/customerController.mjs'
+import customers from '../../controllers/customerController.mjs';
 
 const router = express.Router();
 
@@ -63,9 +63,12 @@ router.get('/all-customers', async (req, res) => {
         const data = await customers.getAllCustomers();
         res.status(200).json({ data });
     } catch (error) {
-        res.status(500).json({ message: 'Failed to fetch data', error: error.message});
+        res.status(500).json({
+            message: 'Failed to fetch data',
+            error: error.message
+        });
     }
-})
+});
 
 /**
  * @swagger
@@ -135,10 +138,17 @@ router.post('/new-customer', async (req, res) => {
 
     try {
         const result = await customers.addCustomer(data);
-        res.status(200).json({ message: 'Data received and inserted', data: data, result });
+        res.status(200).json({
+            message: 'Data received and inserted',
+            data: data,
+            result
+        });
     } catch (error) {
         console.error('Error occurred during customer insertion:', error);
-        res.status(500).json({ error: 'Failed to insert data into database', details: error.message });
+        res.status(500).json({
+            error: 'Failed to insert data into database',
+            details: error.message
+        });
     }
 });
 
@@ -149,9 +159,31 @@ router.get('/customer/:id', async (req, res) => {
         const data = await customers.getCustomer(customerId);
         res.status(200).json({ data });
     } catch (error) {
-        res.status(500).json({ message: 'Failed to fetch data', error: error.message});
+        res.status(500).json({
+            message: 'Failed to fetch data',
+            error: error.message
+        });
     }
-})
+});
+
+router.put('/update-customer/:id', async (req, res) => {
+    const customerId = req.params.id;
+    const updatedData = req.body;
+
+    try {
+        if (!updatedData || Object.keys(updatedData).length === 0) {
+            return res.status(400).json({ error: 'No data was provided.' });
+        }
+
+        const result = await customers.updateCustomer(customerId, updatedData);
+        res.status(200).json({ result });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Failed to update customer information',
+            error: error.message
+        });
+    }
+});
 
 /**
  * @swagger
@@ -198,9 +230,15 @@ router.get('/customer/:id', async (req, res) => {
 router.delete('/delete-all-customers', async (req, res) => {
     try {
         const result = await customers.deleteAllCustomers();
-        res.status(200).json({ message: 'All customers deleted successfully', result });
+        res.status(200).json({
+            message: 'All customers deleted successfully',
+            result
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Failed to delete customers', error: error.message });
+        res.status(500).json({
+            message: 'Failed to delete customers',
+            error: error.message
+        });
     }
 });
 
@@ -236,12 +274,15 @@ router.delete('/delete-one-customer', async (req, res) => {
         const result = await customers.deleteOneCustomer(customerID);
 
         if (result.deletedCount === 1) {
-            res.status(200).json({ message: "Customer deleted successfully" });
+            res.status(200).json({ message: 'Customer deleted successfully' });
         } else {
-            res.status(404).json({ message: "Customer not found" });
+            res.status(404).json({ message: 'Customer not found' });
         }
     } catch (error) {
-        res.status(500).json({ error: "Failed to delete customer" });
+        res.status(500).json({
+            message: 'Failed to delete customer',
+            error: error.message
+        });
     }
 });
 

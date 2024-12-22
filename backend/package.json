@@ -1,28 +1,38 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha --exit --timeout 10000",
-    "start": "node app.mjs"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "chai-http": "^5.1.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.1",
-    "mongodb": "^6.11.0",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
-  },
-  "type": "module",
-  "devDependencies": {
-    "chai": "^5.1.2",
-    "mocha": "^11.0.1",
-    "supertest": "^7.0.0"
-  }
+    "name": "backend",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "test": "mocha --exit --timeout 10000",
+        "start": "node app.mjs",
+        "format": "prettier --write .",
+        "lint": "eslint . ",
+        "lint:fix": "eslint . --fix "
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "chai-http": "^5.1.1",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.7",
+        "express": "^4.21.1",
+        "express-rate-limit": "^7.5.0",
+        "jsonwebtoken": "^9.0.2",
+        "mongodb": "^6.11.0",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1"
+    },
+    "type": "module",
+    "devDependencies": {
+        "@eslint/js": "^9.17.0",
+        "chai": "^5.1.2",
+        "eslint": "^9.17.0",
+        "globals": "^15.14.0",
+        "mocha": "^11.0.1",
+        "prettier": "^3.4.2",
+        "supertest": "^7.0.0"
+    }
 }

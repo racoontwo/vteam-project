@@ -1,18 +1,18 @@
 import database from '../../db/database.mjs';
 import { ObjectId } from 'mongodb';
 
-const customers = {
-    getAllCustomers: async function getAllCustomers() {
+const admins = {
+    getAllAdmins: async function getAllAdmins() {
         let db;
 
         try {
-            const db = await database.getCollection('customers');
+            const db = await database.getCollection('admins');
             const result = await db.collection.find({}).toArray();
 
             return result;
         } catch (error) {
-            console.error('Error fetching customers:', error);
-            throw new Error('Failed to fetch customers');
+            console.error('Error fetching the data:', error);
+            throw new Error('Failed to fetch admins');
         } finally {
             if (db) {
                 await db.client.close();
@@ -20,31 +20,17 @@ const customers = {
         }
     },
 
-    getCustomer: async function getCustomer(id) {
+    getAdmin: async function getAdmin(id) {
         let db;
 
         try {
-            const db = await database.getCollection('customers');
-            const result = await db.collection
-                .aggregate([
-                    {
-                        $match: { _id: new ObjectId(id) }
-                    },
-                    {
-                        $lookup: {
-                            from: 'rentals',
-                            localField: '_id',
-                            foreignField: 'customerId',
-                            as: 'rentals'
-                        }
-                    }
-                ])
-                .toArray();
+            const db = await database.getCollection('admins');
+            const result = await db.collection.find(new ObjectId(id)).toArray();
 
             return result;
         } catch (error) {
-            console.error('Error fetching customer:', error);
-            throw new Error('Failed to fetch customer');
+            console.error('Error fetching data:', error);
+            throw new Error('Failed to fetch admin data');
         } finally {
             if (db) {
                 await db.client.close();
@@ -52,11 +38,11 @@ const customers = {
         }
     },
 
-    addCustomer: async function addCustomer(data) {
+    newAdmin: async function newAdmin(data) {
         let db;
 
         try {
-            const db = await database.getCollection('customers');
+            const db = await database.getCollection('admins');
             const result = await db.collection.insertOne(data);
 
             return result;
@@ -70,11 +56,11 @@ const customers = {
         }
     },
 
-    updateCustomer: async function updateCustomer(customerId, updatedData) {
+    updateAdmin: async function updateAdmin(customerId, updatedData) {
         let db;
 
         try {
-            const db = await database.getCollection('customers');
+            const db = await database.getCollection('admins');
             const result = await db.collection.updateOne(
                 { _id: new ObjectId(customerId) },
                 { $set: updatedData }
@@ -82,7 +68,7 @@ const customers = {
 
             // Check for matches and updates
             if (result.matchedCount === 0) {
-                throw new Error('No customer found with the given ID.');
+                throw new Error('No admin found with the given ID.');
             }
             return result;
         } finally {
@@ -92,18 +78,19 @@ const customers = {
         }
     },
 
-    deleteOneCustomer: async function deleteOneCustomer(id) {
+    deleteAdmin: async function deleteAdmin(id) {
         let db;
+
         try {
-            const db = await database.getCollection('customers');
+            const db = await database.getCollection('admins');
             const result = await db.collection.deleteOne({
                 _id: new ObjectId(id)
             });
 
             return result;
         } catch (error) {
-            console.error('Error deleting customer from database:', error);
-            throw new Error('Customer deletion failed');
+            console.error('Error deleting admin from database:', error);
+            throw new Error('Admin deletion failed');
         } finally {
             if (db) {
                 await db.client.close();
@@ -111,16 +98,16 @@ const customers = {
         }
     },
 
-    deleteAllCustomers: async function deleteAllCustomers() {
+    deleteAllAdmins: async function deleteAllAdmins() {
         let db;
 
         try {
-            const db = await database.getCollection('customers');
+            const db = await database.getCollection('admins');
             const result = await db.collection.deleteMany({});
             return result;
         } catch (error) {
-            console.error('Error deleting data from MongoDB:', error);
-            throw new Error('Database deletion failed');
+            console.error('Error deleting all admins from MongoDB:', error);
+            throw new Error('Admin deletion failed');
         } finally {
             if (db) {
                 await db.client.close();
@@ -129,4 +116,4 @@ const customers = {
     }
 };
 
-export default customers;
+export default admins;

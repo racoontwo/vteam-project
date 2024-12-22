@@ -33,7 +33,10 @@ jobs:
     - run: npm install
       working-directory: ./backend
 
-    - run: npm test
+    - name: run tests
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+      run: npm test
       working-directory: ./backend
 
   webclient:
@@ -55,11 +58,16 @@ jobs:
       uses: supercharge/mongodb-github-action@1.7.0
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
-
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+        
     - run: npm install
       working-directory: ./webclient
 
-    - run: npm test
+    - name: run tests
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+      run: npm test
       working-directory: ./webclient
 
   admin-webclient:
@@ -81,11 +89,16 @@ jobs:
       uses: supercharge/mongodb-github-action@1.7.0
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
 
     - run: npm install
       working-directory: ./admin-webclient
 
-    - run: npm test
+    - name: run tests
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+      run: npm test
       working-directory: ./admin-webclient
 
   mobileclient:
@@ -107,11 +120,16 @@ jobs:
       uses: supercharge/mongodb-github-action@1.7.0
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
 
     - run: npm install
       working-directory: ./mobileclient
 
-    - run: npm test
+    - name: run tests
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+      run: npm test
       working-directory: ./mobileclient
 
   simulation:
@@ -133,10 +151,15 @@ jobs:
       uses: supercharge/mongodb-github-action@1.7.0
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
 
     - run: npm install
       working-directory: ./simulation
 
-    - run: npm test
+    - name: run tests
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+      run: npm test
       working-directory: ./simulation
 
