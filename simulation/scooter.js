@@ -14,6 +14,14 @@ export default class Scooter {
         this.tripLog = ": [ObjectId], (referens till Trips)";
     };
 
+    startTrip(coordinates) {
+        if (this.status === "available") {
+            console.log(`Trip started at coordinates: ${coordinates}`);
+            this.setStatus("rented");
+        } else {
+            console.log("Trip cannot be started. Current status:", this.status);
+        }
+    }
     printLiveLocation() {
         console.log(this.location);
         return this.location;
@@ -151,7 +159,6 @@ export default class Scooter {
             console.error("Error updating scooter stats:", error.message);
         }
     }
-
 
     setStatus(newStatus) {
         const validStatuses = ["available", "rented", "maintenance", "charging"];
