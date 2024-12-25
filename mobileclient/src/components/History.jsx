@@ -1,6 +1,7 @@
 import { useCustomer } from '../context/CustomerContext';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft } from "react-icons/fa6";
+import React from 'react';
 
 function History() {
     const { customer, error, loading } = useCustomer();
@@ -13,9 +14,23 @@ function History() {
                 </Link>
                 <h1>History</h1>
             </div>
-            <div className="page-content">
-
-            </div>
+            {loading && <p>Loading...</p>}
+            {error && <p>{error}</p>}
+            {customer && (
+                <ul className="history-list">
+                    {customer.rentalHistory.map((rental) => (
+                        <li>
+                            <Link to={`/history-details`} state={{ rental }} className="history-item">
+                                <div className="history-details">
+                                    <span className="history-minutes">{rental.durationMinutes} min</span>
+                                    <span className="history-date">{new Date(rental.endTime).toLocaleDateString()}</span>
+                                </div>
+                                <span className="history-cost">{rental.cost} Kr</span>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }

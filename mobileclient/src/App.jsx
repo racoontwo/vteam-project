@@ -10,6 +10,7 @@ import Signup from './components/Signup';
 import Account from './components/Account';
 import Wallet from './components/Wallet';
 import History from './components/History';
+import HistoryDetails from './components/HistoryDetails';
 import AddFunds from './components/AddFunds';
 import { CustomerProvider } from './context/CustomerContext';
 
@@ -43,6 +44,7 @@ function App() {
                                 <Route path="/account" element={<Account onLogout={handleLogout} />} />
                                 <Route path="/wallet" element={<Wallet />} />
                                 <Route path="/history" element={<History />} />
+                                <Route path="/history-details" element={<HistoryDetails />} />
                                 <Route path="/add-funds" element={<AddFunds />} />
                             </>
                         ) : (
