@@ -1,0 +1,195 @@
+[
+  {
+    "id": 1,
+    "city": "Växjö",
+    "driveZone": {
+      "latitude": 56.89205,
+      "longitude": 14.79823,
+      "radius_km2": 11.19
+    },
+    "parkZones": [
+      {
+        "name": "Park zone 1",
+        "latitude": 56.88647,
+        "longitude": 14.79122,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Park zone 2",
+        "latitude": 56.88637,
+        "longitude": 14.80038,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Park zone 3",
+        "latitude": 56.89117,
+        "longitude": 14.80345,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Park zone 4",
+        "latitude": 56.89652,
+        "longitude": 14.80933,
+        "radius_km2": 0.01
+      }
+    ],
+    "chargingZones": [
+      {
+        "name": "Charging zone 1",
+        "latitude": 56.87830,
+        "longitude": 14.81446,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Charging zone 2",
+        "latitude": 56.88760,
+        "longitude": 14.77717,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Charging zone 3",
+        "latitude": 56.89665,
+        "longitude": 14.79141,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Charging zone 4",
+        "latitude": 56.88819,
+        "longitude": 14.82003,
+        "radius_km2": 0.01
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "city": "Karlskrona centrum",
+    "driveZone": {
+      "latitude": 56.16206,
+      "longitude": 15.58834,
+      "radius_km2": 0.61
+    },
+    "parkZones": [
+      {
+        "name": "Park zone 1",
+        "latitude": 56.16244,
+        "longitude": 15.58232,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Park zone 2",
+        "latitude": 56.16547,
+        "longitude": 15.58840,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Park zone 3",
+        "latitude": 56.16330,
+        "longitude": 15.59408,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Park zone 4",
+        "latitude": 56.15953,
+        "longitude": 15.59164,
+        "radius_km2": 0.01
+      }
+    ],
+    "chargingZones": [
+      {
+        "name": "Charging zone 1",
+        "latitude": 56.16152,
+        "longitude": 15.58689,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Charging zone 2",
+        "latitude": 56.16088,
+        "longitude": 15.58245,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Charging zone 3",
+        "latitude": 56.16203,
+        "longitude": 15.59153,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Charging zone 4",
+        "latitude": 56.16509,
+        "longitude": 15.58672,
+        "radius_km2": 0.01
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "city": "Malmö",
+    "driveZone": {
+      "latitude": 55.57582,
+      "longitude": 13.00644,
+      "radius_km2": 46.62
+    },
+    "parkZones": [
+      {
+        "name": "Park zone 1",
+        "latitude": 55.59147,
+        "longitude": 12.96790,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Park zone 2",
+        "latitude": 55.58934,
+        "longitude": 13.04411,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Park zone 3",
+        "latitude": 55.56155,
+        "longitude": 13.04047,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Park zone 4",
+        "latitude": 55.56066,
+        "longitude": 12.98234,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Park zone 5",
+        "latitude": 55.57487,
+        "longitude": 12.99909
+      },
+      {
+        "name": "Park zone 6",
+        "latitude": 55.58038,
+        "longitude": 13.01669
+      }
+    ],
+    "chargingZones": [
+      {
+        "name": "Charging zone 1",
+        "latitude": 55.58907,
+        "longitude": 12.98320,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Charging zone 2",
+        "latitude": 55.58975,
+        "longitude": 13.02968,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Charging zone 3",
+        "latitude": 55.56238,
+        "longitude": 13.02931,
+        "radius_km2": 0.01
+      },
+      {
+        "name": "Charging zone 4",
+        "latitude": 55.57994,
+        "longitude": 12.97170,
+        "radius_km2": 0.01
+      }
+    ]
+  }
+]
