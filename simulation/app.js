@@ -90,4 +90,6 @@ testRent();
 // - get the scooters to show up in frontend map
 
 // - work together to create "rent" in frontend and backend. 
-//
+
+
+// - kom ihåg att jobba i branches, superviktigt. 
