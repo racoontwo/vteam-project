@@ -25,21 +25,48 @@ import { ObjectId } from 'mongodb';
 //     }
 // }
 
-async function getCollectionData() {
-    let data = [];
-    try {
-        const getCollectionData = await database.listCollections();
-        console.log(getCollectionData);
+// async function rentScooter(userID, scooterID) {
+//     try {
+//         const scootersData = await database.getAllScooters('scooters');
 
-    } catch (error) {
-        console.error('Error loading scooters or monitoring:', error.message);
+//         scooters.forEach(scooter => {
+//             scooter.startPrintingLocation();
+//         });
+
+
+//     } catch (error) {
+//         console.error('Error loading scooters or monitoring:', error.message);
+//     }
+// }
+
+// async function getCollectionData() {
+//     let data = [];
+//     try {
+//         // const getCollectionData = await database.listCollections();
+//         const getCollectionData = await database.getAllScooters('scooters');
+//         console.log(getCollectionData);
+
+//     } catch (error) {
+//         console.error('Error loading scooters or monitoring:', error.message);
+//     }
+
+// }
+
+async function testRent() {
+        try {
+            // const getCollectionData = await database.listCollections();
+            let scooter = await Scooter.loadObjectScooter("6761f728b2bfdd488eb5c71e");
+            scooter.startTrip();
+    
+        } catch (error) {
+            console.error('Error loading scooters or monitoring:', error.message);
+        }
+    
     }
 
-}
-
-
-getCollectionData();
+// getCollectionData();
 // liveFeed();
+testRent();
 
 
 //KRAV
@@ -56,3 +83,11 @@ getCollectionData();
 
 //tanke kring användning - vid "rent" - ladda cykeln, kör trip, stanna cykeln, spara cykeln, "ändra status"
 //var 30 sekund så sparas datan
+
+
+//next Meeting
+// - can we get a user to rent a scooter?
+// - get the scooters to show up in frontend map
+
+// - work together to create "rent" in frontend and backend. 
+//

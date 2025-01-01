@@ -112,6 +112,18 @@ export async function updateStatus() {
     }
 }
 
+export async function rentScooter(scooterID) {
+    // Use a default scooter ID if none is provided
+    scooterID = scooterID || "6761f728b2bfdd488eb5c71e";
+    let scooter = await Scooter.loadObjectScooter(scooterID);
+    
+    scooter.status = "rented";
+    scooter.printInfo();
+    await scooter.save();
+    
+    return scooter;
+}
+
 
 async function utils() {
     const args = process.argv.slice(2);
@@ -125,14 +137,17 @@ async function utils() {
 
     switch (command) {
         case 'custom':
-            let scooter = await Scooter.loadObjectScooter("676072689bbf8ed45f57d2d3");
+            let scooter = await Scooter.loadObjectScooter("6761f728b2bfdd488eb5c71e");
             // console.log(scooter);
-            scooter.battery = 37;
+            scooter.status = "available";
             scooter.printInfo();
             scooter.save();
-            let again = await Scooter.loadObjectScooter("676072689bbf8ed45f57d2d3");
+            let again = await Scooter.loadObjectScooter("6761f728b2bfdd488eb5c71e");
             again.printInfo();
 
+            break;
+        case 'rentScooter':
+            await rentScooter("6761f728b2bfdd488eb5c71e");
             break;
         case 'addScooter':
             await util.addOne();

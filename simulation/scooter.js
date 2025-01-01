@@ -14,10 +14,11 @@ export default class Scooter {
         this.tripLog = ": [ObjectId], (referens till Trips)";
     };
 
-    startTrip(coordinates) {
+    async startTrip() {
         if (this.status === "available") {
-            console.log(`Trip started at coordinates: ${coordinates}`);
+            console.log(`Trip started at coordinates: ${this.location}`);
             this.setStatus("rented");
+            this.save();
         } else {
             console.log("Trip cannot be started. Current status:", this.status);
         }
