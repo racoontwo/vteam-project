@@ -9,23 +9,37 @@ import { ObjectId } from 'mongodb';
 // create update function that writes to the database. - done
 
 
-async function liveFeed() {
-    let scooters = [];
+// async function liveFeed() {
+//     let scooters = [];
+//     try {
+//         const scootersData = await database.getAllScooters('scooters');
+//         scooters = scootersData.map(scooterData => Scooter.createFromDb(scooterData));
+
+//         scooters.forEach(scooter => {
+//             scooter.startPrintingLocation();
+//         });
+
+
+//     } catch (error) {
+//         console.error('Error loading scooters or monitoring:', error.message);
+//     }
+// }
+
+async function getCollectionData() {
+    let data = [];
     try {
-        const scootersData = await database.getAllScooters('scooters');
-        scooters = scootersData.map(scooterData => Scooter.createFromDb(scooterData));
-
-        scooters.forEach(scooter => {
-            scooter.startPrintingLocation();
-        });
-
+        const getCollectionData = await database.listCollections();
+        console.log(getCollectionData);
 
     } catch (error) {
         console.error('Error loading scooters or monitoring:', error.message);
     }
+
 }
 
-liveFeed();
+
+getCollectionData();
+// liveFeed();
 
 
 //KRAV
