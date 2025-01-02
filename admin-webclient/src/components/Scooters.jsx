@@ -6,11 +6,13 @@ function Scooters({ isLoggedIn }) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [expandedRows, setExpandedRows] = useState([]);
-    const baseUrl = "http://localhost:4000";
+    //const baseUrl = import.meta.env.VITE_BASE_URL;
+    const baseUrl = "http://localhost:4000"; // mock api server
     const apiKey = import.meta.env.VITE_API_KEY;
 
     useEffect(() => {
-        const fetchCustomer = async () => {
+        // Fetch scooters from the API
+        const fetchScooter = async () => {
             try {
                 const response = await fetch(`${baseUrl}/scooters`, {
                     headers: {  
@@ -29,9 +31,10 @@ function Scooters({ isLoggedIn }) {
             }
         };
 
-        fetchCustomer();
+        fetchScooter();
     }, [baseUrl]);
 
+    // Handle row expansion to show more details
     const handleExpand = (ScooterId) => {
         if (expandedRows.includes(ScooterId)) {
             setExpandedRows(expandedRows.filter(id => id !== ScooterId));
@@ -39,7 +42,7 @@ function Scooters({ isLoggedIn }) {
             setExpandedRows([...expandedRows, ScooterId]);
         }
     };
-
+    // Delete scooter by id
     const handleDelete = async (ScooterId) => {
         try {
             const response = await fetch(`${baseUrl}/api/v1/scooters/delete-one-scooter`, {
@@ -55,6 +58,7 @@ function Scooters({ isLoggedIn }) {
                 throw new Error('Failed to delete scooter');
             }
 
+            // Update the state to remove the deleted scooter
             setScooters({ data: scooters.data.filter(scooter => scooter.id !== ScooterId) });
 
         } catch (error) {
@@ -62,6 +66,7 @@ function Scooters({ isLoggedIn }) {
         }
     };
 
+    // Show a message if the user is not logged in
     if (!isLoggedIn) {
         return (
             <div className="scooters">
@@ -101,9 +106,11 @@ function Scooters({ isLoggedIn }) {
                                 </tr>
                                 {expandedRows.includes(scooter.id) && (
                                     <tr className="expanded">
-                                        <td colSpan="3">
+                                        <td colSpan="4">
                                             <div className="expanded-content">
-                                                <p>{scooter.status} {scooter.battery}</p>
+                                                <p>Location: {scooter.location.latitude}, {scooter.location.longitude}</p>
+                                                <p>User: {scooter.user}</p>
+                                                <p>Trip Log: {scooter.tripLog}</p>
                                                 <button onClick={() => handleDelete(scooter.id)}>Delete</button>
                                             </div>
                                         </td>
