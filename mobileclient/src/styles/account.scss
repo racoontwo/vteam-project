@@ -1,5 +1,24 @@
 @use 'variables';
 
 .account {
-    text-align: center;
+    input {
+        width: 100%;
+    }
+
+    .name-inputs {
+        display: flex;
+        gap: 1rem;
+
+        input {
+            flex: 1;
+        }
+    }
+}
+
+.delete-button {
+    background-color: variables.$color-red;
+    
+    &:hover {
+        background-color: variables.$color-red2;
+    }
 }
