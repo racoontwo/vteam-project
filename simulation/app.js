@@ -5,6 +5,7 @@ import database from './modules/scooter_db.js';
 import Scooter from './scooter.js';
 import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
 import { ObjectId } from 'mongodb';
+import { calculateDistance, interpolateCoords, simulateMovement, simulateMovementWithSpeed } from './modules/locationTracker.js';
 
 // create update function that writes to the database. - done
 
@@ -65,11 +66,35 @@ async function testRent() {
     
     }
 
-getCollectionData();
+let randomCos1 = getRandomCoordinates();
+let randomCos2 = getRandomCoordinates();
+
+
+
+let distance = calculateDistance(randomCos1, randomCos2);
+console.log("randomCos1:", randomCos1);
+console.log("randomCos2:", randomCos2);
+console.log("distance:", distance);
+
+// getCollectionData();
 console.log(process.env.AMOUNT_OF_SCOOTERS);
 console.log(process.env.PERCENT_TO_RUN);
 // liveFeed();
 // testRent();
+
+// simulateMovement(randomCos1, randomCos2, 5000, 500);
+
+
+// Example Usage:
+const startCoords = { latitude: 10.0, longitude: 20.0 };
+const endCoords = { latitude: 10.5, longitude: 20.5 };
+const speedKmh = 20000; // 20 km/h
+const updateInterval = 1000; // Update every second (1000 ms)
+
+const distanceBetween = calculateDistance(startCoords, endCoords);
+console.log(distanceBetween);
+
+simulateMovementWithSpeed(startCoords, endCoords, speedKmh, updateInterval);
 
 
 //KRAV
