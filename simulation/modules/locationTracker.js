@@ -47,30 +47,6 @@ export function interpolateCoords(start, end, fraction) {
     };
 }
 
-export function simulateMovement(start, end, duration, updateInterval) {
-    const totalSteps = Math.ceil(duration / updateInterval); // Total steps based on duration and update interval
-    let currentStep = 0;
-
-    const intervalId = setInterval(() => {
-        // Calculate the fraction for the current step
-        const fraction = currentStep / totalSteps;
-
-        // Interpolate the coordinates
-        const currentCoords = interpolateCoords(start, end, fraction);
-
-        // Log the current position
-        console.log(`Step ${currentStep}: Latitude: ${currentCoords.latitude}, Longitude: ${currentCoords.longitude}`);
-
-        // Check if we've reached the end
-        if (currentStep >= totalSteps) {
-            clearInterval(intervalId);
-            console.log("Simulation complete.");
-        }
-
-        currentStep++;
-    }, updateInterval);
-}
-
 
 export function simulateMovementWithSpeed(start, end, speedKmh, updateInterval) {
     const totalDistance = calculateDistance(start, end); // Total distance in km

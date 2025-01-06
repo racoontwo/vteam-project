@@ -3,11 +3,10 @@ dotenv.config();
 
 import database from './modules/scooter_db.js';
 import Scooter from './scooter.js';
-import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
+import {jondoe, getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
 import { ObjectId } from 'mongodb';
-import { calculateDistance, interpolateCoords, simulateMovement, simulateMovementWithSpeed } from './modules/locationTracker.js';
+import { calculateDistance, interpolateCoords, simulateMovementWithSpeed } from './modules/locationTracker.js';
 
-// create update function that writes to the database. - done
 
 
 // async function liveFeed() {
@@ -53,18 +52,15 @@ async function getCollectionData() {
 
 }
 
-async function testRent() {
-        try {
-            // const getCollectionData = await database.listCollections();
-            let scooter = await Scooter.loadObjectScooter("6761f728b2bfdd488eb5c71e");
-            scooter.setStatus("available");
-            scooter.startTrip();
+
+
+    console.log(jondoe._id);
+    // create update function that writes to the database. - done
     
-        } catch (error) {
-            console.error('Error loading scooters or monitoring:', error.message);
-        }
     
-    }
+    // create simulation for 1 scooter
+    
+    
 
 let randomCos1 = getRandomCoordinates();
 let randomCos2 = getRandomCoordinates();
@@ -80,7 +76,6 @@ console.log("distance:", distance);
 console.log(process.env.AMOUNT_OF_SCOOTERS);
 console.log(process.env.PERCENT_TO_RUN);
 // liveFeed();
-// testRent();
 
 // simulateMovement(randomCos1, randomCos2, 5000, 500);
 

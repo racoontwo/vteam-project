@@ -5,6 +5,15 @@ import database from './modules/scooter_db.js';
 import Scooter from './scooter.js';
 import { ObjectId } from 'mongodb';
 
+export const jondoe = {
+    _id: "id123456789",
+    name: "Jon Doe",
+    email: "jondoe@odduser.com",
+    balance: "456 (kontosaldo)",
+    rentalHistory: "[Objectld], (referens till Trips)",
+    paymentHistory: "[Objectld], (referens till Betalningar)"
+    }
+
 
 export function getRandomCoordinates() {
     const latitude = (Math.random() * 180 - 90).toFixed(6); // Latitude range: -90 to +90
