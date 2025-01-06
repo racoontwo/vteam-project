@@ -48,7 +48,8 @@ export function interpolateCoords(start, end, fraction) {
 }
 
 
-export function simulateMovementWithSpeed(start, end, speedKmh, updateInterval) {
+export function simulateMovementWithSpeed(start, end, speedKmh) {
+    const updateInterval = 500;
     const totalDistance = calculateDistance(start, end); // Total distance in km
     const speedPerMs = speedKmh / 3600000; // Speed in km/ms
     const stepDistance = speedPerMs * updateInterval; // Distance covered per update interval

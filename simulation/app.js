@@ -39,46 +39,64 @@ import { calculateDistance, interpolateCoords, simulateMovementWithSpeed } from 
 //     }
 // }
 
+
 async function getCollectionData() {
-    let data = [];
     try {
         const getCollectionData = await database.listCollections();
-        // const getCollectionData = await database.getAllScooters('scooters');
-        console.log(getCollectionData);
+        return getCollectionData;
 
     } catch (error) {
         console.error('Error loading scooters or monitoring:', error.message);
     }
-
 }
 
 
+async function getFirstScooter() {
+    try {
+        // Fetch all scooters from the collection
+        const scooters = await database.getAllScooters('scooters');
+        return scooters; // Returns an array of scooters
+    } catch (error) {
+        console.error('Error loading scooters or monitoring:', error.message);
+    }
+}
 
-    console.log(jondoe._id);
-    // create update function that writes to the database. - done
-    
-    
-    // create simulation for 1 scooter
-    
-    
+async function simulateStartTrip(userID, scooterID) {
+    try {
+        // Load the scooter object based on its ID
+        let scooter = await Scooter.loadObjectScooter(scooterID);
+        let coordinates = scooter.location; // Get the scooter's current location
+        let destination = getRandomCoordinates(); // Generate a random destination
+        simulateMovementWithSpeed(coordinates, destination, process.env.SCOOTER_SPEED); // Simulate movement
+    } catch (error) {
+        console.error('Error simulating trip:', error.message);
+    }
+}
 
-let randomCos1 = getRandomCoordinates();
-let randomCos2 = getRandomCoordinates();
+// Main function to initialize the simulation
+(async function main() {
+    try {
+        // Get the collection of scooters
+        let scooters = await getFirstScooter();
 
+        if (scooters && scooters.length > 0) {
+            // Get the first scooter's ID
+            let firstScooterID = scooters[0]._id;
 
+            // Simulate a trip for the first scooter
+            await simulateStartTrip(jondoe._id, firstScooterID, process.env.SCOOTER_SPEED);
+            console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
+        } else {
+            console.log('No scooters found in the collection.');
+        }
+    } catch (error) {
+        console.error('Error during simulation:', error.message);
+    }
+})();
 
-let distance = calculateDistance(randomCos1, randomCos2);
-console.log("randomCos1:", randomCos1);
-console.log("randomCos2:", randomCos2);
-console.log("distance:", distance);
 
 // getCollectionData();
-console.log(process.env.AMOUNT_OF_SCOOTERS);
-console.log(process.env.PERCENT_TO_RUN);
 // liveFeed();
-
-// simulateMovement(randomCos1, randomCos2, 5000, 500);
-
 
 // Example Usage:
 const startCoords = { latitude: 10.0, longitude: 20.0 };
@@ -89,7 +107,7 @@ const updateInterval = 1000; // Update every second (1000 ms)
 const distanceBetween = calculateDistance(startCoords, endCoords);
 console.log(distanceBetween);
 
-simulateMovementWithSpeed(startCoords, endCoords, speedKmh, updateInterval);
+// simulateMovementWithSpeed(startCoords, endCoords, speedKmh, updateInterval);
 
 
 //KRAV
@@ -108,11 +126,3 @@ simulateMovementWithSpeed(startCoords, endCoords, speedKmh, updateInterval);
 //skapa Trips-class som är kopplat till användare, cykel laddas, triplog sparas i cykel efter completed trip. 
 //kolla med Patrik om det är samma sak som "rentals" - ska vi ha det i back-end till exempel?
 
-//var 30 sekund så sparas data
-
-
-//next Meeting
-// - can we get a user to rent a scooter?
-// - get the scooters to show up in frontend map
-// - work together to create "rent" in frontend and backend. 
-// - kom ihåg att jobba i branches, blir mkt lättare då.
