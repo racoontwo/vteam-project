@@ -39,23 +39,24 @@ import { ObjectId } from 'mongodb';
 //     }
 // }
 
-// async function getCollectionData() {
-//     let data = [];
-//     try {
-//         // const getCollectionData = await database.listCollections();
-//         const getCollectionData = await database.getAllScooters('scooters');
-//         console.log(getCollectionData);
+async function getCollectionData() {
+    let data = [];
+    try {
+        const getCollectionData = await database.listCollections();
+        // const getCollectionData = await database.getAllScooters('scooters');
+        console.log(getCollectionData);
 
-//     } catch (error) {
-//         console.error('Error loading scooters or monitoring:', error.message);
-//     }
+    } catch (error) {
+        console.error('Error loading scooters or monitoring:', error.message);
+    }
 
-// }
+}
 
 async function testRent() {
         try {
             // const getCollectionData = await database.listCollections();
             let scooter = await Scooter.loadObjectScooter("6761f728b2bfdd488eb5c71e");
+            scooter.setStatus("available");
             scooter.startTrip();
     
         } catch (error) {
@@ -64,9 +65,11 @@ async function testRent() {
     
     }
 
-// getCollectionData();
+getCollectionData();
+console.log(process.env.AMOUNT_OF_SCOOTERS);
+console.log(process.env.PERCENT_TO_RUN);
 // liveFeed();
-testRent();
+// testRent();
 
 
 //KRAV
@@ -82,14 +85,14 @@ testRent();
 
 
 //tanke kring användning - vid "rent" - ladda cykeln, kör trip, stanna cykeln, spara cykeln, "ändra status"
-//var 30 sekund så sparas datan
+//skapa Trips-class som är kopplat till användare, cykel laddas, triplog sparas i cykel efter completed trip. 
+//kolla med Patrik om det är samma sak som "rentals" - ska vi ha det i back-end till exempel?
+
+//var 30 sekund så sparas data
 
 
 //next Meeting
 // - can we get a user to rent a scooter?
 // - get the scooters to show up in frontend map
-
 // - work together to create "rent" in frontend and backend. 
-
-
-// - kom ihåg att jobba i branches, superviktigt. 
+// - kom ihåg att jobba i branches, blir mkt lättare då.

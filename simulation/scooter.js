@@ -15,14 +15,28 @@ export default class Scooter {
     };
 
     async startTrip() {
-        if (this.status === "available") {
-            console.log(`Trip started at coordinates: ${this.location}`);
-            this.setStatus("rented");
-            this.save();
-        } else {
+        if (this.status !== "available") {
             console.log("Trip cannot be started. Current status:", this.status);
+            return;
         }
+    
+        console.log(`Trip started at coordinates: ${this.location}`);
+        this.setStatus("rented");
+        this.save();
     }
+    
+
+    async endTrip() {
+        if (this.status !== "rented") {
+            console.log("Trip cannot be ended. Current status:", this.status);
+            return;
+        }
+    
+        console.log(`Trip ended at coordinates: ${this.location}`);
+        this.setStatus(this.battery > 10 ? "available" : "off");
+        this.save();
+    }
+    
     printLiveLocation() {
         console.log(this.location);
         return this.location;
@@ -162,7 +176,7 @@ export default class Scooter {
     }
 
     setStatus(newStatus) {
-        const validStatuses = ["available", "rented", "maintenance", "charging"];
+        const validStatuses = ["available", "rented", "maintenance", "charging", "off"];
         if (!validStatuses.includes(newStatus)) {
             throw new Error(`Invalid status: ${newStatus}. Must be one of: ${validStatuses.join(", ")}`);
         }
