@@ -7,7 +7,7 @@ import Scooter from './scooter.js';
 import {jondoe, getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
 import { ObjectId } from 'mongodb';
 import { calculateDistance, interpolateCoords, simulateMovementWithSpeed } from './modules/locationTracker.js';
-import cities  from './modules/cities_db.js'
+import cities from './modules/cities_db.js'
 
 
 
@@ -38,19 +38,32 @@ async function simulateStartTrip(userID, scooterID) {
     }
 }
 
-async function getCities() {
+// async function getCities() {
+//     try {
+//         const result = await database.getAll('cities_locations');
+//         return result;
+//     } catch (error) {
+//         console.error('Error fetching scooters:', error);
+//         throw new Error('Failed to fetch scooters');
+//     }
+// }
+
+// let result = await getCities();
+// console.log(result);
+
+(async () => {
     try {
-        const result = await database.getAll('cities_locations');
-        return result;
+        const cityName = 'Växjö'; // Change this variable to fetch data for another city
+        const parkingZones = await cities.getParkingZones(cityName);
+
+        console.log(`Parking Zones for ${cityName}:`);
+        parkingZones.forEach((zone, index) => {
+            console.log(`  Zone ${index + 1}:`, zone);
+        });
     } catch (error) {
-        console.error('Error fetching scooters:', error);
-        throw new Error('Failed to fetch scooters');
+        console.error('Error:', error.message);
     }
-}
-
-let result = await getCities();
-console.log(result);
-
+})();
 
 // Main function to initialize the simulation
 // (async function main() {
