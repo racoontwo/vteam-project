@@ -76,6 +76,10 @@ export function simulateMovementWithSpeed(start, end, speedKmh) {
     }, updateInterval);
 }
 
+export function getCoordinates() {
+    
+}
+
 
 // // Example Usage:
 // const startCoords = { latitude: 10.0, longitude: 20.0 };

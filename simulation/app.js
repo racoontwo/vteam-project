@@ -2,10 +2,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import database from './modules/scooter_db.js';
+import db from './modules/db.js';
 import Scooter from './scooter.js';
 import {jondoe, getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
 import { ObjectId } from 'mongodb';
 import { calculateDistance, interpolateCoords, simulateMovementWithSpeed } from './modules/locationTracker.js';
+import cities  from './modules/cities_db.js'
 
 
 
@@ -25,87 +27,60 @@ import { calculateDistance, interpolateCoords, simulateMovementWithSpeed } from 
 //     }
 // }
 
-// async function rentScooter(userID, scooterID) {
-//     try {
-//         const scootersData = await database.getAllScooters('scooters');
-
-//         scooters.forEach(scooter => {
-//             scooter.startPrintingLocation();
-//         });
-
-
-//     } catch (error) {
-//         console.error('Error loading scooters or monitoring:', error.message);
-//     }
-// }
-
-
-async function getCollectionData() {
-    try {
-        const getCollectionData = await database.listCollections();
-        return getCollectionData;
-
-    } catch (error) {
-        console.error('Error loading scooters or monitoring:', error.message);
-    }
-}
-
-
-async function getFirstScooter() {
-    try {
-        // Fetch all scooters from the collection
-        const scooters = await database.getAllScooters('scooters');
-        return scooters; // Returns an array of scooters
-    } catch (error) {
-        console.error('Error loading scooters or monitoring:', error.message);
-    }
-}
 
 async function simulateStartTrip(userID, scooterID) {
     try {
         // Load the scooter object based on its ID
         let scooter = await Scooter.loadObjectScooter(scooterID);
-        let coordinates = scooter.location; // Get the scooter's current location
-        let destination = getRandomCoordinates(); // Generate a random destination
-        simulateMovementWithSpeed(coordinates, destination, process.env.SCOOTER_SPEED); // Simulate movement
+        simulateMovementWithSpeed(scooter.location, getRandomCoordinates(), process.env.SCOOTER_SPEED); // Simulate movement
     } catch (error) {
         console.error('Error simulating trip:', error.message);
     }
 }
 
-// Main function to initialize the simulation
-(async function main() {
+async function getCities() {
     try {
-        // Get the collection of scooters
-        let scooters = await getFirstScooter();
-
-        if (scooters && scooters.length > 0) {
-            // Get the first scooter's ID
-            let firstScooterID = scooters[0]._id;
-
-            // Simulate a trip for the first scooter
-            await simulateStartTrip(jondoe._id, firstScooterID, process.env.SCOOTER_SPEED);
-            console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
-        } else {
-            console.log('No scooters found in the collection.');
-        }
+        const result = await getAll('cities_locations');
+        return result;
     } catch (error) {
-        console.error('Error during simulation:', error.message);
+        console.error('Error fetching scooters:', error);
+        throw new Error('Failed to fetch scooters');
     }
-})();
+}
 
 
-// getCollectionData();
-// liveFeed();
+
+// Main function to initialize the simulation
+// (async function main() {
+//     try {
+//         // Get the collection of scooters
+//         let scooters = await getScooters();
+
+//         if (scooters && scooters.length > 0) {
+//             // Get the first scooter's ID
+//             let firstScooterID = scooters[0]._id;
+
+//             // Simulate a trip for the first scooter
+//             await simulateStartTrip(jondoe._id, firstScooterID);
+//             console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
+//         } else {
+//             console.log('No scooters found in the collection.');
+//         }
+//     } catch (error) {
+//         console.error('Error during simulation:', error.message);
+//     }
+// })();
+
+
 
 // Example Usage:
-const startCoords = { latitude: 10.0, longitude: 20.0 };
-const endCoords = { latitude: 10.5, longitude: 20.5 };
-const speedKmh = 20000; // 20 km/h
-const updateInterval = 1000; // Update every second (1000 ms)
+// const startCoords = { latitude: 10.0, longitude: 20.0 };
+// const endCoords = { latitude: 10.5, longitude: 20.5 };
+// const speedKmh = 20000; // 20 km/h
+// const updateInterval = 1000; // Update every second (1000 ms)
 
-const distanceBetween = calculateDistance(startCoords, endCoords);
-console.log(distanceBetween);
+// const distanceBetween = calculateDistance(startCoords, endCoords);
+// console.log(distanceBetween);
 
 // simulateMovementWithSpeed(startCoords, endCoords, speedKmh, updateInterval);
 

@@ -1,0 +1,62 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+import { MongoClient } from "mongodb";
+
+// Connect to the database
+export async function connectDB() {
+    let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@elsparkcyklar.svx9m.mongodb.net/?retryWrites=true&w=majority&appName=Elsparkcyklar`;
+
+    // Uses a local database for testing
+    if (process.env.NODE_ENV === "test") {
+        dsn = `mongodb://localhost:27017/test`;
+    }
+
+    const client = await MongoClient.connect(dsn);
+    const db = client.db();
+
+    return {
+        db: db,
+        client: client
+    };
+}
+
+// Get the collection you want from the database
+export async function getCollection(collectionName) {
+    const database = await connectDB();
+    const collection = database.db.collection(collectionName);
+    return {
+        collection: collection,
+        client: database.client
+    };
+}
+
+export async function getAll(collectionName) {
+    try {
+        const db = await getCollection(collectionName);
+        const result = await db.collection.find({}).toArray();
+
+        await db.client.close();
+        return result;
+    } catch (error) {
+        console.error(`Error fetching data from collection "${collectionName}":`, error);
+        throw new Error(`Failed to fetch data from collection "${collectionName}"`);
+    }
+}
+
+
+// List all collections in the database
+export async function listCollections() {
+    const database = await connectDB();
+    try {
+        const collections = await database.db.listCollections().toArray();
+        console.log("Collections:", collections.map(collection => collection.name));
+    } catch (err) {
+        console.error("Error listing collections:", err);
+    } finally {
+        await database.client.close();
+    }
+}
+
+// Example usage
+// listCollections().catch(console.error);
