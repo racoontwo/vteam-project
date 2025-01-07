@@ -1,10 +1,11 @@
+
 import dotenv from 'dotenv';
 dotenv.config();
 
 import { MongoClient } from "mongodb";
 
 // Connect to the database
-export async function connectDB() {
+async function connectDB() {
     let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@elsparkcyklar.svx9m.mongodb.net/?retryWrites=true&w=majority&appName=Elsparkcyklar`;
 
     // Uses a local database for testing
@@ -21,8 +22,8 @@ export async function connectDB() {
     };
 }
 
-// Get the collection you want from the database
-export async function getCollection(collectionName) {
+// Get the collection object itself you want from the database
+async function getCollection(collectionName) {
     const database = await connectDB();
     const collection = database.db.collection(collectionName);
     return {
@@ -31,7 +32,8 @@ export async function getCollection(collectionName) {
     };
 }
 
-export async function getAll(collectionName) {
+// Fetches all documents or records from a collection.
+async function getAll(collectionName) {
     try {
         const db = await getCollection(collectionName);
         const result = await db.collection.find({}).toArray();
@@ -44,9 +46,8 @@ export async function getAll(collectionName) {
     }
 }
 
-
 // List all collections in the database
-export async function listCollections() {
+async function listCollections() {
     const database = await connectDB();
     try {
         const collections = await database.db.listCollections().toArray();
@@ -60,3 +61,10 @@ export async function listCollections() {
 
 // Example usage
 // listCollections().catch(console.error);
+
+export default {
+    connectDB, 
+    getCollection,
+    getAll,
+    listCollections
+}

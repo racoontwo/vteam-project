@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import database from './modules/scooter_db.js';
-import {getAll} from './modules/db.js';
+// import scooterbase from './modules/scooter_db.js';
+import database from './modules/db.js';
 import Scooter from './scooter.js';
 import {jondoe, getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
 import { ObjectId } from 'mongodb';
@@ -14,7 +14,7 @@ import cities  from './modules/cities_db.js'
 // async function liveFeed() {
 //     let scooters = [];
 //     try {
-//         const scootersData = await database.getAllScooters('scooters');
+//         const scootersData = await scooterbase.getAllScooters('scooters');
 //         scooters = scootersData.map(scooterData => Scooter.createFromDb(scooterData));
 
 //         scooters.forEach(scooter => {
@@ -40,7 +40,7 @@ async function simulateStartTrip(userID, scooterID) {
 
 async function getCities() {
     try {
-        const result = await getAll('cities_locations');
+        const result = await database.getAll('cities_locations');
         return result;
     } catch (error) {
         console.error('Error fetching scooters:', error);

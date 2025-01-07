@@ -2,16 +2,13 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { MongoClient } from "mongodb";
-import { ObjectId } from 'mongodb';
-import { getCollection } from './db.js';
+import database from './db.js';
 
+const collectionName = 'cities_locations';
 
-const collectionName = "scooters";
-
-async function getAllCities(collectionName) {
+async function getAllCities() {
     try {
-        const db = await getCollection(collectionName); // Use the getCollection function
+        const db = await database.getCollection(collectionName); // Use the getCollection function
         const result = await db.collection.find({}).toArray();
 
         console.log(result);
@@ -19,15 +16,14 @@ async function getAllCities(collectionName) {
         await db.client.close();
         return result;
     } catch (error) {
-        console.error('Error fetching scooters:', error);
-        throw new Error('Failed to fetch scooters');
+        console.error('Error fetching cities_location:', error);
+        throw new Error('Failed to fetch cities_location');
     }
 }
 
-// let result = getAllCities(collectionName);
-// console.log(result);
+let result = await getAllCities();
+console.log(result);
 
 export default {  
     getAllCities,
 };
-
