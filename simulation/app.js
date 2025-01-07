@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import database from './modules/scooter_db.js';
-import db from './modules/db.js';
+import {getAll} from './modules/db.js';
 import Scooter from './scooter.js';
 import {jondoe, getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
 import { ObjectId } from 'mongodb';
@@ -48,6 +48,8 @@ async function getCities() {
     }
 }
 
+let result = await getCities();
+console.log(result);
 
 
 // Main function to initialize the simulation
