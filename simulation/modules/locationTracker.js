@@ -1,3 +1,6 @@
+
+import cities from './cities_db.js'
+
 // Location tracker module
 export const locationTracker = {
     location: "Initial Location",
@@ -47,7 +50,6 @@ export function interpolateCoords(start, end, fraction) {
     };
 }
 
-
 export function simulateMovementWithSpeed(start, end, speedKmh) {
     const updateInterval = 500;
     const totalDistance = calculateDistance(start, end); // Total distance in km
@@ -77,7 +79,7 @@ export function simulateMovementWithSpeed(start, end, speedKmh) {
 }
 
 export function getCoordinates() {
-    
+
 }
 
 

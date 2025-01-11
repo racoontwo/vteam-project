@@ -1,3 +1,4 @@
+
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -10,24 +11,6 @@ import { calculateDistance, interpolateCoords, simulateMovementWithSpeed } from 
 import cities from './modules/cities_db.js'
 
 
-
-// async function liveFeed() {
-//     let scooters = [];
-//     try {
-//         const scootersData = await scooterbase.getAllScooters('scooters');
-//         scooters = scootersData.map(scooterData => Scooter.createFromDb(scooterData));
-
-//         scooters.forEach(scooter => {
-//             scooter.startPrintingLocation();
-//         });
-
-
-//     } catch (error) {
-//         console.error('Error loading scooters or monitoring:', error.message);
-//     }
-// }
-
-
 async function simulateStartTrip(userID, scooterID) {
     try {
         // Load the scooter object based on its ID
@@ -38,18 +21,6 @@ async function simulateStartTrip(userID, scooterID) {
     }
 }
 
-// async function getCities() {
-//     try {
-//         const result = await database.getAll('cities_locations');
-//         return result;
-//     } catch (error) {
-//         console.error('Error fetching scooters:', error);
-//         throw new Error('Failed to fetch scooters');
-//     }
-// }
-
-// let result = await getCities();
-// console.log(result);
 
 (async () => {
     try {
@@ -116,3 +87,21 @@ async function simulateStartTrip(userID, scooterID) {
 //skapa Trips-class som är kopplat till användare, cykel laddas, triplog sparas i cykel efter completed trip. 
 //kolla med Patrik om det är samma sak som "rentals" - ska vi ha det i back-end till exempel?
 
+
+
+
+// async function liveFeed() {
+//     let scooters = [];
+//     try {
+//         const scootersData = await scooterbase.getAllScooters('scooters');
+//         scooters = scootersData.map(scooterData => Scooter.createFromDb(scooterData));
+
+//         scooters.forEach(scooter => {
+//             scooter.startPrintingLocation();
+//         });
+
+
+//     } catch (error) {
+//         console.error('Error loading scooters or monitoring:', error.message);
+//     }
+// }

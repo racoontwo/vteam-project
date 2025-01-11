@@ -52,8 +52,8 @@ async function getParkingZones(cityName) {
 // console.log(result);
 
 
-let result = await getCityData('Växjö');
-console.log(result);
+// let result = await getCityData('Växjö');
+// console.log(result);
 
 export default {  
     getAllCities,
