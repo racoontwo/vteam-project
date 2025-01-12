@@ -57,6 +57,7 @@ async function getDriveZone(cityName) {
     }
 }
 
+// function to get random coordinates within a city
 async function getRandomCityCoordinates(cityName) {
     try {
         const center = await getDriveZone(cityName);
@@ -87,7 +88,6 @@ async function getRandomCityCoordinates(cityName) {
         throw error;
     }
 }
-
 
 export default {  
     getAllCities,

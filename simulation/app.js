@@ -2,7 +2,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-// import scooterbase from './modules/scooter_db.js';
+import scooterbase from './modules/scooter_db.js';
 import database from './modules/db.js';
 import Scooter from './scooter.js';
 import {jondoe, getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
@@ -15,25 +15,29 @@ async function simulateStartTrip(userID, scooterID) {
     try {
         // Load the scooter object based on its ID
         let scooter = await Scooter.loadObjectScooter(scooterID);
-
-        simulateMovementWithSpeed(scooter.location, getRandomCoordinates(), process.env.SCOOTER_SPEED);
+        const cityName = 'Malmö'; // Change this variable to fetch data for another city
+        console.log('Starting at: ', scooter.location);
+        let destination = await cities.getRandomCityCoordinates(cityName);
+        console.log('Ending at:', destination);
+        simulateMovementWithSpeed(scooter.location, destination, process.env.SCOOTER_SPEED);
     } catch (error) {
         console.error('Error simulating trip:', error.message);
     }
 }
 
 
-(async () => {
-    try {
-        const cityName = 'Växjö'; // Change this variable to fetch data for another city
-        const citiData = await cities.getDriveZone(cityName);
-        console.log(citiData);
-        const randomLocation = await cities.getRandomCityCoordinates(cityName);
-        console.log(randomLocation);
-    } catch (error) {
-        console.error('Error:', error.message);
-    }
-})();
+// (async () => {
+//     try {
+//         const cityName = 'Växjö'; // Change this variable to fetch data for another city
+//         const citiData = await cities.getDriveZone(cityName);
+//         console.log(citiData);
+//         console.log(getRandomCoordinates());
+//         const randomLocation = await cities.getRandomCityCoordinates(cityName);
+//         console.log(randomLocation);
+//     } catch (error) {
+//         console.error('Error:', error.message);
+//     }
+// })();
 
 
 // (async () => {
@@ -50,26 +54,28 @@ async function simulateStartTrip(userID, scooterID) {
 //     }
 // })();
 
+
 // Main function to initialize the simulation
-// (async function main() {
-//     try {
-//         // Get the collection of scooters
-//         let scooters = await getScooters();
+(async function main() {
+    try {
+        // Get the collection of scooters
+        let scooters = await database.getAll('scooters');
 
-//         if (scooters && scooters.length > 0) {
-//             // Get the first scooter's ID
-//             let firstScooterID = scooters[0]._id;
+        if (scooters && scooters.length > 0) {
+            // Get the first scooter's ID
+            let firstScooterID = scooters[0]._id;
 
-//             // Simulate a trip for the first scooter
-//             await simulateStartTrip(jondoe._id, firstScooterID);
-//             console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
-//         } else {
-//             console.log('No scooters found in the collection.');
-//         }
-//     } catch (error) {
-//         console.error('Error during simulation:', error.message);
-//     }
-// })();
+
+            // Simulate a trip for the first scooter
+            await simulateStartTrip(jondoe._id, firstScooterID);
+            console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
+        } else {
+            console.log('No scooters found in the collection.');
+        }
+    } catch (error) {
+        console.error('Error during simulation:', error.message);
+    }
+})();
 
 
 
@@ -101,21 +107,3 @@ async function simulateStartTrip(userID, scooterID) {
 //skapa Trips-class som är kopplat till användare, cykel laddas, triplog sparas i cykel efter completed trip. 
 //kolla med Patrik om det är samma sak som "rentals" - ska vi ha det i back-end till exempel?
 
-
-
-
-// async function liveFeed() {
-//     let scooters = [];
-//     try {
-//         const scootersData = await scooterbase.getAllScooters('scooters');
-//         scooters = scootersData.map(scooterData => Scooter.createFromDb(scooterData));
-
-//         scooters.forEach(scooter => {
-//             scooter.startPrintingLocation();
-//         });
-
-
-//     } catch (error) {
-//         console.error('Error loading scooters or monitoring:', error.message);
-//     }
-// }

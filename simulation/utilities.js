@@ -3,6 +3,7 @@ dotenv.config();
 
 import database from './modules/scooter_db.js';
 import Scooter from './scooter.js';
+import cities from './modules/cities_db.js'
 import { ObjectId } from 'mongodb';
 
 export const jondoe = {
@@ -15,11 +16,14 @@ export const jondoe = {
     }
 
 
+
+
 export function getRandomCoordinates() {
-    const latitude = (Math.random() * 180 - 90).toFixed(6); // Latitude range: -90 to +90
-    const longitude = (Math.random() * 360 - 180).toFixed(6); // Longitude range: -180 to +180
+    const latitude = parseFloat((Math.random() * 180 - 90).toFixed(6)); // Latitude range: -90 to +90
+    const longitude = parseFloat((Math.random() * 360 - 180).toFixed(6)); // Longitude range: -180 to +180
     return { latitude, longitude };
 }
+
 
 export function getRandomBatteryLevel() {
         return Math.floor(Math.random() * 100) + 1;
@@ -47,7 +51,8 @@ export async function addWithCoordinates() {
 export async function addTenWithCoordinates() {
     let scooters = [];
     for (let i = 0; i < 10; i++) {
-        const randomCoordinates = getRandomCoordinates();
+        const randomCoordinates = await cities.getRandomCityCoordinates('Malmö');
+        console.log(randomCoordinates);
         const newScooter = new Scooter(randomCoordinates);
         let added = await database.addScooter(newScooter);
         console.log(`Scooter ${i + 1} with coordinates added:`, added);
@@ -189,6 +194,7 @@ async function utils() {
             const location = args.slice(2).join(' ');
             await updateLocation(scooterID, location);
             break;
+        
         case 'count':
             await countScooters();
             break;
