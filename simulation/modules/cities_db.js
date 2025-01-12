@@ -46,17 +46,53 @@ async function getParkingZones(cityName) {
     }
 }
 
+// Function to return the parking zones for a specific city
+async function getDriveZone(cityName) {
+    try {
+        const city = await getCityData(cityName);
+        return city.driveZone;
+    } catch (error) {
+        console.error(`Error fetching drive zone for "${cityName}":`, error);
+        throw error;
+    }
+}
 
-// example usage 
-// let result = await getAllCities();
-// console.log(result);
+async function getRandomCityCoordinates(cityName) {
+    try {
+        const center = await getDriveZone(cityName);
+        const { latitude, longitude, radius_km2 } = center;
 
+        // Convert radius from square kilometers to a circular radius in kilometers
+        const radius = Math.sqrt(radius_km2);
 
-// let result = await getCityData('Växjö');
-// console.log(result);
+        // Convert radius to degrees (approximately, assuming Earth is a sphere)
+        const radiusInDegrees = radius / 111; // 111 km ~ 1 degree of latitude
+
+        const angle = Math.random() * 2 * Math.PI;
+
+        const distance = Math.random() * radiusInDegrees;
+
+        const deltaLat = distance * Math.cos(angle);
+        const deltaLon = distance * Math.sin(angle) / Math.cos(latitude * (Math.PI / 180));
+
+        const randomLat = latitude + deltaLat;
+        const randomLon = longitude + deltaLon;
+
+        return {
+        latitude: randomLat,
+        longitude: randomLon,
+        };
+    } catch (error) {
+        console.error(`Error fetching drive zone for "${cityName}":`, error);
+        throw error;
+    }
+}
+
 
 export default {  
     getAllCities,
     getCityData,
-    getParkingZones
+    getParkingZones,
+    getDriveZone,
+    getRandomCityCoordinates
 };

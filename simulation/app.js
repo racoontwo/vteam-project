@@ -15,7 +15,8 @@ async function simulateStartTrip(userID, scooterID) {
     try {
         // Load the scooter object based on its ID
         let scooter = await Scooter.loadObjectScooter(scooterID);
-        simulateMovementWithSpeed(scooter.location, getRandomCoordinates(), process.env.SCOOTER_SPEED); // Simulate movement
+
+        simulateMovementWithSpeed(scooter.location, getRandomCoordinates(), process.env.SCOOTER_SPEED);
     } catch (error) {
         console.error('Error simulating trip:', error.message);
     }
@@ -25,16 +26,29 @@ async function simulateStartTrip(userID, scooterID) {
 (async () => {
     try {
         const cityName = 'Växjö'; // Change this variable to fetch data for another city
-        const parkingZones = await cities.getParkingZones(cityName);
-
-        console.log(`Parking Zones for ${cityName}:`);
-        parkingZones.forEach((zone, index) => {
-            console.log(`  Zone ${index + 1}:`, zone);
-        });
+        const citiData = await cities.getDriveZone(cityName);
+        console.log(citiData);
+        const randomLocation = await cities.getRandomCityCoordinates(cityName);
+        console.log(randomLocation);
     } catch (error) {
         console.error('Error:', error.message);
     }
 })();
+
+
+// (async () => {
+//     try {
+//         const cityName = 'Växjö'; // Change this variable to fetch data for another city
+//         const parkingZones = await cities.getParkingZones(cityName);
+
+//         console.log(`Parking Zones for ${cityName}:`);
+//         parkingZones.forEach((zone, index) => {
+//             console.log(`  Zone ${index + 1}:`, zone);
+//         });
+//     } catch (error) {
+//         console.error('Error:', error.message);
+//     }
+// })();
 
 // Main function to initialize the simulation
 // (async function main() {
