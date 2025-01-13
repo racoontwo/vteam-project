@@ -2,6 +2,8 @@ import database from './modules/scooter_db.js';
 import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
 
 export default class Scooter {
+    static updateInterval = 3000;
+
     constructor(location = {}, scooterID = null) {
         this.scooterID = scooterID; // the scooter recieves an ObjectID when imported in the db.
         this.location = location;
@@ -10,12 +12,70 @@ export default class Scooter {
         this.speed = 0;
         this.battery = Math.floor(Math.random() * 101);
         this.tripLog = ": [ObjectId], (referens till Trips)";
+    };
+
+    async startTrip() {
+        if (this.status !== "available") {
+            console.log("Trip cannot be started. Current status:", this.status);
+            return;
+        }
+    
+        console.log(`Trip started at coordinates: ${this.location}`);
+        this.setStatus("rented");
+        this.save();
+    }
+    
+
+    async endTrip() {
+        if (this.status !== "rented") {
+            console.log("Trip cannot be ended. Current status:", this.status);
+            return;
+        }
+    
+        console.log(`Trip ended at coordinates: ${this.location}`);
+        this.setStatus(this.battery > 10 ? "available" : "off");
+        this.save();
+    }
+    
+    printLiveLocation() {
+        console.log(this.location);
+        return this.location;
+    };
+
+    startPrintingLocation() {
+        setInterval(() => {
+            this.printLiveLocation();
+        }, Scooter.updateInterval);
     }
 
-    static async createNewScooter() {
-        let newScooter = new Scooter();
-        let added = await database.addScooter(newScooter);
-        console.log(added);
+    static createFromDb(jsonObject) {
+        try {
+            if (!jsonObject || typeof jsonObject !== "object") {
+                throw new Error("Invalid JSON object provided.");
+            }
+
+            const {
+                _id = null,
+                location = {},
+                user = "[ObjectID], referens till User",
+                status = "Off",
+                speed = 0,
+                battery = 100,
+                tripLog = [],
+            } = jsonObject;
+
+            const newScooter = new Scooter(location, _id);
+            newScooter.user = user;
+            newScooter.status = status;
+            newScooter.speed = speed;
+            newScooter.battery = battery;
+            newScooter.tripLog = tripLog;
+
+            return newScooter;
+        } catch (error) {
+            console.error("Error creating scooter from JSON:", error.message);
+            throw error;
+        }
     }
 
     static async loadObjectScooter(scooterID) {
@@ -117,7 +177,7 @@ export default class Scooter {
 
 
     setStatus(newStatus) {
-        const validStatuses = ["available", "rented", "maintenance", "charging"];
+        const validStatuses = ["available", "rented", "maintenance", "charging", "off"];
         if (!validStatuses.includes(newStatus)) {
             throw new Error(`Invalid status: ${newStatus}. Must be one of: ${validStatuses.join(", ")}`);
         }

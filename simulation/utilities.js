@@ -3,14 +3,27 @@ dotenv.config();
 
 import database from './modules/scooter_db.js';
 import Scooter from './scooter.js';
+import cities from './modules/cities_db.js'
 import { ObjectId } from 'mongodb';
+
+export const jondoe = {
+    _id: "id123456789",
+    name: "Jon Doe",
+    email: "jondoe@odduser.com",
+    balance: "456 (kontosaldo)",
+    rentalHistory: "[Objectld], (referens till Trips)",
+    paymentHistory: "[Objectld], (referens till Betalningar)"
+    }
+
+
 
 
 export function getRandomCoordinates() {
-    const latitude = (Math.random() * 180 - 90).toFixed(6); // Latitude range: -90 to +90
-    const longitude = (Math.random() * 360 - 180).toFixed(6); // Longitude range: -180 to +180
+    const latitude = parseFloat((Math.random() * 180 - 90).toFixed(6)); // Latitude range: -90 to +90
+    const longitude = parseFloat((Math.random() * 360 - 180).toFixed(6)); // Longitude range: -180 to +180
     return { latitude, longitude };
 }
+
 
 export function getRandomBatteryLevel() {
         return Math.floor(Math.random() * 100) + 1;
@@ -38,7 +51,8 @@ export async function addWithCoordinates() {
 export async function addTenWithCoordinates() {
     let scooters = [];
     for (let i = 0; i < 10; i++) {
-        const randomCoordinates = getRandomCoordinates();
+        const randomCoordinates = await cities.getRandomCityCoordinates('Malmö');
+        console.log(randomCoordinates);
         const newScooter = new Scooter(randomCoordinates);
         let added = await database.addScooter(newScooter);
         console.log(`Scooter ${i + 1} with coordinates added:`, added);
@@ -112,8 +126,20 @@ export async function updateStatus() {
     }
 }
 
+export async function rentScooter(scooterID) {
+    // Use a default scooter ID if none is provided
+    scooterID = scooterID || "6761f728b2bfdd488eb5c71e";
+    let scooter = await Scooter.loadObjectScooter(scooterID);
+    
+    scooter.status = "rented";
+    scooter.printInfo();
+    await scooter.save();
+    
+    return scooter;
+}
 
-async function main() {
+
+async function utils() {
     const args = process.argv.slice(2);
 
     if (args.length === 0) {
@@ -125,14 +151,17 @@ async function main() {
 
     switch (command) {
         case 'custom':
-            let scooter = await Scooter.loadObjectScooter("676072689bbf8ed45f57d2d3");
+            let scooter = await Scooter.loadObjectScooter("6761f728b2bfdd488eb5c71e");
             // console.log(scooter);
-            scooter.battery = 37;
+            scooter.status = "available";
             scooter.printInfo();
             scooter.save();
-            let again = await Scooter.loadObjectScooter("676072689bbf8ed45f57d2d3");
+            let again = await Scooter.loadObjectScooter("6761f728b2bfdd488eb5c71e");
             again.printInfo();
 
+            break;
+        case 'rentScooter':
+            await rentScooter("6761f728b2bfdd488eb5c71e");
             break;
         case 'addScooter':
             await util.addOne();
@@ -165,6 +194,7 @@ async function main() {
             const location = args.slice(2).join(' ');
             await updateLocation(scooterID, location);
             break;
+        
         case 'count':
             await countScooters();
             break;
@@ -175,4 +205,8 @@ async function main() {
     }
 }
 
-main()
+if (import.meta.url === `file://${process.argv[1]}`) {
+    utils();
+} else if (process.argv[1] === new URL(import.meta.url).pathname) {
+    utils();
+}
