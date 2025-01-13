@@ -1,28 +1,242 @@
 {
   "customers": [
     {
-      "id": "1",
-      "name": "test",
-      "email": "test",
-      "balance": 100
+        "id": "1",
+        "firstName": "test",
+        "lastName": "test",
+        "email": "test.test@test.com",
+        "balance": 100,
+        "rentalHistory": [
+            {
+                "id": "1",
+                "scooterId": "1",
+                "startTime": "2021-09-01T12:00:00",
+                "endTime": "2021-09-01T13:00:00",
+                "durationMinutes": 60,
+                "startLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "endLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "cost": 10
+            },
+            {
+                "id": "2",
+                "scooterId": "2",
+                "startTime": "2021-09-01T14:00:00",
+                "endTime": "2021-09-01T15:00:00",
+                "durationMinutes": 60,
+                "startLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "endLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "cost": 20
+            }
+        ]
     },
     {
-      "id": "2",
-      "name": "test2",
-      "email": "test2",
-      "balance": 200
+        "id": "2",
+        "firstName": "test2",
+        "lastName": "test2",
+        "email": "test2.test2@test.com",
+        "balance": 200,
+        "rentalHistory": [
+            {
+                "id": "1",
+                "scooterId": "1",
+                "startTime": "2021-09-01T12:00:00",
+                "endTime": "2021-09-01T13:00:00",
+                "durationMinutes": 60,
+                "startLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "endLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "cost": 10
+            },
+            {
+                "id": "2",
+                "scooterId": "2",
+                "startTime": "2021-09-01T14:00:00",
+                "endTime": "2021-09-01T15:00:00",
+                "durationMinutes": 60,
+                "startLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "endLocation": {
+                    "latitude": "-61.475072",
+                    "longitude": "-103.978585"
+                },
+                "cost": 20
+            }
+        ]
     }
     ],
     "Scooters": [
-      {
-        "id": "1",
-        "status": "available",
-        "battery": 100
+        {
+            "id": {
+            "$oid": "67608d8aaddddcc3e6c17274"
+            },
+            "location": {
+                "latitude": "-61.475072",
+                "longitude": "-103.978585"
+            },
+            "user": "[ObjectID], referens till User",
+            "status": "Off",
+            "speed": 0,
+            "battery": 63,
+            "tripLog": ": [ObjectId], (referens till Trips)"
         },
         {
-          "id": "2",
-          "status": "available",
-          "battery": 100
+            "id": {
+            "$oid": "67608d8aaddddcc3e6c17275"
+            },
+            "location": {
+                "latitude": "-41.944542",
+                "longitude": "-25.827162"
+            },
+            "user": "[ObjectID], referens till User",
+            "status": "Off",
+            "speed": 0,
+            "battery": 20,
+            "tripLog": ": [ObjectId], (referens till Trips)"
+        }
+    ],
+    "cities_locations": [
+        {
+            "_id": "676d3db8741808f26a0be370",
+            "id": "1",
+            "city": "Växjö",
+            "driveZone": {
+                "latitude": 56.89205,
+                "longitude": 14.79823,
+                "radius_km2": 11.19
+            },
+            "parkZones": [
+                {
+                    "name": "Park zone 1",
+                    "latitude": 56.88647,
+                    "longitude": 14.79122,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Park zone 2",
+                    "latitude": 56.88637,
+                    "longitude": 14.80038,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Park zone 3",
+                    "latitude": 56.89117,
+                    "longitude": 14.80345,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Park zone 4",
+                    "latitude": 56.89652,
+                    "longitude": 14.80933,
+                    "radius_km2": 0.01
+                }
+            ],
+            "chargingZones": [
+                {
+                    "name": "Charging zone 1",
+                    "latitude": 56.8783,
+                    "longitude": 14.81446,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Charging zone 2",
+                    "latitude": 56.8876,
+                    "longitude": 14.77717,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Charging zone 3",
+                    "latitude": 56.89665,
+                    "longitude": 14.79141,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Charging zone 4",
+                    "latitude": 56.88819,
+                    "longitude": 14.82003,
+                    "radius_km2": 0.01
+                }
+            ]
+        },
+        {
+            "_id": "676d3db8741808f26a0be371",
+            "id": "2",
+            "city": "Karlskrona centrum",
+            "driveZone": {
+                "latitude": 56.16206,
+                "longitude": 15.58834,
+                "radius_km2": 0.61
+            },
+            "parkZones": [
+                {
+                    "name": "Park zone 1",
+                    "latitude": 56.16244,
+                    "longitude": 15.58232,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Park zone 2",
+                    "latitude": 56.16547,
+                    "longitude": 15.5884,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Park zone 3",
+                    "latitude": 56.1633,
+                    "longitude": 15.59408,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Park zone 4",
+                    "latitude": 56.15953,
+                    "longitude": 15.59164,
+                    "radius_km2": 0.01
+                }
+            ],
+            "chargingZones": [
+                {
+                    "name": "Charging zone 1",
+                    "latitude": 56.16152,
+                    "longitude": 15.58689,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Charging zone 2",
+                    "latitude": 56.16088,
+                    "longitude": 15.58245,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Charging zone 3",
+                    "latitude": 56.16203,
+                    "longitude": 15.59153,
+                    "radius_km2": 0.01
+                },
+                {
+                    "name": "Charging zone 4",
+                    "latitude": 56.16509,
+                    "longitude": 15.58672,
+                    "radius_km2": 0.01
+                }
+            ]
         }
     ]
 }

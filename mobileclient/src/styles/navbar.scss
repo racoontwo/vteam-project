@@ -2,9 +2,6 @@
 
 .navbar {
     background-color: variables.$background-navbar;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 
     .nav {
@@ -20,6 +17,11 @@
             align-items: center;
             color: variables.$icon-color;
             transition: color 0.3s;
+
+            span {
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
 
             &:hover {
                 color: variables.$icon-hover-color;

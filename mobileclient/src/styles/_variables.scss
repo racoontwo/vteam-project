@@ -1,4 +1,5 @@
 // colors
+$color-black: #000000;
 $color-dark: #171717;
 $color-dark2: #212121;
 $color-dark3: #313131;
@@ -12,8 +13,14 @@ $color-light4: #bbb;
 $color-light5: #aaa;
 $color-white: #FFFFFF;
 $color-accent: #5a8f6a;
-$color-accent2: #437054;
+$color-accent2: #4a7f5a;
 $color-blue: #2d60a7;
+$color-red: #7c3431;
+$color-red2: #6c2421;
+
+// fonts
+$font-primary: 'Inter', sans-serif;
+$font-secondary: 'Open Sans', sans-serif;
 
 // text
 $text-primary: $color-dark2;

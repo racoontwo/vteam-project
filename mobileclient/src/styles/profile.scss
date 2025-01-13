@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     margin: 0;
-    margin-top: 2rem;
+    padding: 1rem 0;
 
     a {
         display: flex;
@@ -14,13 +14,16 @@
         width: 100%;
         margin: 0 0 1.5rem;
         padding: 1.5rem;
-        font-size: 1.2rem;
         background-color: variables.$background2;
         color: variables.$text-primary;
         border-radius: 0.5rem;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-        
+        box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.2);
     }
+
+    h3 {
+        margin: 0;
+    }
+
     .icon {
         font-size: 2rem;
         margin-right: 1.5rem;
@@ -29,6 +32,47 @@
     .angle {
         margin-left: auto;
         font-size: 1.5rem;
-        color: variables.$icon-inactive-color
+        color: variables.$icon-inactive-color;
+    }
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+    font-size: 1.5rem;
+    position: relative;
+    text-align: center;
+
+    h1 {
+        margin: 0 0 0.6rem;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2rem;
+    }
+
+    .back {
+        color: variables.$icon-color;
+        font-size: 1.5rem;
+        padding: 1rem 1.5rem;
+        cursor: pointer;
+    }
+
+    .save-button {
+        background: none;
+        color: variables.$text-primary;
+        text-decoration: underline;
+        width: auto;
+    }
+}
+
+.page-footer {
+    margin-top: auto;
+    padding: 1rem 0 2rem;
+
+    button {
+        margin-top: 1rem;
     }
 }

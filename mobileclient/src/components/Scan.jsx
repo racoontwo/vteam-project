@@ -1,7 +1,9 @@
 function Scan() {
     return (
-        <div className="scan">
-            <h1>Scan</h1>
+        <div className="main-content">
+            <div className="scan">
+                <h1>Scan</h1>
+            </div>
         </div>
     );
 }

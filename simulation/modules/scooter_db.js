@@ -205,6 +205,20 @@ async function countScooters() {
     }
 }
 
+async function listCollections() {
+    try {
+        const { db, client } = await connectDB(); // Reuse the connectDB function
+
+        const collections = await db.listCollections().toArray();
+
+        await client.close();
+        return collections.map(collection => collection.name);
+    } catch (error) {
+        console.error('Error listing collections:', error);
+        throw new Error('Failed to list collections');
+    }
+}
+
 export default { 
     connectDB, 
     getCollection, 
@@ -216,5 +230,6 @@ export default {
     updateLocation,
     countScooters,
     updateScooterStats,
-    updateScooter
+    updateScooter,
+    listCollections
 };
