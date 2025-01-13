@@ -7,7 +7,7 @@ import database from './modules/db.js';
 import Scooter from './scooter.js';
 import { jondoe } from './utilities.js'
 import { ObjectId } from 'mongodb';
-import { simulateMovementWithSpeed } from './modules/locationTracker.js';
+import { canIPark, getRandomCoordinates, simulateMovementWithSpeed } from './modules/locationTracker.js';
 import cities from './modules/cities_db.js'
 
 
@@ -16,7 +16,7 @@ async function simulateStartTrip(userID, scooterID) {
         // Load the scooter object based on its ID
         let scooter = await Scooter.loadObjectScooter(scooterID);
         const cityName = 'Malmö'; // Change this variable to fetch data for another city
-        let destination = await cities.getRandomCityCoordinates(cityName);
+        let destination = await getRandomCoordinates(cityName);
 
         console.log('Starting at: ', scooter.location);
         console.log('Ending at:', destination);
@@ -25,8 +25,13 @@ async function simulateStartTrip(userID, scooterID) {
         const arrived = await simulateMovementWithSpeed(scooter.location, destination, process.env.SCOOTER_SPEED);
 
         if (arrived) {
-            console.log('Saving scooter data...');
-            await scooter.save();
+            console.log('Checking to see if parking is available...');
+            const pSpotFound = await canIPark(cityName, destination);
+            if (pSpotFound) {
+                console.log('Parking found and scooter was parked.');
+                console.log('Saving scooter data...');
+                await scooter.park();
+            }
         }
     } catch (error) {
         console.error('Error simulating trip:', error.message);
@@ -44,10 +49,9 @@ async function simulateStartTrip(userID, scooterID) {
             // Get the first scooter's ID
             let firstScooterID = scooters[0]._id;
 
-
             // Simulate a trip for the first scooter
-            await simulateStartTrip(jondoe._id, firstScooterID);
             console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
+            await simulateStartTrip(jondoe._id, firstScooterID);
         } else {
             console.log('No scooters found in the collection.');
         }

@@ -108,9 +108,74 @@ export function simulateMovementWithSpeed(start, end, speedKmh) {
 }
 
 
-export function getCoordinates() {
+export async function getRandomCoordinates(cityName) {
+    try {
+        const center = await cities.getDriveZone(cityName);
+        const { latitude, longitude, radius_km2 } = center;
 
+        // Convert radius from square kilometers to a circular radius in kilometers
+        const radius = Math.sqrt(radius_km2);
+
+        // Convert radius to degrees (approximately, assuming Earth is a sphere)
+        const radiusInDegrees = radius / 111; // 111 km ~ 1 degree of latitude
+
+        const angle = Math.random() * 2 * Math.PI;
+
+        const distance = Math.random() * radiusInDegrees;
+
+        const deltaLat = distance * Math.cos(angle);
+        const deltaLon = distance * Math.sin(angle) / Math.cos(latitude * (Math.PI / 180));
+
+        const randomLat = latitude + deltaLat;
+        const randomLon = longitude + deltaLon;
+
+        return {
+        latitude: randomLat,
+        longitude: randomLon,
+        };
+    } catch (error) {
+        console.error(`Error fetching drive zone for "${cityName}":`, error);
+        throw error;
+    }
 }
+
+export async function canIPark(cityName, location) {
+    const parkZones = await cities.getParkingZones(cityName);
+    // console.log(parkZones);
+    const DEFAULT_RADIUS_KM = 0.01;
+
+    const toRadians = (degrees) => (degrees * Math.PI) / 180;
+
+    const haversineDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371; // Earth's radius in km
+        const dLat = toRadians(lat2 - lat1);
+        const dLon = toRadians(lon2 - lon1);
+        const a =
+            Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRadians(lat1)) *
+            Math.cos(toRadians(lat2)) *
+            Math.sin(dLon / 2) ** 2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // Distance in km
+    };
+
+    for (const zone of parkZones) {
+        const radius = zone.radius_km2 || DEFAULT_RADIUS_KM;
+        const distance = haversineDistance(
+            location.latitude,
+            location.longitude,
+            zone.latitude,
+            zone.longitude
+        );
+
+        if (distance <= radius) {
+            return true;
+        }
+    }
+
+    return "Location is not within any park zone";
+}
+
 
 
 // // Example Usage:

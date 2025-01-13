@@ -175,6 +175,16 @@ export default class Scooter {
         }
     }
 
+    park() {
+        try {
+            this.setStatus("available");
+            this.save();
+            console.log("Scooter status updated to 'available' and saved to the database.");
+        } catch (error) {
+            console.error("Error updating scooter status to 'available':", error.message);
+            throw new Error("Failed to set scooter status to 'available'");
+        }
+    }
 
     setStatus(newStatus) {
         const validStatuses = ["available", "rented", "maintenance", "charging", "off"];
