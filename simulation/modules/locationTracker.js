@@ -68,7 +68,7 @@ export function simulateMovementWithSpeed(start, end, speedKmh) {
         if (fraction >= 1) {
             console.log(`ARRIVED! Destination: Latitude: ${end.latitude}, Longitude: ${end.longitude}`);
             clearInterval(intervalId);
-            return;
+            return true;
         }
 
         // Interpolate the current position

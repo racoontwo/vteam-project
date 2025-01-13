@@ -2,7 +2,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import scooterbase from './modules/scooter_db.js';
+// import scooterbase from './modules/scooter_db.js';
 import database from './modules/db.js';
 import Scooter from './scooter.js';
 import {jondoe, getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
@@ -16,10 +16,15 @@ async function simulateStartTrip(userID, scooterID) {
         // Load the scooter object based on its ID
         let scooter = await Scooter.loadObjectScooter(scooterID);
         const cityName = 'Malmö'; // Change this variable to fetch data for another city
-        console.log('Starting at: ', scooter.location);
         let destination = await cities.getRandomCityCoordinates(cityName);
+        console.log('Starting at: ', scooter.location);
         console.log('Ending at:', destination);
-        simulateMovementWithSpeed(scooter.location, destination, process.env.SCOOTER_SPEED);
+        
+        // Simulate movement
+        if (simulateMovementWithSpeed(scooter.location, destination, process.env.SCOOTER_SPEED)) {
+            await scooter.save();
+        }
+
     } catch (error) {
         console.error('Error simulating trip:', error.message);
     }

@@ -175,6 +175,7 @@ export default class Scooter {
         }
     }
 
+
     setStatus(newStatus) {
         const validStatuses = ["available", "rented", "maintenance", "charging", "off"];
         if (!validStatuses.includes(newStatus)) {
