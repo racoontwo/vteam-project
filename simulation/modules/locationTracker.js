@@ -50,6 +50,34 @@ export function interpolateCoords(start, end, fraction) {
     };
 }
 
+// export function simulateMovementWithSpeed(start, end, speedKmh) {
+//     const updateInterval = 500;
+//     const totalDistance = calculateDistance(start, end); // Total distance in km
+//     const speedPerMs = speedKmh / 3600000; // Speed in km/ms
+//     const stepDistance = speedPerMs * updateInterval; // Distance covered per update interval
+//     let fraction = 0; // Start at the beginning
+
+//     console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
+//     console.log(`Starting simulation at ${speedKmh} km/h...`);
+
+//     const intervalId = setInterval(() => {
+//         // Calculate the fraction of distance covered
+//         fraction += stepDistance / totalDistance;
+
+//         // Stop the simulation if we've reached or exceeded the destination
+//         if (fraction >= 1) {
+//             console.log(`ARRIVED! Destination: Latitude: ${end.latitude}, Longitude: ${end.longitude}`);
+//             clearInterval(intervalId);
+//             return true;
+//         }
+
+//         // Interpolate the current position
+//         const currentCoords = interpolateCoords(start, end, fraction);
+
+//         console.log(`Current position: Latitude: ${currentCoords.latitude}, Longitude: ${currentCoords.longitude}`);
+//     }, updateInterval);
+// }
+
 export function simulateMovementWithSpeed(start, end, speedKmh) {
     const updateInterval = 500;
     const totalDistance = calculateDistance(start, end); // Total distance in km
@@ -60,23 +88,25 @@ export function simulateMovementWithSpeed(start, end, speedKmh) {
     console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
     console.log(`Starting simulation at ${speedKmh} km/h...`);
 
-    const intervalId = setInterval(() => {
-        // Calculate the fraction of distance covered
-        fraction += stepDistance / totalDistance;
+    return new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+            // Calculate the fraction of distance covered
+            fraction += stepDistance / totalDistance;
 
-        // Stop the simulation if we've reached or exceeded the destination
-        if (fraction >= 1) {
-            console.log(`ARRIVED! Destination: Latitude: ${end.latitude}, Longitude: ${end.longitude}`);
-            clearInterval(intervalId);
-            return true;
-        }
-
-        // Interpolate the current position
-        const currentCoords = interpolateCoords(start, end, fraction);
-
-        console.log(`Current position: Latitude: ${currentCoords.latitude}, Longitude: ${currentCoords.longitude}`);
-    }, updateInterval);
+            // Stop the simulation if we've reached or exceeded the destination
+            if (fraction >= 1) {
+                console.log(`ARRIVED! Destination: Latitude: ${end.latitude}, Longitude: ${end.longitude}`);
+                clearInterval(intervalId);
+                resolve(true); // Resolve the promise
+            } else {
+                // Interpolate the current position
+                const currentCoords = interpolateCoords(start, end, fraction);
+                console.log(`Current position: Latitude: ${currentCoords.latitude}, Longitude: ${currentCoords.longitude}`);
+            }
+        }, updateInterval);
+    });
 }
+
 
 export function getCoordinates() {
 

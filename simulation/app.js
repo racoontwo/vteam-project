@@ -5,9 +5,9 @@ dotenv.config();
 // import scooterbase from './modules/scooter_db.js';
 import database from './modules/db.js';
 import Scooter from './scooter.js';
-import {jondoe, getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
+import { jondoe } from './utilities.js'
 import { ObjectId } from 'mongodb';
-import { calculateDistance, interpolateCoords, simulateMovementWithSpeed } from './modules/locationTracker.js';
+import { simulateMovementWithSpeed } from './modules/locationTracker.js';
 import cities from './modules/cities_db.js'
 
 
@@ -17,47 +17,21 @@ async function simulateStartTrip(userID, scooterID) {
         let scooter = await Scooter.loadObjectScooter(scooterID);
         const cityName = 'Malmö'; // Change this variable to fetch data for another city
         let destination = await cities.getRandomCityCoordinates(cityName);
+
         console.log('Starting at: ', scooter.location);
         console.log('Ending at:', destination);
-        
-        // Simulate movement
-        if (simulateMovementWithSpeed(scooter.location, destination, process.env.SCOOTER_SPEED)) {
+
+        // Simulate movement and wait for it to complete
+        const arrived = await simulateMovementWithSpeed(scooter.location, destination, process.env.SCOOTER_SPEED);
+
+        if (arrived) {
+            console.log('Saving scooter data...');
             await scooter.save();
         }
-
     } catch (error) {
         console.error('Error simulating trip:', error.message);
     }
 }
-
-
-// (async () => {
-//     try {
-//         const cityName = 'Växjö'; // Change this variable to fetch data for another city
-//         const citiData = await cities.getDriveZone(cityName);
-//         console.log(citiData);
-//         console.log(getRandomCoordinates());
-//         const randomLocation = await cities.getRandomCityCoordinates(cityName);
-//         console.log(randomLocation);
-//     } catch (error) {
-//         console.error('Error:', error.message);
-//     }
-// })();
-
-
-// (async () => {
-//     try {
-//         const cityName = 'Växjö'; // Change this variable to fetch data for another city
-//         const parkingZones = await cities.getParkingZones(cityName);
-
-//         console.log(`Parking Zones for ${cityName}:`);
-//         parkingZones.forEach((zone, index) => {
-//             console.log(`  Zone ${index + 1}:`, zone);
-//         });
-//     } catch (error) {
-//         console.error('Error:', error.message);
-//     }
-// })();
 
 
 // Main function to initialize the simulation
@@ -82,6 +56,21 @@ async function simulateStartTrip(userID, scooterID) {
     }
 })();
 
+
+
+// (async () => {
+//     try {
+//         const cityName = 'Växjö'; // Change this variable to fetch data for another city
+//         const parkingZones = await cities.getParkingZones(cityName);
+
+//         console.log(`Parking Zones for ${cityName}:`);
+//         parkingZones.forEach((zone, index) => {
+//             console.log(`  Zone ${index + 1}:`, zone);
+//         });
+//     } catch (error) {
+//         console.error('Error:', error.message);
+//     }
+// })();
 
 
 // Example Usage:
