@@ -6,16 +6,16 @@ function Scooters({ isLoggedIn }) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [expandedRows, setExpandedRows] = useState([]);
-    //const baseUrl = import.meta.env.VITE_BASE_URL;
-    const baseUrl = "http://localhost:4000"; // mock api server
+    const baseUrl = import.meta.env.VITE_BASE_URL;
     const apiKey = import.meta.env.VITE_API_KEY;
 
     useEffect(() => {
         // Fetch scooters from the API
         const fetchScooter = async () => {
             try {
-                const response = await fetch(`${baseUrl}/scooters`, {
+                const response = await fetch(`${baseUrl}/api/v1/scooters/all-scooters`, {
                     headers: {  
+                        'x-api-key': apiKey,
                     },
                 });
 
