@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { useState } from 'react';
 import './styles/main.scss';
+import 'leaflet/dist/leaflet.css';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Home from './components/Home';

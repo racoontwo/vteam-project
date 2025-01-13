@@ -1,5 +1,9 @@
 @use 'variables';
 
 .map {
-    text-align: center;
+}
+
+.map .leaflet-container {
+    width: 100%;
+    height: 500px;
 }
