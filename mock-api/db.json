@@ -85,7 +85,9 @@
     ],
     "scooters": [
         {
-            "id": "1",
+            "id": {
+            "$ObjectId": "67608d8aaddddcc3e6c17274"
+            },
             "location": {
                 "latitude": "-61.475072",
                 "longitude": "-103.978585"
@@ -97,7 +99,9 @@
             "tripLog": ": [ObjectId], (referens till Trips)"
         },
         {
-            "id": "2",
+            "id": {
+            "$ObjectId": "67608d8aaddddcc3e6c17275"
+            },
             "location": {
                 "latitude": "-41.944542",
                 "longitude": "-25.827162"
