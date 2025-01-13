@@ -10,10 +10,14 @@
     table {
         width: 100%;
         border-collapse: collapse;
+        border-bottom: 2px solid variables.$table-outline;
 
         th, td {
-            border-bottom: 2px solid variables.$table-outline;
-                padding: 1rem;
+            padding: 1rem;
+        }
+
+        td {
+            border-top: 2px solid variables.$table-outline;
         }
 
         tr:hover {
@@ -25,10 +29,11 @@
             text-align: left;
         }
 
-        .expanded{
+        .expanded {
             td {
                 background-color: variables.$background;
                 text-align: center;
+                border-top: none;
             }
 
             .expanded-content {
@@ -40,7 +45,6 @@
                     flex: 1;
                     text-align: left;
                 }
-
             }
         }
     }

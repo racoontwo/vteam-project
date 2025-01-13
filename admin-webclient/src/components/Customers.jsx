@@ -10,6 +10,7 @@ function Customers({ isLoggedIn }) {
     const apiKey = import.meta.env.VITE_API_KEY;
 
     useEffect(() => {
+        // Fetch customers from the API
         const fetchCustomer = async () => {
             try {
                 const response = await fetch(`${baseUrl}/api/v1/customers/all-customers`, {
@@ -33,6 +34,7 @@ function Customers({ isLoggedIn }) {
         fetchCustomer();
     }, [baseUrl]);
 
+    // Handle row expansion to show more details
     const handleExpand = (customerId) => {
         if (expandedRows.includes(customerId)) {
             setExpandedRows(expandedRows.filter(id => id !== customerId));
@@ -40,7 +42,7 @@ function Customers({ isLoggedIn }) {
             setExpandedRows([...expandedRows, customerId]);
         }
     };
-
+    // Delete customer by id
     const handleDelete = async (customerId) => {
         try {
             const response = await fetch(`${baseUrl}/api/v1/customers/delete-one-customer`, {
@@ -56,6 +58,7 @@ function Customers({ isLoggedIn }) {
                 throw new Error('Failed to delete customer');
             }
 
+            // Update the state to remove the deleted customer
             setCustomers({ data: customers.data.filter(customer => customer._id !== customerId) });
 
         } catch (error) {
@@ -63,6 +66,7 @@ function Customers({ isLoggedIn }) {
         }
     };
 
+    // Show a message if the user is not logged in
     if (!isLoggedIn) {
         return (
             <div className="customers">
