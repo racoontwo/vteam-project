@@ -10,6 +10,7 @@ import Map from './components/Map';
 import Scooters from './components/Scooters';
 import Customers from './components/Customers';
 import AddCustomer from './components/AddCustomer';
+import AddScooter from './components/AddScooter';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(true); // Change to false to test login
@@ -64,6 +65,11 @@ function App() {
                             handleLogout={handleLogout}
                         />} />
                         <Route path="/add-customer" element={<AddCustomer
+                            isLoggedIn={isLoggedIn}
+                            handleLogin={handleLogin}
+                            handleLogout={handleLogout}
+                        />} />
+                        <Route path="/add-scooter" element={<AddScooter
                             isLoggedIn={isLoggedIn}
                             handleLogin={handleLogin}
                             handleLogout={handleLogout}
