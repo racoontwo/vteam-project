@@ -1,5 +1,9 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import database from './modules/scooter_db.js';
-import {getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
+import { simulateMovementWithScooter, simulateMovementWithSpeed } from './modules/locationTracker.js';
+
 
 export default class Scooter {
     static updateInterval = 3000;
@@ -7,36 +11,68 @@ export default class Scooter {
     constructor(location = {}, scooterID = null) {
         this.scooterID = scooterID; // the scooter recieves an ObjectID when imported in the db.
         this.location = location;
-        this.user = "[ObjectID], referens till User";
+        this.user = "[UserID]";
         this.status = "Off";
         this.speed = 0;
         this.battery = Math.floor(Math.random() * 101);
         this.tripLog = ": [ObjectId], (referens till Trips)";
     };
 
-    async startTrip() {
+    async rent(userID) {
         if (this.status !== "available") {
-            console.log("Trip cannot be started. Current status:", this.status);
+            console.log("Scooter cannot be rented. Current status:", this.status);
             return;
         }
-    
-        console.log(`Trip started at coordinates: ${this.location}`);
-        this.setStatus("rented");
-        this.save();
-    }
-    
 
-    async endTrip() {
-        if (this.status !== "rented") {
-            console.log("Trip cannot be ended. Current status:", this.status);
-            return;
-        }
-    
-        console.log(`Trip ended at coordinates: ${this.location}`);
-        this.setStatus(this.battery > 10 ? "available" : "off");
-        this.save();
+        // this.startPrintingLocation();
+
+        console.log('Starting location:', this.location);
+        this.setUser(userID);
+        this.setStatus("rented");
+
+        await this.save();
     }
-    
+
+    async rideToDestination(destination) {
+        console.log("Heading towards: ", destination);
+        this.setSpeed(process.env.SCOOTER_SPEED);
+        // const arrived = await simulateMovementWithSpeed(this.location, destination, this.speed);
+        const arrived = await simulateMovementWithScooter(this, destination);
+        return arrived
+    }
+
+    async park() {
+        try {
+            this.setStatus("available");
+            this.setUser(`Last used by: ${this.user}`);
+            console.log('Saving scooter data...');
+            await this.save();
+        } catch (error) {
+            console.error("Error updating scooter status to 'available':", error.message);
+            throw new Error("Failed to set scooter status to 'available'");
+        }
+    }
+
+    async turnOff() {
+        try {
+            this.setStatus("off");
+            await this.save();
+            console.log(`${this.scooterID} status updated to 'off' and saved to the database.`);
+        } catch (error) {
+            console.error("Error updating scooter status to 'off':", error.message);
+            throw new Error("Failed to set scooter status to 'off'");
+        }
+    }
+
+    async isBatteryLow() {
+        return this.battery < 10;
+    }
+
+    async charge() {
+        this.setStatus("maintenance");
+        await this.save();
+    }
+
     printLiveLocation() {
         console.log(this.location);
         return this.location;
@@ -114,7 +150,7 @@ export default class Scooter {
             const result = await database.updateScooter(this.scooterID, updatedScooterData);
 
             if (result) {
-                console.log('Scooter updated successfully.');
+                console.log(`Scooter "${this.scooterID}" updated successfully.`);
             }
         } catch (error) {
             console.error('Error saving scooter:', error.message);
@@ -122,79 +158,54 @@ export default class Scooter {
         }
     }
 
-    
-    static async loadScooter(scooterID) {
-        try {
-            let scooter = await database.getScooter(scooterID);
-            if (!scooter) {
-                throw new Error(`No scooter found with ID: ${scooterID}`);
-            }
-            return scooter;
-        } catch (error) {
-            console.error('Error loading scooter:', error);
-            throw new Error('Failed to load scooter');
-        }
-    }
 
-    static async updateLocation(scooterID, newLocation) {
-        try {
-            let scooter = await Scooter.loadScooter(scooterID);
+    // static async loadScooter(scooterID) {
+    //     try {
+    //         let scooter = await database.getScooter(scooterID);
+    //         if (!scooter) {
+    //             throw new Error(`No scooter found with ID: ${scooterID}`);
+    //         }
+    //         return scooter;
+    //     } catch (error) {
+    //         console.error('Error loading scooter:', error);
+    //         throw new Error('Failed to load scooter');
+    //     }
+    // }
+
+    // static async updateLocation(scooterID, newLocation) {
+    //     try {
+    //         let scooter = await Scooter.loadScooter(scooterID);
             
-            if (!scooter) {
-                throw new Error(`No scooter found with ID: ${scooterID}`);
-            }
+    //         if (!scooter) {
+    //             throw new Error(`No scooter found with ID: ${scooterID}`);
+    //         }
 
-            scooter.location = newLocation;
+    //         scooter.location = newLocation;
 
-            let updatedScooter = await database.updateLocation(scooterID, scooter.location);
-            return updatedScooter;
-        } catch (error) {
-            console.error('Error updating scooter location:', error);
-            throw new Error('Failed to update scooter location');
-        }
+    //         let updatedScooter = await database.updateLocation(scooterID, scooter.location);
+    //         return updatedScooter;
+    //     } catch (error) {
+    //         console.error('Error updating scooter location:', error);
+    //         throw new Error('Failed to update scooter location');
+    //     }
+    // }
+
+    setSpeed(newSpeed) {
+        this.speed = newSpeed;
     }
 
-
-    static async updateStatus(scooterID) {
-
-        const updatedStats = {
-            location: getRandomCoordinates(),
-            status: "rented",
-            speed: 20,
-            battery: 75,
-            tripLog: ["Trip A", "Trip B", "Trip C"]
-        };
-        
-        try {
-            const result = await database.updateScooterStats(scooterID, updatedStats);
-            if (result) {
-                console.log("Scooter stats updated successfully.");
-            }
-        } catch (error) {
-            console.error("Error updating scooter stats:", error.message);
-        }
-    }
-
-    park() {
-        try {
-            this.setStatus("available");
-            this.save();
-            console.log("Scooter status updated to 'available' and saved to the database.");
-        } catch (error) {
-            console.error("Error updating scooter status to 'available':", error.message);
-            throw new Error("Failed to set scooter status to 'available'");
-        }
+    setUser(newUser) {
+        //newUser has to be an ID
+        this.user = newUser;
     }
 
     setStatus(newStatus) {
-        const validStatuses = ["available", "rented", "maintenance", "charging", "off"];
+        const validStatuses = ["available", "rented", "maintenance", "off"];
         if (!validStatuses.includes(newStatus)) {
             throw new Error(`Invalid status: ${newStatus}. Must be one of: ${validStatuses.join(", ")}`);
         }
         this.status = newStatus;
-        this.speed = newStatus === "rented" ? Math.floor(Math.random() * 26) : 0;
     }
-
 
     setBattery(newBattery) {
         if (typeof newBattery !== 'number' || newBattery < 0 || newBattery > 100) {
@@ -204,6 +215,7 @@ export default class Scooter {
     }
 
     printInfo() {
+        console.log("ScooterID:", this.scooterID);
         console.log("Location:", this.location);
         console.log("UserID:", this.user);
         console.log("Status:", this.status);

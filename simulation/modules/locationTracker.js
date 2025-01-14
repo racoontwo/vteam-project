@@ -106,6 +106,47 @@ export function simulateMovementWithSpeed(start, end, speedKmh) {
         }, updateInterval);
     });
 }
+export async function simulateMovementWithScooter(scooter, destination) {
+    const updateInterval = 500; // in ms
+    const totalDistance = calculateDistance(scooter.location, destination); // Total distance in km
+    const speedPerMs = scooter.speed / 3600000; // Speed in km/ms
+    const stepDistance = speedPerMs * updateInterval; // Distance covered per update interval
+    let fraction = 0; // Start at the beginning
+
+    console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
+    console.log(`Starting simulation at ${scooter.speed} km/h with ${scooter.battery}% battery.`);
+
+    return new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+            if (scooter.battery <= 0) {
+                console.log("Battery depleted. Simulation stopped.");
+                clearInterval(intervalId);
+                resolve(false); // Resolve the promise indicating failure
+                return;
+            }
+
+            // Calculate the fraction of distance covered
+            fraction += stepDistance / totalDistance;
+
+            // Update battery level (1 unit per km)
+            scooter.battery = Math.max(0, Math.floor(scooter.battery - stepDistance));
+
+            // Stop the simulation if we've reached or exceeded the destination
+            if (fraction >= 1) {
+                scooter.location = destination; // Update the scooter's location to the destination
+                console.log(`ARRIVED! Destination: Latitude: ${destination.latitude}, Longitude: ${destination.longitude}`);
+                clearInterval(intervalId);
+                resolve(true); // Resolve the promise indicating success
+            } else {
+                // Interpolate the current position
+                const currentCoords = interpolateCoords(scooter.location, destination, fraction);
+                scooter.location = currentCoords; // Update the scooter's location
+                console.log(`Current position: Latitude: ${currentCoords.latitude}, Longitude: ${currentCoords.longitude}, Battery: ${scooter.battery}%`);
+            }
+        }, updateInterval);
+    });
+}
+
 
 
 export async function getRandomCoordinates(cityName) {
