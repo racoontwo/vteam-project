@@ -64,13 +64,27 @@ export default class Scooter {
         }
     }
 
-    async isBatteryLow() {
-        return this.battery < 10;
+    async charge() {
+        try {
+            this.setStatus("maintenance");
+    
+            while (this.battery < 100) {
+                this.battery += 1;
+                console.log(`Battery level: ${this.battery}%`);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+    
+            this.setStatus("available");
+            await this.save();
+            return;
+        } catch (error) {
+            console.error("Error during charging process:", error.message);
+            throw new Error("Failed to charge scooter");
+        }
     }
 
-    async charge() {
-        this.setStatus("maintenance");
-        await this.save();
+    batteryLow() {
+        return this.battery < 10;
     }
 
     printLiveLocation() {
@@ -84,35 +98,35 @@ export default class Scooter {
         }, Scooter.updateInterval);
     }
 
-    static createFromDb(jsonObject) {
-        try {
-            if (!jsonObject || typeof jsonObject !== "object") {
-                throw new Error("Invalid JSON object provided.");
-            }
+    // static createFromDb(jsonObject) {
+    //     try {
+    //         if (!jsonObject || typeof jsonObject !== "object") {
+    //             throw new Error("Invalid JSON object provided.");
+    //         }
 
-            const {
-                _id = null,
-                location = {},
-                user = "[ObjectID], referens till User",
-                status = "Off",
-                speed = 0,
-                battery = 100,
-                tripLog = [],
-            } = jsonObject;
+    //         const {
+    //             _id = null,
+    //             location = {},
+    //             user = "[ObjectID], referens till User",
+    //             status = "Off",
+    //             speed = 0,
+    //             battery = 100,
+    //             tripLog = [],
+    //         } = jsonObject;
 
-            const newScooter = new Scooter(location, _id);
-            newScooter.user = user;
-            newScooter.status = status;
-            newScooter.speed = speed;
-            newScooter.battery = battery;
-            newScooter.tripLog = tripLog;
+    //         const newScooter = new Scooter(location, _id);
+    //         newScooter.user = user;
+    //         newScooter.status = status;
+    //         newScooter.speed = speed;
+    //         newScooter.battery = battery;
+    //         newScooter.tripLog = tripLog;
 
-            return newScooter;
-        } catch (error) {
-            console.error("Error creating scooter from JSON:", error.message);
-            throw error;
-        }
-    }
+    //         return newScooter;
+    //     } catch (error) {
+    //         console.error("Error creating scooter from JSON:", error.message);
+    //         throw error;
+    //     }
+    // }
 
     static async loadObjectScooter(scooterID) {
         try {

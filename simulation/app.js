@@ -5,8 +5,8 @@ dotenv.config();
 import database from './modules/db.js';
 import Scooter from './scooter.js';
 import { jondoe } from './utilities.js'
-import { ObjectId } from 'mongodb';
 import { canIPark, getRandomCoordinates, simulateMovementWithSpeed } from './modules/locationTracker.js';
+// import { simulateWithUsers } from './scooter_pool.js'
 
 // Detta program är tänkt att köra i varje cykel och styra/övervaka den. CHECK
 // Cykeln meddelar dess position med jämna mellanrum.
@@ -28,10 +28,10 @@ async function simulateStartTrip(userID, scooterID) {
         let scooter = await Scooter.loadObjectScooter(scooterID);
         let destination = await getRandomCoordinates(cityName);
 
-        //User rents the scooter
-        // Simulate movement and wait for it to complete
-        // const arrived = await simulateMovementWithSpeed(scooter.location, destination, process.env.SCOOTER_SPEED);
+        // User rents the scooter
         await scooter.rent(userID);
+        
+        // Simulate movement to the destination
         const arrived = await scooter.rideToDestination(destination);
 
         if (arrived) {
@@ -39,6 +39,16 @@ async function simulateStartTrip(userID, scooterID) {
             const parkingSpot = await canIPark(cityName, destination);
             if (parkingSpot) {
                 await scooter.park();
+            } else {
+                console.warn('No parking spot available. Please try another location.');
+            }
+        } else {
+            console.warn('Scooter did not arrive at the destination.');
+            
+            // Check if the scooter's battery is low
+            if (scooter.batteryLow()) {
+                console.log('Battery is low. Initiating charging process...');
+                await scooter.charge();
             }
         }
     } catch (error) {
