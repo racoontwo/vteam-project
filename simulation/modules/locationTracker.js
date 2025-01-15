@@ -106,12 +106,14 @@ export function simulateMovementWithSpeed(start, end, speedKmh) {
         }, updateInterval);
     });
 }
+
 export async function simulateMovementWithScooter(scooter, destination) {
     const updateInterval = 500; // in ms
     const totalDistance = calculateDistance(scooter.location, destination); // Total distance in km
     const speedPerMs = scooter.speed / 3600000; // Speed in km/ms
     const stepDistance = speedPerMs * updateInterval; // Distance covered per update interval
     let fraction = 0; // Start at the beginning
+    let distanceTraveled = 0; // Track total distance traveled
 
     console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
     console.log(`Starting simulation at ${scooter.speed} km/h with ${scooter.battery}% battery.`);
@@ -125,11 +127,14 @@ export async function simulateMovementWithScooter(scooter, destination) {
                 return;
             }
 
-            // Calculate the fraction of distance covered
-            fraction += stepDistance / totalDistance;
+            // Update the distance traveled
+            distanceTraveled += stepDistance;
 
             // Update battery level (1 unit per km)
-            scooter.battery = Math.max(0, Math.floor(scooter.battery - stepDistance));
+            scooter.battery = Math.max(0, scooter.battery - Math.floor(distanceTraveled));
+
+            // Calculate the fraction of distance covered
+            fraction = distanceTraveled / totalDistance;
 
             // Stop the simulation if we've reached or exceeded the destination
             if (fraction >= 1) {
@@ -146,8 +151,6 @@ export async function simulateMovementWithScooter(scooter, destination) {
         }, updateInterval);
     });
 }
-
-
 
 export async function getRandomCoordinates(cityName) {
     try {

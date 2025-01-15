@@ -6,7 +6,7 @@ import database from './modules/db.js';
 import Scooter from './scooter.js';
 import { jondoe } from './utilities.js'
 import { canIPark, getRandomCoordinates, simulateMovementWithSpeed } from './modules/locationTracker.js';
-// import { simulateWithUsers } from './scooter_pool.js'
+import { simulateWithUsers } from './scooter_pool.js'
 
 // Detta program är tänkt att köra i varje cykel och styra/övervaka den. CHECK
 // Cykeln meddelar dess position med jämna mellanrum.
@@ -27,8 +27,16 @@ async function simulateStartTrip(userID, scooterID) {
         const scooter = await Scooter.loadObjectScooter(scooterID);
         const destination = await getRandomCoordinates(cityName);
 
-        await scooter.rent(userID);
-        // scooter.setBattery(5);
+        // scooter.setStatus('available');
+        // scooter.setUser(null);
+
+        const rented = await scooter.rent(userID);
+
+        if (!rented) {
+            console.warn('Scooter could not be rented');
+            return;
+        }
+        // scooter.setBattery(90);
         const arrived = await scooter.rideToDestination(destination);
 
         if (!arrived) {
@@ -47,33 +55,63 @@ async function simulateStartTrip(userID, scooterID) {
         }
 
         await scooter.park();
+        console.log('ride is finished');
+        scooter.printInfo();
     } catch (error) {
         console.error('Error simulating trip:', error.message);
     }
 }
 
 
+
 // Main function to initialize the simulation
 (async function main() {
     try {
-        // Get the collection of scooters
-        let scooters = await database.getAll('scooters');
+        if (process.env.NODE_ENV === 'dev') {
+            console.log('Running simulation in development mode...');
+            
+            let scooters = await database.getAll('scooters');
 
-        if (scooters && scooters.length > 0) {
-            // Get the first scooter's ID
-            let firstScooterID = scooters[0]._id;
+            if (scooters && scooters.length > 0) {
+                let firstScooterID = scooters[0]._id;
 
-            // Simulate a trip for the first scooter
-            console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
-            await simulateStartTrip(jondoe._id, firstScooterID);
+                console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
+                await simulateStartTrip(jondoe._id, firstScooterID);
+            } else {
+                console.log('No scooters found in the collection.');
+            }
+        } else if (process.env.NODE_ENV === 'prod') {
+            console.log('Running simulation with users in production mode...');
+            await simulateWithUsers();
         } else {
-            console.log('No scooters found in the collection.');
+            console.warn('NODE_ENV is not set or has an invalid value. Please set it to "dev" or "prod".');
         }
     } catch (error) {
         console.error('Error during simulation:', error.message);
     }
 })();
 
+
+// Main function to initialize the simulation
+// (async function main() {
+//     try {
+//         // Get the collection of scooters
+//         let scooters = await database.getAll('scooters');
+
+//         if (scooters && scooters.length > 0) {
+//             // Get the first scooter's ID
+//             let firstScooterID = scooters[0]._id;
+
+//             // Simulate a trip for the first scooter
+//             console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
+//             await simulateStartTrip(jondoe._id, firstScooterID);
+//         } else {
+//             console.log('No scooters found in the collection.');
+//         }
+//     } catch (error) {
+//         console.error('Error during simulation:', error.message);
+//     }
+// })();
 
 //KRAV
 // Detta program är tänkt att köra i varje cykel och styra/övervaka den.
