@@ -110,13 +110,13 @@ router.delete('/delete-one-scooter', async (req, res) => {
         const result = await scooters.deleteOneScooter(scooterID);
 
         if (result.deletedCount === 1) {
-            res.status(200).json({ message: 'Customer deleted successfully' });
+            res.status(200).json({ message: 'Scooter deleted successfully' });
         } else {
-            res.status(404).json({ message: 'Customer not found' });
+            res.status(404).json({ message: 'Scooter not found' });
         }
     } catch (error) {
         res.status(500).json({
-            message: 'Failed to delete customer',
+            message: 'Failed to delete Scooter',
             error: error.message
         });
     }
