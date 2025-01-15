@@ -72,7 +72,26 @@ const scooters = {
                 await db.client.close();
             }
         }
-    }
+    },
+
+        deleteOneScooter: async function deleteOneScooter(id) {
+            let db;
+            try {
+                const db = await database.getCollection('scooters');
+                const result = await db.collection.deleteOne({
+                    _id: new ObjectId(id)
+                });
+    
+                return result;
+            } catch (error) {
+                console.error('Error deleting Scooter from database:', error);
+                throw new Error('Scooter deletion failed');
+            } finally {
+                if (db) {
+                    await db.client.close();
+                }
+            }
+        },
 };
 
 export default scooters;

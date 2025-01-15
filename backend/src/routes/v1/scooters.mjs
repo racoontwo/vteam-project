@@ -104,5 +104,23 @@ router.put('/update-scooter/:id', async (req, res) => {
     }
 });
 
+router.delete('/delete-one-scooter', async (req, res) => {
+    const scooterID = req.body._id;
+    try {
+        const result = await scooters.deleteOneScooter(scooterID);
+
+        if (result.deletedCount === 1) {
+            res.status(200).json({ message: 'Customer deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Customer not found' });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: 'Failed to delete customer',
+            error: error.message
+        });
+    }
+});
+
 
 export default router;
