@@ -141,7 +141,7 @@ export async function simulateMovementWithScooter(scooter, destination) {
                 // Interpolate the current position
                 const currentCoords = interpolateCoords(scooter.location, destination, fraction);
                 scooter.location = currentCoords; // Update the scooter's location
-                console.log(`Current position: Latitude: ${currentCoords.latitude}, Longitude: ${currentCoords.longitude}, Battery: ${scooter.battery}%`);
+                // console.log(`Current position: Latitude: ${currentCoords.latitude}, Longitude: ${currentCoords.longitude}, Battery: ${scooter.battery}%`);
             }
         }, updateInterval);
     });

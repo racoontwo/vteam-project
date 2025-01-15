@@ -8,6 +8,7 @@ import cors from 'cors';
 import customerRoutesV1 from './src/routes/v1/customer.mjs';
 import adminRoutesV1 from './src/routes/v1/admin.mjs';
 import scooterRoutesV1 from './src/routes/v1/scooters.mjs';
+import citiesRoutesV1 from './src/routes/v1/cities.mjs';
 import { authenticateApiKey } from './src/middleware/authApiKey.mjs';
 import { rateLimiter } from './src/middleware/rateLimit.mjs';
 
@@ -33,6 +34,7 @@ app.get('/', (req, res) => {
 app.use('/api/v1/customers', authenticateApiKey, customerRoutesV1);
 app.use('/api/v1/admins', authenticateApiKey, adminRoutesV1);
 app.use('/api/v1/scooters', authenticateApiKey, scooterRoutesV1);
+app.use('/api/v1/cities', authenticateApiKey, citiesRoutesV1);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

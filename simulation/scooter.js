@@ -71,7 +71,7 @@ export default class Scooter {
             while (this.battery < 100) {
                 this.battery += 1;
                 console.log(`Battery level: ${this.battery}%`);
-                await new Promise(resolve => setTimeout(resolve, 100));
+                await new Promise(resolve => setTimeout(resolve, process.env.BATTERY_CHARGE_RATE));
             }
     
             this.setStatus("available");

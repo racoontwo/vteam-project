@@ -23,38 +23,35 @@ import { canIPark, getRandomCoordinates, simulateMovementWithSpeed } from './mod
 
 async function simulateStartTrip(userID, scooterID) {
     try {
-        // Load the scooter object based on its ID
         const cityName = 'Malmö'; // Change this variable to fetch data for another city
-        let scooter = await Scooter.loadObjectScooter(scooterID);
-        let destination = await getRandomCoordinates(cityName);
+        const scooter = await Scooter.loadObjectScooter(scooterID);
+        const destination = await getRandomCoordinates(cityName);
 
-        // User rents the scooter
         await scooter.rent(userID);
-        
-        // Simulate movement to the destination
+        // scooter.setBattery(5);
         const arrived = await scooter.rideToDestination(destination);
 
-        if (arrived) {
-            console.log('Checking to see if parking is available...');
-            const parkingSpot = await canIPark(cityName, destination);
-            if (parkingSpot) {
-                await scooter.park();
-            } else {
-                console.warn('No parking spot available. Please try another location.');
-            }
-        } else {
+        if (!arrived) {
             console.warn('Scooter did not arrive at the destination.');
-            
-            // Check if the scooter's battery is low
             if (scooter.batteryLow()) {
                 console.log('Battery is low. Initiating charging process...');
                 await scooter.charge();
             }
+            return;
         }
+
+        const parkingSpot = await canIPark(cityName, destination);
+        if (!parkingSpot) {
+            console.warn('No parking spot available. Please try another location.');
+            return;
+        }
+
+        await scooter.park();
     } catch (error) {
         console.error('Error simulating trip:', error.message);
     }
 }
+
 
 // Main function to initialize the simulation
 (async function main() {
