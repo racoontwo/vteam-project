@@ -27,9 +27,6 @@ export default class Scooter {
             if (this.updateInterval === null) { // Start interval only if not already running
                 this.updateInterval = setInterval(() => {
                     this.save();
-                    if (process.env.NODE_ENV === "dev") {
-                        console.log(`Location: ${this.location}, Battery: ${this.battery}%`);
-                    }
                 }, UPDATE_INTERVAL); // Update every 10 seconds
                 console.log(`Interval started for scooter: "${this.scooterID}"`);
             }
@@ -60,6 +57,7 @@ export default class Scooter {
         try {
             this.setStatus("available");
             this.setSpeed(0);
+            this.setUser(null);
             console.log('Saving scooter data...');
 
             await this.save();
@@ -70,9 +68,7 @@ export default class Scooter {
     }
 
     async rideToDestination(destination) {
-        console.log("Heading towards: ", destination);
         this.setSpeed(SCOOTER_SPEED);
-        // const arrived = await simulateMovementWithSpeed(this.location, destination, this.speed);
         const arrived = await simulateMovementWithScooter(this, destination);
         return arrived
     }

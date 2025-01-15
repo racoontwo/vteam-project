@@ -6,7 +6,7 @@ import database from './modules/db.js';
 import Scooter from './scooter.js';
 import { jondoe } from './utilities.js'
 import { canIPark, getRandomCoordinates, simulateMovementWithSpeed } from './modules/locationTracker.js';
-import { simulateWithUsers } from './scooter_pool.js'
+import { simulateStartTrip, simulateWithUsers } from './scooter_pool.js'
 
 // Detta program är tänkt att köra i varje cykel och styra/övervaka den. CHECK
 // Cykeln meddelar dess position med jämna mellanrum.
@@ -21,48 +21,48 @@ import { simulateWithUsers } from './scooter_pool.js'
 // När cykeln tas in för underhåll eller laddning så markeras det att cykeln är i underhållsläge. En cykel som laddas på en laddstation kan inte hyras av en kund och en röd lampa visar att den inte är tillgänglig.
 
 
-async function simulateStartTrip(userID, scooterID) {
-    try {
-        const cityName = 'Malmö'; // Change this variable to fetch data for another city
-        const scooter = await Scooter.loadObjectScooter(scooterID);
-        const destination = await getRandomCoordinates(cityName);
+// async function simulateStartTrip(userID, scooterID) {
+//     try {
+//         const cityName = 'Malmö'; // Change this variable to fetch data for another city
+//         const scooter = await Scooter.loadObjectScooter(scooterID);
+//         const destination = await getRandomCoordinates(cityName);
 
-        // scooter.setStatus('available');
-        // scooter.setUser(null);
-        // scooter.setBattery(90);
+//         // scooter.setStatus('available');
+//         // scooter.setUser(null);
+//         // scooter.setBattery(90);
 
-        const rented = await scooter.rent(userID);
+//         const rented = await scooter.rent(userID);
 
-        if (!rented) {
-            console.warn('Scooter could not be rented');
-            return;
-        }
-        const arrived = await scooter.rideToDestination(destination);
+//         if (!rented) {
+//             console.warn('Scooter could not be rented');
+//             return;
+//         }
+//         const arrived = await scooter.rideToDestination(destination);
 
-        if (!arrived) {
-            console.warn('Scooter did not arrive at the destination.');
-            if (scooter.batteryLow()) {
-                console.log('Battery is low. Initiating charging process...');
-                await scooter.charge();
-            }
-            return;
-        }
+//         if (!arrived) {
+//             console.warn('Scooter did not arrive at the destination.');
+//             if (scooter.batteryLow()) {
+//                 console.log('Battery is low. Initiating charging process...');
+//                 await scooter.charge();
+//             }
+//             return;
+//         }
 
-        const parkingSpot = await canIPark(cityName, destination);
+//         const parkingSpot = await canIPark(cityName, destination);
 
-        if (!parkingSpot) {
-            console.warn('No parking spot available. Please try another location.');
-            return;
-        }
+//         if (!parkingSpot) {
+//             console.warn('No parking spot available. Please try another location.');
+//             return;
+//         }
 
-        await scooter.park();
+//         await scooter.park();
 
-        console.log('Ride is finished');
-        scooter.printInfo();
-    } catch (error) {
-        console.error('Error simulating trip:', error.message);
-    }
-}
+//         console.log('Ride is finished');
+//         scooter.printInfo();
+//     } catch (error) {
+//         console.error('Error simulating trip:', error.message);
+//     }
+// }
 
 
 

@@ -11,14 +11,23 @@ import { canIPark, getRandomCoordinates } from './modules/locationTracker.js';
 //how to solve the update problem for the scooters
 
 
-async function simulateStartTrip(userID, scooterID) {
+export async function simulateStartTrip(userID, scooterID) {
     try {
         const cityName = 'Malmö'; // Change this variable to fetch data for another city
         const scooter = await Scooter.loadObjectScooter(scooterID);
         const destination = await getRandomCoordinates(cityName);
 
-        await scooter.rent(userID);
-        scooter.setBattery(90);
+        // scooter.setStatus('available');
+        // scooter.setUser(null);
+        // scooter.setBattery(90);
+
+        const rented = await scooter.rent(userID);
+
+        if (!rented) {
+            console.warn('Scooter could not be rented');
+            return;
+        }
+
         const arrived = await scooter.rideToDestination(destination);
 
         if (!arrived) {
@@ -31,12 +40,15 @@ async function simulateStartTrip(userID, scooterID) {
         }
 
         const parkingSpot = await canIPark(cityName, destination);
+
         if (!parkingSpot) {
             console.warn('No parking spot available. Please try another location.');
             return;
         }
 
         await scooter.park();
+
+        scooter.printInfo();
     } catch (error) {
         console.error('Error simulating trip:', error.message);
     }
