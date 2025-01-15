@@ -2,62 +2,55 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-// import scooterbase from './modules/scooter_db.js';
 import database from './modules/db.js';
 import Scooter from './scooter.js';
-import {jondoe, getRandomCoordinates, getRandomBatteryLevel, addTen, addWithCoordinates, addTenWithCoordinates } from './utilities.js'
-import { ObjectId } from 'mongodb';
-import { calculateDistance, interpolateCoords, simulateMovementWithSpeed } from './modules/locationTracker.js';
-import cities from './modules/cities_db.js'
+import { jondoe } from './utilities.js'
+import { canIPark, getRandomCoordinates, simulateMovementWithSpeed } from './modules/locationTracker.js';
+// import { simulateWithUsers } from './scooter_pool.js'
+
+// Detta program är tänkt att köra i varje cykel och styra/övervaka den. CHECK
+// Cykeln meddelar dess position med jämna mellanrum.
+// Cykeln meddelar om den kör eller står stilla och vilken hastighet den rör sig i. 
+// Man skall kunna stänga av/stoppa en cykel så att den inte kan köras längre. CHECK
+
+// När en kund hyr cykeln är det möjligt att starta den och köra.
+// Kunden kan lämna tillbaka en cykel och släppa kontrollen över den.
+
+// Cykeln varnar när den behöver laddas.
+// Cykeln sparar en logg över sina resor med start (plats, tid) och slut (plats, tid) samt kund.
+// När cykeln tas in för underhåll eller laddning så markeras det att cykeln är i underhållsläge. En cykel som laddas på en laddstation kan inte hyras av en kund och en röd lampa visar att den inte är tillgänglig.
 
 
 async function simulateStartTrip(userID, scooterID) {
     try {
-        // Load the scooter object based on its ID
-        let scooter = await Scooter.loadObjectScooter(scooterID);
         const cityName = 'Malmö'; // Change this variable to fetch data for another city
-        let destination = await cities.getRandomCityCoordinates(cityName);
-        console.log('Starting at: ', scooter.location);
-        console.log('Ending at:', destination);
-        
-        // Simulate movement
-        if (simulateMovementWithSpeed(scooter.location, destination, process.env.SCOOTER_SPEED)) {
-            await scooter.save();
+        const scooter = await Scooter.loadObjectScooter(scooterID);
+        const destination = await getRandomCoordinates(cityName);
+
+        await scooter.rent(userID);
+        // scooter.setBattery(5);
+        const arrived = await scooter.rideToDestination(destination);
+
+        if (!arrived) {
+            console.warn('Scooter did not arrive at the destination.');
+            if (scooter.batteryLow()) {
+                console.log('Battery is low. Initiating charging process...');
+                await scooter.charge();
+            }
+            return;
         }
 
+        const parkingSpot = await canIPark(cityName, destination);
+        if (!parkingSpot) {
+            console.warn('No parking spot available. Please try another location.');
+            return;
+        }
+
+        await scooter.park();
     } catch (error) {
         console.error('Error simulating trip:', error.message);
     }
 }
-
-
-// (async () => {
-//     try {
-//         const cityName = 'Växjö'; // Change this variable to fetch data for another city
-//         const citiData = await cities.getDriveZone(cityName);
-//         console.log(citiData);
-//         console.log(getRandomCoordinates());
-//         const randomLocation = await cities.getRandomCityCoordinates(cityName);
-//         console.log(randomLocation);
-//     } catch (error) {
-//         console.error('Error:', error.message);
-//     }
-// })();
-
-
-// (async () => {
-//     try {
-//         const cityName = 'Växjö'; // Change this variable to fetch data for another city
-//         const parkingZones = await cities.getParkingZones(cityName);
-
-//         console.log(`Parking Zones for ${cityName}:`);
-//         parkingZones.forEach((zone, index) => {
-//             console.log(`  Zone ${index + 1}:`, zone);
-//         });
-//     } catch (error) {
-//         console.error('Error:', error.message);
-//     }
-// })();
 
 
 // Main function to initialize the simulation
@@ -70,10 +63,9 @@ async function simulateStartTrip(userID, scooterID) {
             // Get the first scooter's ID
             let firstScooterID = scooters[0]._id;
 
-
             // Simulate a trip for the first scooter
-            await simulateStartTrip(jondoe._id, firstScooterID);
             console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
+            await simulateStartTrip(jondoe._id, firstScooterID);
         } else {
             console.log('No scooters found in the collection.');
         }
@@ -81,19 +73,6 @@ async function simulateStartTrip(userID, scooterID) {
         console.error('Error during simulation:', error.message);
     }
 })();
-
-
-
-// Example Usage:
-// const startCoords = { latitude: 10.0, longitude: 20.0 };
-// const endCoords = { latitude: 10.5, longitude: 20.5 };
-// const speedKmh = 20000; // 20 km/h
-// const updateInterval = 1000; // Update every second (1000 ms)
-
-// const distanceBetween = calculateDistance(startCoords, endCoords);
-// console.log(distanceBetween);
-
-// simulateMovementWithSpeed(startCoords, endCoords, speedKmh, updateInterval);
 
 
 //KRAV

@@ -35,15 +35,15 @@ function Scooters({ isLoggedIn }) {
     }, [baseUrl]);
 
     // Handle row expansion to show more details
-    const handleExpand = (ScooterId) => {
-        if (expandedRows.includes(ScooterId)) {
-            setExpandedRows(expandedRows.filter(id => id !== ScooterId));
+    const handleExpand = (scooterId) => {
+        if (expandedRows.includes(scooterId)) {
+            setExpandedRows(expandedRows.filter(id => id !== scooterId));
         } else {
-            setExpandedRows([...expandedRows, ScooterId]);
+            setExpandedRows([...expandedRows, scooterId]);
         }
     };
     // Delete scooter by id
-    const handleDelete = async (ScooterId) => {
+    const handleDelete = async (scooterId) => {
         try {
             const response = await fetch(`${baseUrl}/api/v1/scooters/delete-one-scooter`, {
                 method: 'DELETE',
@@ -51,7 +51,7 @@ function Scooters({ isLoggedIn }) {
                     'Content-Type': 'application/json',
                     'x-api-key': apiKey,
                 },
-                body: JSON.stringify({ id: ScooterId }),
+                body: JSON.stringify({ id: scooterId }),
             });
 
             if (!response.ok) {
@@ -59,7 +59,7 @@ function Scooters({ isLoggedIn }) {
             }
 
             // Update the state to remove the deleted scooter
-            setScooters({ data: scooters.data.filter(scooter => scooter.id !== ScooterId) });
+            setScooters({ data: scooters.data.filter(scooter => scooter._id !== scooterId) });
 
         } catch (error) {
             setError(error.message);
@@ -96,22 +96,22 @@ function Scooters({ isLoggedIn }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {scooters.map(scooter => (
-                            <React.Fragment key={scooter.id}>
-                                <tr onClick={() => handleExpand(scooter.id)}>
-                                    <td>{scooter.id}</td>
+                        {scooters.data.map(scooter => (
+                            <React.Fragment key={scooter._id}>
+                                <tr onClick={() => handleExpand(scooter._id)}>
+                                    <td>{scooter._id}</td>
                                     <td>{scooter.status}</td>
                                     <td>{scooter.battery}</td>
                                     <td>{scooter.speed}</td>
                                 </tr>
-                                {expandedRows.includes(scooter.id) && (
+                                {expandedRows.includes(scooter._id) && (
                                     <tr className="expanded">
                                         <td colSpan="4">
                                             <div className="expanded-content">
                                                 <p>Location: {scooter.location.latitude}, {scooter.location.longitude}</p>
                                                 <p>User: {scooter.user}</p>
                                                 <p>Trip Log: {scooter.tripLog}</p>
-                                                <button onClick={() => handleDelete(scooter.id)}>Delete</button>
+                                                <button onClick={() => handleDelete(scooter._id)}>Delete</button>
                                             </div>
                                         </td>
                                     </tr>
