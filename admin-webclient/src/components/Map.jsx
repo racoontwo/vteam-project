@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, LayerGroup, Circle, Rectangle } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Circle, Rectangle, useMap } from 'react-leaflet';
 import L from 'leaflet';
 
 function Map({ isLoggedIn }) {
     const [scooters, setScooters] = useState(null);
     const [cities, setCities] = useState(null);
+    const [selectedCity, setSelectedCity] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -42,11 +43,11 @@ function Map({ isLoggedIn }) {
                 });
 
                 if (!response.ok) {
-                    console.log(response);
                     throw new Error('Failed to fetch cities');
                 }
                 const data = await response.json();
                 setCities(data);
+                setSelectedCity(data.data[0]);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -58,17 +59,37 @@ function Map({ isLoggedIn }) {
         fetchCities();
     }, [baseUrl]);
 
-    console.log(cities);
+    const handleCityChange = (event) => {
+        const cityId = event.target.value;
+        const city = cities.data.find(city => city._id === cityId);
+        setSelectedCity(city);
+        console.log(selectedCity);
+        console.log("parkZones", selectedCity.parkZones);
+        console.log("chargingZones", selectedCity.chargingZones);
+    };
 
-    const cityCoordinates = [55.60001020081065, 13.00668850676118]; // Malmö
-    const greenCenterCoordinates = [55.60001020081065, 13.00668850676118];
-    const redCenterCoordinates = [55.65001020081065, 13.00668850676118];
-    const blueCenterCoordinates = [55.55001020081065, 13.00668850676118];
-    const rectangle = [[55.60001020081065, 13.00668850676118], [55.65001020081065, 13.20668850676118]];
+    const handleDelete = async (scooterId) => {
+        try {
+            const response = await fetch(`${baseUrl}/api/v1/scooters/delete-one-scooter`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': apiKey,
+                },
+                body: JSON.stringify({ _id: scooterId }),
+            });
 
-    const blue = { color: 'blue' }
-    const red = { fillColor: 'red' }
-    const green = { fillColor: 'green' }
+            if (!response.ok) {
+                throw new Error('Failed to delete scooter');
+            }
+
+            // Update the state to remove the deleted scooter
+            setScooters({ data: scooters.data.filter(scooter => scooter._id !== scooterId) });
+
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
     const scooterIcon = new L.Icon({
         iconUrl: 'scooter.png',
@@ -76,6 +97,12 @@ function Map({ isLoggedIn }) {
         iconAnchor: [12, 25],
         popupAnchor: [0, -30]
     });
+
+    const ChangeMapCenter = ({ center }) => {
+        const map = useMap();
+        map.setView(center);
+        return null;
+    };
 
     if (!isLoggedIn) {
         return (
@@ -90,8 +117,19 @@ function Map({ isLoggedIn }) {
             <h1>Map</h1>
             {loading && <h2>Loading...</h2>}
             {error && <p>{error}</p>}
-            {scooters && (
-                <MapContainer center={cityCoordinates} zoom={12}>
+            {cities && (
+                <div>
+                    <label htmlFor="city-select">Choose a city:</label>
+                    <select id="city-select" onChange={handleCityChange}>
+                        {cities.data.map(city => (
+                            <option key={city._id} value={city._id}>{city.city}</option>
+                        ))}
+                    </select>
+                </div>
+            )}
+            {selectedCity && scooters && (
+                <MapContainer center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]} zoom={12}>
+                    <ChangeMapCenter center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]} />
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -103,32 +141,50 @@ function Map({ isLoggedIn }) {
                             icon={scooterIcon}
                         >
                             <Popup>
-                                <h2>Scooter location</h2>
-                                <button>delete</button>
+                                <h2>{scooter._id}</h2>
+                                <p>Status: {scooter.status}</p>
+                                <p>Battery: {scooter.battery}</p>
+                                <p>Speed: {scooter.speed}</p>
+                                <button onClick={() => handleDelete(scooter._id)}>Delete</button>
                             </Popup>
                         </Marker>
                     ))}
-                    <Circle 
-                        center={blueCenterCoordinates} 
-                        pathOptions={blue} 
-                        radius={1500} />
                     <Circle
-                        center={redCenterCoordinates}
-                        pathOptions={red}
-                        radius={700}
+                        center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]}
+                        pathOptions={{ fillColor: 'green' }}
                         stroke={false}
-                    />
-                    <Circle
-                        center={greenCenterCoordinates}
-                        pathOptions={green}
-                        radius={1000}
-                        stroke={false}
-                    />
-                    <Rectangle 
-                        bounds={rectangle}
-                        stroke={false}
-                        pathOptions={green}
-                    />
+                        radius={selectedCity.driveZone.radius_km2 * 1000}
+                    >
+                        <Popup>
+                            <h2>{selectedCity.city}</h2>
+                        </Popup>
+                    </Circle>
+                    {selectedCity.parkZones.map((zone, index) => (
+                        <Circle
+                            key={index}
+                            center={[zone.latitude, zone.longitude]}
+                            pathOptions={{ color: 'blue' }}
+                            stroke={false}
+                            radius={1000} // TODO: Change to zone.radius_km2 * 1000
+                        >
+                            <Popup>
+                                <h2>{zone.name}</h2>
+                            </Popup>
+                        </Circle>
+                    ))}
+                    {selectedCity.chargingZones.map((zone, index) => (
+                        <Circle
+                            key={index}
+                            center={[zone.latitude, zone.longitude]}
+                            pathOptions={{ color: 'red' }}
+                            stroke={false}
+                            radius={zone.radius_km2 * 1000}
+                        >
+                            <Popup>
+                                <h2>{zone.name}</h2>
+                            </Popup>
+                        </Circle>
+                    ))}
                 </MapContainer>
             )}
         </div>
