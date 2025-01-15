@@ -114,18 +114,21 @@ function Map({ isLoggedIn }) {
 
     return (
         <div className="map">
-            <h1>Map</h1>
             {loading && <h2>Loading...</h2>}
             {error && <p>{error}</p>}
             {cities && (
-                <div>
-                    <label htmlFor="city-select">Choose a city:</label>
-                    <select id="city-select" onChange={handleCityChange}>
-                        {cities.data.map(city => (
-                            <option key={city._id} value={city._id}>{city.city}</option>
-                        ))}
-                    </select>
+                <div className="page-header">
+                    <h1>Map</h1>
+                    <div className='city-select'>
+                        <label htmlFor="city-select">Choose a city:</label>
+                        <select id="city-select" onChange={handleCityChange}>
+                            {cities.data.map(city => (
+                                <option key={city._id} value={city._id}>{city.city}</option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
+
             )}
             {selectedCity && scooters && (
                 <MapContainer center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]} zoom={12}>
