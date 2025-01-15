@@ -266,13 +266,3 @@ export async function canIPark(cityName, location) {
 
     return "Location is not within any park zone";
 }
-
-
-
-// // Example Usage:
-// const startCoords = { latitude: 10.0, longitude: 20.0 };
-// const endCoords = { latitude: 20.0, longitude: 30.0 };
-// const totalDuration = 5000; // 5 seconds
-// const interval = 500; // Update every 0.5 seconds
-
-// simulateMovement(startCoords, endCoords, totalDuration, interval);

@@ -5,7 +5,7 @@ import database from './modules/scooter_db.js';
 import { simulateMovementWithScooter, simulateMovementWithSpeed } from './modules/locationTracker.js';
 
 const UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 10000;  // Default to 10000 ms
-const SCOOTER_SPEED = process.env.SCOOTER_SPEED || 15;  // Default to speed 15
+const SCOOTER_SPEED = process.env.SCOOTER_SPEED || 20;
 const BATTERY_CHARGE_RATE = process.env.BATTERY_CHARGE_RATE || 500; 
 
 export default class Scooter {
@@ -22,36 +22,23 @@ export default class Scooter {
         this.updateInterval = null; // To store the interval ID
     };
 
-    // updateToDatabase() {
-    //     console.log(`Updating scooter ${this.scooterID} to database...`);
-    // }
-
     updateIntervals() {
         if (this.status === "rented") {
             if (this.updateInterval === null) { // Start interval only if not already running
                 this.updateInterval = setInterval(() => {
-                        console.log(`${this.battery}%`);
-                        console.log(this.location);
                     this.save();
+                    if (process.env.NODE_ENV === "dev") {
+                        console.log(`Location: ${this.location}, Battery: ${this.battery}%`);
+                    }
                 }, UPDATE_INTERVAL); // Update every 10 seconds
-                console.log(`Interval started for scooter ${this.id}`);
+                console.log(`Interval started for scooter: "${this.scooterID}"`);
             }
         } else {
             if (this.updateInterval !== null) { // Clear the interval if it exists
                 clearInterval(this.updateInterval);
                 this.updateInterval = null;
-                console.log(`Interval stopped for scooter ${this.id}`);
+                console.log(`Interval stopped for scooter: "${this.scooterID}"`);
             }
-        }
-    }
-    
-    stopUpdating() {
-        if (this.user) {
-            clearInterval(this.user); // Stop the interval
-            this.user = null;         // Reset to default when parked
-            console.log("Stopped updating.");
-        } else {
-            console.error("No interval is running for this scooter.");
         }
     }
 
