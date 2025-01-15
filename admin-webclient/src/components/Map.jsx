@@ -4,6 +4,7 @@ import L from 'leaflet';
 
 function Map({ isLoggedIn }) {
     const [scooters, setScooters] = useState(null);
+    const [cities, setCities] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -31,10 +32,33 @@ function Map({ isLoggedIn }) {
             }
         };
 
+        // Fetch cities from the API
+        const fetchCities = async () => {
+            try {
+                const response = await fetch(`${baseUrl}/api/v1/cities/all-cities`, {
+                    headers: {  
+                        'x-api-key': apiKey,
+                    },
+                });
+
+                if (!response.ok) {
+                    console.log(response);
+                    throw new Error('Failed to fetch cities');
+                }
+                const data = await response.json();
+                setCities(data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchScooter();
+        fetchCities();
     }, [baseUrl]);
 
-    console.log(scooters);
+    console.log(cities);
 
     const cityCoordinates = [55.60001020081065, 13.00668850676118]; // Malmö
     const greenCenterCoordinates = [55.60001020081065, 13.00668850676118];
