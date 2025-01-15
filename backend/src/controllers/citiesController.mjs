@@ -1,7 +1,7 @@
 import database from '../../db/database.mjs';
 import { ObjectId } from 'mongodb';
 
-const collectionName = 'cities_location';
+const collectionName = 'cities_locations';
 
 const cities = {
     getAllCities: async function getAllCities() {
