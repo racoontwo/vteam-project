@@ -19,24 +19,30 @@ export default class Scooter {
         this.speed = 0;
         this.battery = Math.floor(Math.random() * 101);
         this.tripLog = ": [ObjectId], (referens till Trips)";
+        this.updateInterval = null; // To store the interval ID
     };
 
-    updateInterval() {
-        // Clear any existing interval first to avoid overlapping
-        if (this.user) {
-            console.error("An interval is already running for this scooter.");
-            return;
-        }
-    
-        // Set up the interval using this.user as the ID
-        this.user = setInterval(() => {
-            if (this.status !== 'rented') {
-                this.stopUpdating();
-                return;
+    // updateToDatabase() {
+    //     console.log(`Updating scooter ${this.scooterID} to database...`);
+    // }
+
+    updateIntervals() {
+        if (this.status === "rented") {
+            if (this.updateInterval === null) { // Start interval only if not already running
+                this.updateInterval = setInterval(() => {
+                        console.log(`${this.battery}%`);
+                        console.log(this.location);
+                    this.save();
+                }, UPDATE_INTERVAL); // Update every 10 seconds
+                console.log(`Interval started for scooter ${this.id}`);
             }
-            console.log("Updating scooter:", this);
-            this.save();
-        }, UPDATE_INTERVAL);
+        } else {
+            if (this.updateInterval !== null) { // Clear the interval if it exists
+                clearInterval(this.updateInterval);
+                this.updateInterval = null;
+                console.log(`Interval stopped for scooter ${this.id}`);
+            }
+        }
     }
     
     stopUpdating() {
@@ -48,39 +54,32 @@ export default class Scooter {
             console.error("No interval is running for this scooter.");
         }
     }
-    
-    
-    // Update the saving interval based on the current status
-    // updateSaveInterval() {
-    //     if (this.saveInterval) {
-    //         clearInterval(this.saveInterval);
-    //     }
-    
-    //     const intervalTime = this.status === "rented" ? 10000 : 600000; // 10 seconds or 10 minutes
-    //     this.saveInterval = setInterval(() => this.save(), intervalTime);
-    
-    //     console.log(
-    //         `Save interval updated: Status is '${this.status}', saving every ${
-    //             this.status === "rented" ? "10 seconds" : "10 minutes"
-    //         }.`
-    //     );
-    // }
 
     async rent(userID) {
         if (this.status !== "available") {
-            console.log("Scooter cannot be rented. Current status:", this.status);
+            console.log(`Scooter: "${this.scooterID}" cannot be rented. Current status: "${this.status}"`);
             return false;
         }
 
-        console.log('Starting location:', this.location);
         this.setUser(userID);
         this.setStatus("rented");
-        this.updateInterval();
 
         await this.save();
 
-
         return true;
+    }
+
+    async park() {
+        try {
+            this.setStatus("available");
+            this.setSpeed(0);
+            console.log('Saving scooter data...');
+
+            await this.save();
+        } catch (error) {
+            console.error("Error updating scooter status to 'available':", error.message);
+            throw new Error("Failed to set scooter status to 'available'");
+        }
     }
 
     async rideToDestination(destination) {
@@ -89,21 +88,6 @@ export default class Scooter {
         // const arrived = await simulateMovementWithSpeed(this.location, destination, this.speed);
         const arrived = await simulateMovementWithScooter(this, destination);
         return arrived
-    }
-
-    async park() {
-        try {
-            this.setStatus("available");
-            this.setSpeed(0);
-            this.stopUpdating();
-            console.log('Saving scooter data...');
-            // this.updateSaveInterval();
-
-            await this.save();
-        } catch (error) {
-            console.error("Error updating scooter status to 'available':", error.message);
-            throw new Error("Failed to set scooter status to 'available'");
-        }
     }
 
     async turnOff() {
@@ -141,16 +125,6 @@ export default class Scooter {
         return this.battery < 10;
     }
 
-    async printLiveLocation() {
-        console.log(this.location);
-        return this.location;
-    };
-
-    startPrintingLocation() {
-        setInterval(() => {
-            this.printLiveLocation();
-        }, UPDATE_INTERVAL);
-    }
 
     // static createFromDb(jsonObject) {
     //     try {
@@ -215,7 +189,6 @@ export default class Scooter {
                 tripLog: this.tripLog
             };
 
-            console.log(this.location);
             const result = await database.updateScooter(this.scooterID, updatedScooterData);
 
             if (result) {
@@ -270,11 +243,19 @@ export default class Scooter {
 
     setStatus(newStatus) {
         const validStatuses = ["available", "rented", "maintenance", "off"];
+        
+        // Validate the new status
         if (!validStatuses.includes(newStatus)) {
             throw new Error(`Invalid status: ${newStatus}. Must be one of: ${validStatuses.join(", ")}`);
         }
+    
+        // Update the status
         this.status = newStatus;
+    
+        // Call updateIntervals to manage the interval based on the new status
+        this.updateIntervals();
     }
+
 
     setBattery(newBattery) {
         if (typeof newBattery !== 'number' || newBattery < 0 || newBattery > 100) {

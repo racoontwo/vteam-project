@@ -29,6 +29,7 @@ async function simulateStartTrip(userID, scooterID) {
 
         // scooter.setStatus('available');
         // scooter.setUser(null);
+        // scooter.setBattery(90);
 
         const rented = await scooter.rent(userID);
 
@@ -36,7 +37,6 @@ async function simulateStartTrip(userID, scooterID) {
             console.warn('Scooter could not be rented');
             return;
         }
-        // scooter.setBattery(90);
         const arrived = await scooter.rideToDestination(destination);
 
         if (!arrived) {
@@ -49,13 +49,15 @@ async function simulateStartTrip(userID, scooterID) {
         }
 
         const parkingSpot = await canIPark(cityName, destination);
+
         if (!parkingSpot) {
             console.warn('No parking spot available. Please try another location.');
             return;
         }
 
         await scooter.park();
-        console.log('ride is finished');
+
+        console.log('Ride is finished');
         scooter.printInfo();
     } catch (error) {
         console.error('Error simulating trip:', error.message);
