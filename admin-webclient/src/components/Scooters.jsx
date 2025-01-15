@@ -51,7 +51,7 @@ function Scooters({ isLoggedIn }) {
                     'Content-Type': 'application/json',
                     'x-api-key': apiKey,
                 },
-                body: JSON.stringify({ id: scooterId }),
+                body: JSON.stringify({ _id: scooterId }),
             });
 
             if (!response.ok) {
