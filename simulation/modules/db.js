@@ -74,6 +74,21 @@ async function listCollections() {
     }
 }
 
+async function countItems(collectionName) {
+    try {
+        const { collection, client } = await getCollection(collectionName);
+
+        const count = await collection.countDocuments();
+
+        await client.close();
+
+        return count;
+    } catch (error) {
+        console.error('Error counting items:', error);
+        throw new Error('Failed to count items');
+    }
+}
+
 // Example usage
 // listCollections().catch(console.error);
 
@@ -82,5 +97,6 @@ export default {
     getCollection,
     getAll,
     dropAll,
-    listCollections
+    listCollections,
+    countItems
 }

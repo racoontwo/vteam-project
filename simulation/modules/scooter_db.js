@@ -79,6 +79,7 @@ async function addScooter(scooter) {
             speed: scooter.speed,
             battery: scooter.battery,
             tripLog: scooter.tripLog,
+            city:   scooter.city
         });
 
         await client.close();
