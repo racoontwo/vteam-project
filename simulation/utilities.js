@@ -4,7 +4,9 @@ dotenv.config();
 import database from './modules/scooter_db.js';
 import Scooter from './scooter.js';
 import cities from './modules/cities_db.js'
-import { ObjectId } from 'mongodb';
+import { faker } from '@faker-js/faker';
+
+
 
 export const jondoe = {
     _id: "id123456789",
@@ -16,6 +18,22 @@ export const jondoe = {
     }
 
 
+export const randomUser = {
+        // Generate random first name, last name, and email
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet
+        .email(
+            faker.person.firstName(),
+            faker.person.lastName()
+        )
+        .toLowerCase(),
+        passwordHash: 'pw-hashed-123',
+        oathID: 'oathID',
+        balance: faker.number.int({ min: 500, max: 5000 }),
+        tripLog: 'ref_to_trip_log_object',
+        paymentHistory: 'transactions'
+}
 
 
 export function getRandomCoordinates() {
@@ -162,6 +180,9 @@ async function utils() {
             break;
         case 'rentScooter':
             await rentScooter("6761f728b2bfdd488eb5c71e");
+            break;
+        case 'randomUser':
+            console.log(randomUser);
             break;
         case 'addScooter':
             await util.addOne();
