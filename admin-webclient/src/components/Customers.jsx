@@ -77,7 +77,7 @@ function Customers({ isLoggedIn }) {
 
     return (
         <div className="customers">
-            <div className="customer-header">
+            <div className="page-header">
                 <h1>Customers</h1>
                 <Link to="/add-customer">
                     <button>Add Customer</button>

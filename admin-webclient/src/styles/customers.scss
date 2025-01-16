@@ -1,11 +1,6 @@
 @use 'variables';
 
 .customers {
-    .customer-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
 
     table {
         width: 100%;
