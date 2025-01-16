@@ -6,11 +6,21 @@
 @use 'profile';
 @use 'login';
 @use 'signup';
+@use 'history';
+@use 'wallet';
+@use 'account';
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 html {
-    font-family: "Roboto", sans-serif;
     background-color: variables.$background;
     color: variables.$text-primary;
+    line-height: 1.5;
+}
+
+html, input, button, select, textarea {
+    font-family: variables.$font-primary !important;
+    line-height: 1.5;
 }
 
 body {
@@ -22,6 +32,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    margin: 0 auto;
 }
 
 .main-content {
@@ -47,7 +58,7 @@ button {
     font-size: 1rem;
     border: none;
     border-radius: 2rem;
-    padding: 0.8rem 1.5rem;
+    padding: 0.6rem 1.2rem;
     cursor: pointer;
     transition: background-color 0.3s;
     &:hover {
@@ -57,5 +68,19 @@ button {
 
 .login-button {
     color: variables.$color-white;
-    font-weight: 700;
+    font-weight: 600;
+}
+
+input {
+    background-color: variables.$background2;
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+
+    &:focus {
+        outline: none;
+        background-color: variables.$background3;
+    }
 }

@@ -7,7 +7,7 @@ function History() {
     const { customer, error, loading } = useCustomer();
 
     return (
-        <div className="main-content">
+        <div className="main-content profile-content">
             <div className="page-header">
                 <Link to="/profile">
                     <FaArrowLeft className="back" />

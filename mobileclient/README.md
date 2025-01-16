@@ -15,13 +15,6 @@ VITE_API_KEY="6b00bafa-4f70-463b-a4c3-1234c317a09f"
 VITE_BASE_URL="http://localhost:5001"
 ```
 
-### Example .env file for mock api:
-
-```
-VITE_API_KEY="6b00bafa-4f70-463b-a4c3-1234c317a09f"
-VITE_BASE_URL="http://localhost:4000"
-```
-
 ### React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
