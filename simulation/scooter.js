@@ -153,6 +153,7 @@ export default class Scooter {
             scooter.speed = scooterData.speed;
             scooter.battery = scooterData.battery;
             scooter.tripLog = scooterData.tripLog;
+            scooter.city = scooterData.city;
     
             return scooter;
         } catch (error) {
@@ -255,6 +256,7 @@ export default class Scooter {
         console.log("Battery:", this.battery);
         console.log("Speed:", this.speed);
         console.log("TripLog:", this.tripLog);
+        console.log("City:", this.city);
     }
 
 }
