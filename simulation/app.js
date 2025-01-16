@@ -6,7 +6,15 @@ import database from './modules/db.js';
 // import Scooter from './scooter.js';
 import { jondoe, randomUser } from './utilities.js'
 // import { canIPark, getRandomCoordinates, simulateMovementWithSpeed } from './modules/locationTracker.js';
-import { simulateStartTrip, simulateWithUsers } from './scooter_pool.js'
+// import { simulateStartTrip, simulateWithUsers } from './scooter_pool.js'
+import { simulateWithUsers } from './scooter_pool.js'
+
+
+// docker compose up --build
+
+//next step is Cityname attached to the scooter.
+//update all scooters to "available" in start of simulation?
+
 
 // Detta program är tänkt att köra i varje cykel och styra/övervaka den. CHECK
 // Cykeln meddelar dess position med jämna mellanrum.
@@ -77,8 +85,9 @@ import { simulateStartTrip, simulateWithUsers } from './scooter_pool.js'
             if (scooters && scooters.length > 0) {
                 let firstScooterID = scooters[0]._id;
 
-                console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
-                await simulateStartTrip(jondoe._id, firstScooterID);
+                // console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
+                // await simulateStartTrip(jondoe._id, firstScooterID);
+                await startSimulateTrip(jondoe._id, firstScooterID);
             } else {
                 console.log('No scooters found in the collection.');
             }

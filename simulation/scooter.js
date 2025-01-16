@@ -19,6 +19,7 @@ export default class Scooter {
         this.speed = 0;
         this.battery = Math.floor(Math.random() * 101);
         this.tripLog = ": [ObjectId], (referens till Trips)";
+        this.city = 'CityName'
         this.updateInterval = null; // To store the interval ID
     };
 
@@ -153,6 +154,7 @@ export default class Scooter {
             scooter.speed = scooterData.speed;
             scooter.battery = scooterData.battery;
             scooter.tripLog = scooterData.tripLog;
+            scooter.city = scooterData.city;
     
             return scooter;
         } catch (error) {
@@ -175,7 +177,7 @@ export default class Scooter {
             const result = await database.updateScooter(this.scooterID, updatedScooterData);
 
             if (result) {
-                console.log(`Scooter "${this.scooterID}" updated successfully.`);
+                // console.log(`Scooter "${this.scooterID}" updated successfully.`);
             }
         } catch (error) {
             console.error('Error saving scooter:', error.message);
@@ -255,6 +257,7 @@ export default class Scooter {
         console.log("Battery:", this.battery);
         console.log("Speed:", this.speed);
         console.log("TripLog:", this.tripLog);
+        console.log("City:", this.city);
     }
 
 }
