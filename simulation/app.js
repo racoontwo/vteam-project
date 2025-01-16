@@ -82,7 +82,7 @@ import { simulateWithUsers } from './scooter_pool.js'
             if (scooters && scooters.length > 0) {
                 let firstScooterID = scooters[0]._id;
 
-                console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
+                // console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
                 // await simulateStartTrip(jondoe._id, firstScooterID);
                 await startSimulateTrip(jondoe._id, firstScooterID);
             } else {
