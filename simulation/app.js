@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import database from './modules/db.js';
-import Scooter from './scooter.js';
+// import Scooter from './scooter.js';
 import { jondoe } from './utilities.js'
-import { canIPark, getRandomCoordinates, simulateMovementWithSpeed } from './modules/locationTracker.js';
+// import { canIPark, getRandomCoordinates, simulateMovementWithSpeed } from './modules/locationTracker.js';
 import { simulateStartTrip, simulateWithUsers } from './scooter_pool.js'
 
 // Detta program är tänkt att köra i varje cykel och styra/övervaka den. CHECK
