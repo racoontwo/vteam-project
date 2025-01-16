@@ -9,6 +9,9 @@ import { jondoe, randomUser } from './utilities.js'
 // import { simulateStartTrip, simulateWithUsers } from './scooter_pool.js'
 import { simulateWithUsers } from './scooter_pool.js'
 
+
+// docker compose up --build
+
 //next step is Cityname attached to the scooter.
 //update all scooters to "available" in start of simulation?
 

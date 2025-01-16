@@ -19,7 +19,7 @@ export async function startSimulateTrip(userID, scooterID) {
 
         const destination = await getRandomCoordinates(scooter.city);
 
-        scooter.setStatus('available');
+        // scooter.setStatus('available');
         // scooter.setUser(null);
         // scooter.setBattery(90);
 

@@ -133,7 +133,7 @@ async function utils() {
             if (isNaN(num) || num <= 0) {
                 console.log('Please provide a valid number of customers to add.');
             } else {
-                await addMultipleScooters(num, 'Växjö');
+                await addMultipleScooters(num, 'Karlskrona centrum');
             }
             break;
         case 'randomUser':
