@@ -1,5 +1,90 @@
 @use 'variables';
 
 .profile {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 1rem 0;
+
+    a {
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0 0 1.5rem;
+        padding: 1.5rem;
+        background-color: variables.$background2;
+        color: variables.$text-primary;
+        border-radius: 0.5rem;
+        box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    h3 {
+        margin: 0;
+    }
+
+    .icon {
+        font-size: 2rem;
+        margin-right: 1.5rem;
+    }
+
+    .angle {
+        margin-left: auto;
+        font-size: 1.5rem;
+        color: variables.$icon-inactive-color;
+    }
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+    font-size: 1.5rem;
+    position: relative;
     text-align: center;
+
+    h1 {
+        margin: 0 0 0.6rem;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2rem;
+    }
+
+    .back {
+        color: variables.$icon-color;
+        font-size: 1.5rem;
+        padding: 1rem 1.5rem;
+        cursor: pointer;
+    }
+
+    .save-button {
+        background: none;
+        color: variables.$text-primary;
+        text-decoration: underline;
+        width: auto;
+    }
+}
+
+.page-footer {
+    margin-top: auto;
+    margin: auto;
+    padding: 1rem 0 2rem;
+
+    button {
+        margin: 0 1rem;
+    }
 }
