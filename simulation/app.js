@@ -7,7 +7,7 @@ import database from './modules/db.js';
 import { jondoe, randomUser } from './utilities.js'
 // import { canIPark, getRandomCoordinates, simulateMovementWithSpeed } from './modules/locationTracker.js';
 // import { simulateStartTrip, simulateWithUsers } from './scooter_pool.js'
-import { simulateWithUsers } from './scooter_pool.js'
+import { startSimulateTrip, simulateWithUsers } from './scooter_pool.js'
 
 
 // docker compose up --build
@@ -28,52 +28,6 @@ import { simulateWithUsers } from './scooter_pool.js'
 // Cykeln sparar en logg över sina resor med start (plats, tid) och slut (plats, tid) samt kund.
 // När cykeln tas in för underhåll eller laddning så markeras det att cykeln är i underhållsläge. En cykel som laddas på en laddstation kan inte hyras av en kund och en röd lampa visar att den inte är tillgänglig.
 
-
-// async function simulateStartTrip(userID, scooterID) {
-//     try {
-//         const cityName = 'Malmö'; // Change this variable to fetch data for another city
-//         const scooter = await Scooter.loadObjectScooter(scooterID);
-//         const destination = await getRandomCoordinates(cityName);
-
-//         // scooter.setStatus('available');
-//         // scooter.setUser(null);
-//         // scooter.setBattery(90);
-
-//         const rented = await scooter.rent(userID);
-
-//         if (!rented) {
-//             console.warn('Scooter could not be rented');
-//             return;
-//         }
-//         const arrived = await scooter.rideToDestination(destination);
-
-//         if (!arrived) {
-//             console.warn('Scooter did not arrive at the destination.');
-//             if (scooter.batteryLow()) {
-//                 console.log('Battery is low. Initiating charging process...');
-//                 await scooter.charge();
-//             }
-//             return;
-//         }
-
-//         const parkingSpot = await canIPark(cityName, destination);
-
-//         if (!parkingSpot) {
-//             console.warn('No parking spot available. Please try another location.');
-//             return;
-//         }
-
-//         await scooter.park();
-
-//         console.log('Ride is finished');
-//         scooter.printInfo();
-//     } catch (error) {
-//         console.error('Error simulating trip:', error.message);
-//     }
-// }
-
-
-
 // Main function to initialize the simulation
 (async function main() {
     try {
@@ -81,13 +35,12 @@ import { simulateWithUsers } from './scooter_pool.js'
             console.log('Running simulation in development mode...');
             
             let scooters = await database.getAll('scooters');
+            let customers = await database.getAll('customers');
 
             if (scooters && scooters.length > 0) {
                 let firstScooterID = scooters[0]._id;
-
-                // console.log(`Simulation started for user: ${jondoe._id}, scooter: ${firstScooterID}`);
-                // await simulateStartTrip(jondoe._id, firstScooterID);
-                await startSimulateTrip(jondoe._id, firstScooterID);
+                let firstCustomerID = customers[0]._id;
+                await startSimulateTrip(firstCustomerID, firstScooterID);
             } else {
                 console.log('No scooters found in the collection.');
             }
