@@ -46,6 +46,21 @@ async function getAll(collectionName) {
     }
 }
 
+async function dropAll(collectionName) {
+    try {
+        const { collection, client } = await getCollection(collectionName);
+
+        const result = await collection.deleteMany({});
+
+        await client.close();
+
+        return result;
+    } catch (error) {
+        console.error('Failed to remove all from database:', error);
+        throw new Error('Database removal failed: ' + error.message);
+    }
+}
+
 // List all collections in the database
 async function listCollections() {
     const database = await connectDB();
@@ -66,5 +81,6 @@ export default {
     connectDB, 
     getCollection,
     getAll,
+    dropAll,
     listCollections
 }

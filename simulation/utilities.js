@@ -79,7 +79,6 @@ export async function addTenWithCoordinates() {
     return scooters;
 }
 
-
 export async function addOne() {
     await Scooter.createNewScooter();
 }
