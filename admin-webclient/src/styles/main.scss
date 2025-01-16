@@ -1,5 +1,4 @@
 @use 'variables';
-
 @use 'header';
 @use 'sidebar';
 @use 'home';
@@ -8,10 +7,16 @@
 @use 'customers';
 @use 'map';
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 html {
-    font-family: "Roboto", sans-serif;
     background-color: variables.$background;
     color: variables.$text-primary;
+}
+
+html, input, button, select, textarea {
+    font-family: variables.$font-primary !important;
+    line-height: 1.5;
 }
 
 body {
@@ -51,6 +56,19 @@ input {
     &:focus {
         outline: none;
         background-color: variables.$background3;
+    }
+}
+
+select {
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: variables.$background2;
+    color: variables.$text-primary;
+
+    &:focus {
+        outline: none;
     }
 }
 

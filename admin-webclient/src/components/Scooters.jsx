@@ -77,7 +77,7 @@ function Scooters({ isLoggedIn }) {
 
     return (
         <div className="scooters">
-            <div className="scooters-header">
+            <div className="page-header">
                 <h1>Scooters</h1>
                 <Link to="/add-scooter">
                     <button>Add scooter</button>
