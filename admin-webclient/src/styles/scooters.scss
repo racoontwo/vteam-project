@@ -23,29 +23,36 @@
         th, td {
             text-align: left;
         }
-
-        .expanded {
-            td {
-                background-color: variables.$background;
-                text-align: center;
-                border-top: none;
-            }
-
-            .expanded-content {
-                display: flex;
-                align-items: center;
-
-                p {
-                    margin: 0;
-                    flex: 1;
-                    text-align: left;
-                }
-            }
-        }
     }
 }
 
-.add-scooter {
+.scooters .expanded {
+    td {
+        background-color: variables.$background;
+        text-align: center;
+        border-top: none;
+    }
+}
+
+.scooters .expanded-content {
+    display: flex;
+}
+
+.scooters .expanded-details {
+    p {
+        margin: 0.1rem 0;
+        flex: 1;
+        text-align: left;
+    }
+}
+
+.scooters .expanded-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.scooters .add-scooter {
     display: flex;
     flex-direction: column;
     align-items: center;
