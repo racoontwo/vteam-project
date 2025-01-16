@@ -19,7 +19,7 @@ function History() {
             {customer && (
                 <ul className="history-list">
                     {customer.rentalHistory.map((rental) => (
-                        <li>
+                        <li key={rental._id}>
                             <Link to={`/history-details`} state={{ rental }} className="history-item">
                                 <div className="history-details">
                                     <span className="history-minutes">{rental.durationMinutes} min</span>
