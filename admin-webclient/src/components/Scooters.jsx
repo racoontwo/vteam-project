@@ -32,6 +32,16 @@ function Scooters({ isLoggedIn }) {
         };
 
         fetchScooter();
+
+        console.log(scooters);
+
+        // fetch every 10 seconds
+        const interval = setInterval(() => {
+            fetchScooter();
+            console.log("fetching scooters");
+        }, 10000);
+
+        return () => clearInterval(interval);
     }, [baseUrl]);
 
     // Handle row expansion to show more details
@@ -108,10 +118,14 @@ function Scooters({ isLoggedIn }) {
                                     <tr className="expanded">
                                         <td colSpan="4">
                                             <div className="expanded-content">
-                                                <p>Location: {scooter.location.latitude}, {scooter.location.longitude}</p>
-                                                <p>User: {scooter.user}</p>
-                                                <p>Trip Log: {scooter.tripLog}</p>
-                                                <button onClick={() => handleDelete(scooter._id)}>Delete</button>
+                                                <div className="expanded-details">
+                                                    <p>Location: {scooter.location.latitude}, {scooter.location.longitude}</p>
+                                                    <p>User: {scooter.user}</p>
+                                                    <p>Trip Log: {scooter.tripLog}</p>
+                                                </div>
+                                                <div className="expanded-actions">
+                                                    <button onClick={() => handleDelete(scooter._id)}>Delete</button>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
