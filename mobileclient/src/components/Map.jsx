@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, Rectangle, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 
-function Map({ isLoggedIn }) {
+function Map() {
     const [scooters, setScooters] = useState(null);
     const [cities, setCities] = useState(null);
     const [selectedCity, setSelectedCity] = useState(null);
@@ -59,38 +60,6 @@ function Map({ isLoggedIn }) {
         fetchCities();
     }, [baseUrl]);
 
-    const handleCityChange = (event) => {
-        const cityId = event.target.value;
-        const city = cities.data.find(city => city._id === cityId);
-        setSelectedCity(city);
-        console.log(selectedCity);
-        console.log("parkZones", selectedCity.parkZones);
-        console.log("chargingZones", selectedCity.chargingZones);
-    };
-
-    const handleDelete = async (scooterId) => {
-        try {
-            const response = await fetch(`${baseUrl}/api/v1/scooters/delete-one-scooter`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': apiKey,
-                },
-                body: JSON.stringify({ _id: scooterId }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to delete scooter');
-            }
-
-            // Update the state to remove the deleted scooter
-            setScooters({ data: scooters.data.filter(scooter => scooter._id !== scooterId) });
-
-        } catch (error) {
-            setError(error.message);
-        }
-    };
-
     const scooterIcon = new L.Icon({
         iconUrl: 'scooter.png',
         iconSize: [30, 30],
@@ -98,41 +67,13 @@ function Map({ isLoggedIn }) {
         popupAnchor: [0, -30]
     });
 
-    const ChangeMapCenter = ({ center }) => {
-        const map = useMap();
-        map.setView(center);
-        return null;
-    };
-
-    if (!isLoggedIn) {
-        return (
-            <div className="map">
-                <h2>Please log in to view this page.</h2>
-            </div>
-        );
-    }
 
     return (
         <div className="map">
             {loading && <h2>Loading...</h2>}
             {error && <p>{error}</p>}
-            {cities && (
-                <div className="page-header">
-                    <h1>Map</h1>
-                    <div className='city-select'>
-                        <label htmlFor="city-select">Choose a city:</label>
-                        <select id="city-select" onChange={handleCityChange}>
-                            {cities.data.map(city => (
-                                <option key={city._id} value={city._id}>{city.city}</option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-
-            )}
             {selectedCity && scooters && (
-                <MapContainer center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]} zoom={12}>
-                    <ChangeMapCenter center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]} />
+                <MapContainer className="map-container" center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]} zoom={12}>
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -148,7 +89,6 @@ function Map({ isLoggedIn }) {
                                 <p>Status: {scooter.status}</p>
                                 <p>Battery: {scooter.battery}</p>
                                 <p>Speed: {scooter.speed}</p>
-                                <button onClick={() => handleDelete(scooter._id)}>Delete</button>
                             </Popup>
                         </Marker>
                     ))}

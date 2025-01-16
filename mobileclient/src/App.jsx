@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useState } from 'react';
 import './styles/main.scss';
 import Navbar from './components/Navbar';
-import Home from './components/Home';
+import Map from './components/Map';
 import Scan from './components/Scan';
 import Profile from './components/Profile';
 import Login from './components/Login';
@@ -37,8 +37,8 @@ function App() {
                     <Routes>
                         {isLoggedIn ? (
                             <>
-                                <Route path="/" element={<><Home /><Navbar /></>} />
-                                <Route path="*" element={<><Home /><Navbar /></>} />
+                                <Route path="/" element={<><Map /><Navbar /></>} />
+                                <Route path="*" element={<><Map /><Navbar /></>} />
                                 <Route path="/scan" element={<><Scan /><Navbar /></>} />
                                 <Route path="/profile" element={<><Profile /><Navbar /></>} />
                                 <Route path="/account" element={<Account onLogout={handleLogout} />} />

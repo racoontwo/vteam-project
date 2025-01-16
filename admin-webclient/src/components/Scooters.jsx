@@ -51,7 +51,7 @@ function Scooters({ isLoggedIn }) {
                     'Content-Type': 'application/json',
                     'x-api-key': apiKey,
                 },
-                body: JSON.stringify({ id: scooterId }),
+                body: JSON.stringify({ _id: scooterId }),
             });
 
             if (!response.ok) {
@@ -77,7 +77,7 @@ function Scooters({ isLoggedIn }) {
 
     return (
         <div className="scooters">
-            <div className="scooters-header">
+            <div className="page-header">
                 <h1>Scooters</h1>
                 <Link to="/add-scooter">
                     <button>Add scooter</button>

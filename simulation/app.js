@@ -4,7 +4,7 @@ dotenv.config();
 
 import database from './modules/db.js';
 // import Scooter from './scooter.js';
-import { jondoe } from './utilities.js'
+import { jondoe, randomUser } from './utilities.js'
 // import { canIPark, getRandomCoordinates, simulateMovementWithSpeed } from './modules/locationTracker.js';
 import { simulateStartTrip, simulateWithUsers } from './scooter_pool.js'
 
