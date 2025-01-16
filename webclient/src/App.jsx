@@ -1,15 +1,22 @@
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useState } from 'react';
 import './styles/main.scss';
+import Profile from './components/Profile';
+import Account from './components/Account';
+import Wallet from './components/Wallet';
+import History from './components/History';
+import HistoryDetails from './components/HistoryDetails';
+import AddFunds from './components/AddFunds';
+import Home from './components/Home';
+import Signup from './components/Signup';
+import Login from './components/Login';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Home from './components/Home';
-import Login from './components/Login';
-import Profile from './components/Profile';
-import Signup from './components/Signup';
+import { CustomerProvider } from './context/CustomerContext';
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(true); // Change to false to test login
+    const customerId = 1;
 
     const handleLogin = () => {
         setIsLoggedIn(true);
@@ -22,38 +29,30 @@ function App() {
     };
 
     return (
-        <Router>
-            <div className="main">
-                <Header
-                    isLoggedIn={isLoggedIn}
-                    handleLogin={handleLogin}
-                    handleLogout={handleLogout}
-                />
-                <div className="main-content">
-                    <Routes>
-                        <Route path="/" element={<Home 
-                            isLoggedIn={isLoggedIn} 
-                            handleLogin={handleLogin} 
-                            handleLogout={handleLogout} 
-                            />} />
-                        <Route path="/login" element={<Login 
-                            isLoggedIn={isLoggedIn} 
-                            handleLogin={handleLogin} 
-                            handleLogout={handleLogout} 
-                            />} />
-                        <Route path="/signup" element={<Signup 
-                            isLoggedIn={isLoggedIn} 
-                            handleLogin={handleLogin} 
-                            handleLogout={handleLogout} 
-                            />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="*" element={<Home />} />
-                    </Routes>
+        <CustomerProvider customerId={customerId}>
+            <Router>
+                <div className="main">
+                    <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+                    <div className="main-content">
+                        <Routes>
+                            <Route path="/" element={<Home isLoggedIn={isLoggedIn} />} />
+                            <Route path="*" element={<Home isLoggedIn={isLoggedIn} />} />
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="/account" element={<Account />} />
+                            <Route path="/wallet" element={<Wallet />} />
+                            <Route path="/history" element={<History />} />
+                            <Route path="/history-details" element={<HistoryDetails />} />
+                            <Route path="/add-funds" element={<AddFunds />} />
+                            <Route path="/login" element={<Login isLoggedIn={isLoggedIn} handleLogin={handleLogin} handleLogout={handleLogout} />} />
+                            <Route path="/signup" element={<Signup />} />
+                        </Routes>
+                    </div>
+                    <Footer />
                 </div>
-                <Footer />
-            </div>
-        </Router>
+            </Router>
+        </CustomerProvider>
     );
 }
 
 export default App;
+

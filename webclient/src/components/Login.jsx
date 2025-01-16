@@ -1,19 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-function Login({ isLoggedIn, handleLogin, handleLogout }) {
+function Login({onLogin}) {
     return (
-        <div className="login">
-            <h1>Log in</h1>
-            {isLoggedIn ? (
-                <Link to="/">
-                    <button className="login-button" onClick={handleLogout}>Log out</button>
-                </Link>
-            ) : (
-                <Link to="/">
-                    <button className="login-button" onClick={handleLogin}>Log in</button>
-                </Link>
-            )}
-        </div>
+        <div className="main-content">
+            <div className="login">
+                <h1>Log in</h1>
+                <form onSubmit={onLogin}>
+                    <input type="text" placeholder="Email" required />
+                    <input type="password" placeholder="Password" required />
+                    <button type="submit">Log in</button>
+                </form>
+                <Link to="/signup">Sign up</Link>
+            </div>
+    </div>
     );
 }
 

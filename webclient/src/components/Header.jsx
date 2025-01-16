@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { MdAccountCircle } from "react-icons/md";
 
-function Header({ isLoggedIn, handleLogin, handleLogout }) {
+function Header({ isLoggedIn, handleLogout }) {
     return (
       <div className="header">
         <h1>
