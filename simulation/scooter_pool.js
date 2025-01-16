@@ -5,40 +5,56 @@ import database from './modules/db.js';
 import Scooter from './scooter.js';
 import { canIPark, getRandomCoordinates } from './modules/locationTracker.js';
 
-console.log(process.env.AMOUNT_OF_SCOOTERS);
-console.log(process.env.PERCENT_TO_RUN);
 
 //For tomorrow. 
 //check if we can remove all console logs and
 //how to solve the update problem for the scooters
 
 
-async function simulateStartTrip(userID, scooterID) {
+export async function simulateStartTrip(userID, scooterID) {
     try {
-        // Load the scooter object based on its ID
         const cityName = 'Malmö'; // Change this variable to fetch data for another city
-        let scooter = await Scooter.loadObjectScooter(scooterID);
-        let destination = await getRandomCoordinates(cityName);
+        const scooter = await Scooter.loadObjectScooter(scooterID);
+        const destination = await getRandomCoordinates(cityName);
 
-        //User rents the scooter
-        // Simulate movement and wait for it to complete
-        // const arrived = await simulateMovementWithSpeed(scooter.location, destination, process.env.SCOOTER_SPEED);
-        await scooter.rent(userID);
+        // scooter.setStatus('available');
+        // scooter.setUser(null);
+        // scooter.setBattery(90);
+
+        const rented = await scooter.rent(userID);
+
+        if (!rented) {
+            console.warn('Scooter could not be rented');
+            return;
+        }
+
         const arrived = await scooter.rideToDestination(destination);
 
-        if (arrived) {
-            console.log('Checking to see if parking is available...');
-            const parkingSpot = await canIPark(cityName, destination);
-            if (parkingSpot) {
-                await scooter.park();
+        if (!arrived) {
+            console.warn('Scooter did not arrive at the destination.');
+            if (scooter.batteryLow()) {
+                console.log('Battery is low. Initiating charging process...');
+                await scooter.charge();
             }
+            return;
         }
+
+        const parkingSpot = await canIPark(cityName, destination);
+
+        if (!parkingSpot) {
+            console.warn('No parking spot available. Please try another location.');
+            return;
+        }
+
+        await scooter.park();
+
+        scooter.printInfo();
     } catch (error) {
         console.error('Error simulating trip:', error.message);
     }
 }
 
-export default async function simulateWithUsers() {
+export async function simulateWithUsers() {
     try {
         // Get the collections of customers and scooters
         let customers = await database.getAll('customers');
@@ -72,7 +88,7 @@ export default async function simulateWithUsers() {
     }
 }
 
-simulateWithUsers();
+// simulateWithUsers();
 
 //env-variables:
 //percent_to_run = 70

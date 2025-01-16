@@ -4,53 +4,73 @@ dotenv.config();
 import database from './modules/scooter_db.js';
 import { simulateMovementWithScooter, simulateMovementWithSpeed } from './modules/locationTracker.js';
 
+const UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 10000;  // Default to 10000 ms
+const SCOOTER_SPEED = process.env.SCOOTER_SPEED || 20;
+const BATTERY_CHARGE_RATE = process.env.BATTERY_CHARGE_RATE || 500; 
 
 export default class Scooter {
-    static updateInterval = 3000;
+    static saveInterval = 10000;
 
     constructor(location = {}, scooterID = null) {
-        this.scooterID = scooterID; // the scooter recieves an ObjectID when imported in the db.
+        this.scooterID = scooterID; // the scooter receives an ObjectID when imported in the db.
         this.location = location;
-        this.user = "[UserID]";
+        this.user = null;
         this.status = "Off";
         this.speed = 0;
         this.battery = Math.floor(Math.random() * 101);
         this.tripLog = ": [ObjectId], (referens till Trips)";
+        this.updateInterval = null; // To store the interval ID
     };
+
+    updateIntervals() {
+        if (this.status === "rented") {
+            if (this.updateInterval === null) { // Start interval only if not already running
+                this.updateInterval = setInterval(() => {
+                    this.save();
+                }, UPDATE_INTERVAL); // Update every 10 seconds
+                console.log(`Interval started for scooter: "${this.scooterID}"`);
+            }
+        } else {
+            if (this.updateInterval !== null) { // Clear the interval if it exists
+                clearInterval(this.updateInterval);
+                this.updateInterval = null;
+                console.log(`Interval stopped for scooter: "${this.scooterID}"`);
+            }
+        }
+    }
 
     async rent(userID) {
         if (this.status !== "available") {
-            console.log("Scooter cannot be rented. Current status:", this.status);
-            return;
+            console.log(`Scooter: "${this.scooterID}" cannot be rented. Current status: "${this.status}"`);
+            return false;
         }
 
-        // this.startPrintingLocation();
-
-        console.log('Starting location:', this.location);
         this.setUser(userID);
         this.setStatus("rented");
 
         await this.save();
-    }
 
-    async rideToDestination(destination) {
-        console.log("Heading towards: ", destination);
-        this.setSpeed(process.env.SCOOTER_SPEED);
-        // const arrived = await simulateMovementWithSpeed(this.location, destination, this.speed);
-        const arrived = await simulateMovementWithScooter(this, destination);
-        return arrived
+        return true;
     }
 
     async park() {
         try {
             this.setStatus("available");
-            this.setUser(`Last used by: ${this.user}`);
+            this.setSpeed(0);
+            this.setUser(null);
             console.log('Saving scooter data...');
+
             await this.save();
         } catch (error) {
             console.error("Error updating scooter status to 'available':", error.message);
             throw new Error("Failed to set scooter status to 'available'");
         }
+    }
+
+    async rideToDestination(destination) {
+        this.setSpeed(SCOOTER_SPEED);
+        const arrived = await simulateMovementWithScooter(this, destination);
+        return arrived
     }
 
     async turnOff() {
@@ -70,11 +90,12 @@ export default class Scooter {
     
             while (this.battery < 100) {
                 this.battery += 1;
-                console.log(`Battery level: ${this.battery}%`);
-                await new Promise(resolve => setTimeout(resolve, process.env.BATTERY_CHARGE_RATE));
+                // console.log(`Battery level: ${this.battery}%`);
+                await new Promise(resolve => setTimeout(resolve, BATTERY_CHARGE_RATE));
             }
     
             this.setStatus("available");
+            console.log(`Battery fully charged: ${this.battery}%`);
             await this.save();
             return;
         } catch (error) {
@@ -87,16 +108,6 @@ export default class Scooter {
         return this.battery < 10;
     }
 
-    printLiveLocation() {
-        console.log(this.location);
-        return this.location;
-    };
-
-    startPrintingLocation() {
-        setInterval(() => {
-            this.printLiveLocation();
-        }, Scooter.updateInterval);
-    }
 
     // static createFromDb(jsonObject) {
     //     try {
@@ -215,11 +226,19 @@ export default class Scooter {
 
     setStatus(newStatus) {
         const validStatuses = ["available", "rented", "maintenance", "off"];
+        
+        // Validate the new status
         if (!validStatuses.includes(newStatus)) {
             throw new Error(`Invalid status: ${newStatus}. Must be one of: ${validStatuses.join(", ")}`);
         }
+    
+        // Update the status
         this.status = newStatus;
+    
+        // Call updateIntervals to manage the interval based on the new status
+        this.updateIntervals();
     }
+
 
     setBattery(newBattery) {
         if (typeof newBattery !== 'number' || newBattery < 0 || newBattery > 100) {
