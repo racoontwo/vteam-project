@@ -7,7 +7,6 @@ import { faker } from '@faker-js/faker';
 
 // Collections: [ 'apiKeys', 'customers', 'cities_locations', 'scooters' ]
 
-
 export const randomUser = {
         // Generate random first name, last name, and email
         firstName: faker.person.firstName(),
@@ -67,6 +66,8 @@ export async function deleteAll() {
     console.log(deleted);
 }
 
+
+//this function will be called
 async function utils() {
     const args = process.argv.slice(2);
 
@@ -86,7 +87,6 @@ async function utils() {
                 await addMultiple(num);
             }
             break;
-        
         case 'randomUser':
             console.log(randomUser);
             break;

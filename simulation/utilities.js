@@ -104,7 +104,6 @@ export async function updateLocation(scooterID, location) {
     return updated
 }
 
-
 export async function showAll() {
     let showAll = await database.getAllScooters('scooters');
     console.log(showAll);
