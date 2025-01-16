@@ -46,6 +46,21 @@ async function getAll(collectionName) {
     }
 }
 
+async function dropAll(collectionName) {
+    try {
+        const { collection, client } = await getCollection(collectionName);
+
+        const result = await collection.deleteMany({});
+
+        await client.close();
+
+        return result;
+    } catch (error) {
+        console.error('Failed to remove all from database:', error);
+        throw new Error('Database removal failed: ' + error.message);
+    }
+}
+
 // List all collections in the database
 async function listCollections() {
     const database = await connectDB();
@@ -59,6 +74,21 @@ async function listCollections() {
     }
 }
 
+async function countItems(collectionName) {
+    try {
+        const { collection, client } = await getCollection(collectionName);
+
+        const count = await collection.countDocuments();
+
+        await client.close();
+
+        return count;
+    } catch (error) {
+        console.error('Error counting items:', error);
+        throw new Error('Failed to count items');
+    }
+}
+
 // Example usage
 // listCollections().catch(console.error);
 
@@ -66,5 +96,7 @@ export default {
     connectDB, 
     getCollection,
     getAll,
-    listCollections
+    dropAll,
+    listCollections,
+    countItems
 }

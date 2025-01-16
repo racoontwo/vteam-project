@@ -79,7 +79,6 @@ export async function addTenWithCoordinates() {
     return scooters;
 }
 
-
 export async function addOne() {
     await Scooter.createNewScooter();
 }
@@ -104,7 +103,6 @@ export async function updateLocation(scooterID, location) {
     let updated = await database.updateLocation(scooterID, location);
     return updated
 }
-
 
 export async function showAll() {
     let showAll = await database.getAllScooters('scooters');
