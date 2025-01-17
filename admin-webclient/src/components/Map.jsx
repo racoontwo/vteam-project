@@ -104,7 +104,7 @@ function Map({ isLoggedIn }) {
 
     const scooterIconGreen = new L.DivIcon({
         html: ReactDOMServer.renderToString(
-          <div className="scooter-icon" style={{ backgroundColor: 'green' }}>
+          <div className="scooter-icon" style={{ backgroundColor: 'darkgreen' }}>
               <TbScooter className="icon"  size={24} color="white" />
           </div>
         ),
@@ -116,7 +116,7 @@ function Map({ isLoggedIn }) {
 
     const scooterIconRed = new L.DivIcon({
         html: ReactDOMServer.renderToString(
-          <div className="scooter-icon" style={{ backgroundColor: 'red' }}>
+          <div className="scooter-icon" style={{ backgroundColor: 'darkred' }}>
               <TbScooter className="icon"  size={24} color="white" />
           </div>
         ),

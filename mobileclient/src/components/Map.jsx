@@ -73,7 +73,7 @@ function Map() {
 
     const scooterIcon = new L.DivIcon({
         html: ReactDOMServer.renderToString(
-          <div className="scooter-icon" style={{ backgroundColor: 'green' }}>
+          <div className="scooter-icon">
               <TbScooter className="icon"  size={24} color="white" />
           </div>
         ),
@@ -126,7 +126,7 @@ function Map() {
                         <Circle
                             key={index}
                             center={[zone.latitude, zone.longitude]}
-                            pathOptions={{ color: 'blue' }}
+                            pathOptions={{ color: '' }}
                             stroke={false}
                             radius={1000} // TODO: Change to zone.radius_km2 * 1000
                         >
