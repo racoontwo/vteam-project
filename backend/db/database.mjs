@@ -1,7 +1,17 @@
 import { MongoClient } from 'mongodb';
 
+let db = null;
+let client = null;
+
 // Connect to the database
 async function connectDB() {
+    if (db) {
+        return {
+            db: db,
+            client: client
+        }
+    }
+
     let dsn = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@elsparkcyklar.svx9m.mongodb.net/?retryWrites=true&w=majority&appName=Elsparkcyklar`;
 
     // Uses a local database for testing
@@ -9,8 +19,10 @@ async function connectDB() {
         dsn = `mongodb://localhost:27017/test`;
     }
 
-    const client = await MongoClient.connect(dsn);
-    const db = client.db();
+    client = await MongoClient.connect(dsn);
+    db = client.db();
+
+    console.log('Connected to the database');
 
     return {
         db: db,
