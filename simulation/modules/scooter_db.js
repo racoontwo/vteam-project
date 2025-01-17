@@ -124,34 +124,12 @@ async function dropScooters() {
     }
 }
 
-async function updateLocation(scooterID, location) {
+async function updateScooter(updatedStats) {
     try {
         const { collection, client } = await getCollection('scooters');
 
         const result = await collection.updateOne(
-            { _id: new ObjectId(scooterID) },
-            { $set: { location: location } }
-        );
-
-        await client.close(); // Ensure the client is closed
-
-        if (result.matchedCount !== 1) {
-            throw new Error("Error updating location.");
-        }
-
-        return true;
-    } catch (e) {
-        console.error('Failed to update location:', e);
-        return false;
-    }
-}
-
-async function updateScooter(scooterID, updatedStats) {
-    try {
-        const { collection, client } = await getCollection('scooters');
-
-        const result = await collection.updateOne(
-            { _id: new ObjectId(scooterID) },
+            { _id: updatedStats._id },
             { $set: updatedStats }
         );
 
@@ -167,29 +145,6 @@ async function updateScooter(scooterID, updatedStats) {
         return false;
     }
 }
-
-async function updateScooterStats(scooterID, updatedStats) {
-    try {
-        const { collection, client } = await getCollection('scooters');
-
-        const result = await collection.updateOne(
-            { _id: new ObjectId(scooterID) },
-            { $set: updatedStats }
-        );
-
-        await client.close();
-
-        if (result.matchedCount !== 1) {
-            throw new Error("Error updating scooter stats. Scooter not found.");
-        }
-
-        return true;
-    } catch (e) {
-        console.error('Failed to update scooter stats:', e);
-        return false;
-    }
-}
-
 
 async function countScooters() {
     try {
@@ -228,9 +183,7 @@ export default {
     removeScooter, 
     getScooter, 
     dropScooters,
-    updateLocation,
     countScooters,
-    updateScooterStats,
     updateScooter,
     listCollections
 };
