@@ -19,7 +19,9 @@ export async function startSimulateTrip(userID, scooterID) {
 
         const destination = await getRandomCoordinates(scooter.city);
 
-        // scooter.setStatus('available');
+        
+        console.log(scooter.city);
+        scooter.setStatus('available');
         // scooter.setUser(null);
         // scooter.setBattery(90);
 
@@ -28,9 +30,9 @@ export async function startSimulateTrip(userID, scooterID) {
 
         const arrived = await scooter.rideToDestination(destination);
         if (!arrived) {
-            console.warn('Scooter did not arrive at the destination.');
+            // console.warn('Scooter did not arrive at the destination.');
             if (scooter.batteryLow()) {
-                console.log('Battery is low. Initiating charging process...');
+                // console.log('Battery is low. Initiating charging process...');
                 await scooter.charge();
             }
             return;

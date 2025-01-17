@@ -132,7 +132,7 @@ async function updateScooter(updatedStats) {
             throw new Error("Missing or invalid '_id' in updatedStats.");
         }
 
-        console.log('Updated stats:', updatedStats);
+        // console.log('Updated stats:', updatedStats);
 
         // Ensure _id is not part of the $set object
         const { _id, ...fieldsToUpdate } = updatedStats;
@@ -148,7 +148,7 @@ async function updateScooter(updatedStats) {
             throw new Error("Error updating scooter stats. Scooter not found.");
         }
 
-        console.log('Update result:', result);
+        // console.log('Update result:', result);
         return true;
     } catch (e) {
         console.error('Failed to update scooter stats:', e);
