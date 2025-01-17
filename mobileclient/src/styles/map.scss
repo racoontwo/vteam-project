@@ -7,8 +7,17 @@
     }
     
     .leaflet-popup-content {
+        min-width: 150px;
         p {
+            font-size: 0.8rem;
             margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+        }
+
+        button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
         }
     }
     
@@ -17,6 +26,37 @@
 
         label {
             margin-right: 1rem;
+        }
+    }
+
+    .leaflet-container a.leaflet-popup-close-button {
+        font-size: 2rem;
+        margin: 0.5rem;
+    }
+
+    .popup-content {
+        display: flex;
+        align-items: center;
+        text-align: center;
+
+        .scooter-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 0.5rem;
+
+            h3 {
+                margin: 0;
+            }
+
+            p {
+                margin: 0.5rem 0;
+            }
+        }
+
+        .scooter-icon {
+            font-size: 2rem;
+            margin-right: 0.5rem;
         }
     }
 }
