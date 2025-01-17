@@ -88,39 +88,3 @@ export async function simulateWithUsers() {
         console.error('Error during simulation:', error.message);
     }
 }
-
-
-// export async function simulateWithUsers() {
-//     try {
-//         // Get the collections of customers and scooters
-//         let customers = await database.getAll('customers');
-//         let scooters = await database.getAll('scooters');
-
-//         if (scooters && scooters.length > 0) {
-//             // Create an array of promises for all the simulations
-//             let simulationPromises = [];
-
-//             for (let i = 0; i < customers.length && i < scooters.length; i++) {
-//                 // Get the current customer's ID and the next available scooter's ID
-//                 let customerID = customers[i]._id;
-//                 let scooterID = scooters[i]._id;
-
-//                 // Log the start of the simulation
-//                 // console.log(`Simulation queued for user: ${customerID}, scooter: ${scooterID}`);
-
-//                 // Add the simulation to the promises array
-//                 // simulationPromises.push(simulateStartTrip(customerID, scooterID));
-//                 simulationPromises.push(startSimulateTrip(customerID, scooterID));
-//             }
-
-//             // Run all simulations concurrently
-//             await Promise.all(simulationPromises);
-
-//             console.log('All simulations completed.');
-//         } else {
-//             console.log('No scooters found in the collection.');
-//         }
-//     } catch (error) {
-//         console.error('Error during simulation:', error.message);
-//     }
-// }

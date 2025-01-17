@@ -9,7 +9,6 @@ import { faker } from '@faker-js/faker';
 
 // Collections: [ 'apiKeys', 'customers', 'cities_locations', 'scooters' ]
 
-
 //set up the objects
 export const randomUser = {
         // Generate random first name, last name, and email
@@ -133,7 +132,9 @@ async function utils() {
             if (isNaN(num) || num <= 0) {
                 console.log('Please provide a valid number of customers to add.');
             } else {
-                await addMultipleScooters(num, 'Karlskrona centrum');
+                // await addMultipleScooters(num, 'Malmö');
+                // await addMultipleScooters(num, 'Karlskrona centrum');
+                await addMultipleScooters(num, 'Växjö');
             }
             break;
         case 'randomUser':
@@ -156,7 +157,10 @@ async function utils() {
         case 'showScooters':
             await showAll('scooters');
             break;
-        case 'count':
+        case 'countCustomers':
+            await count('customers');
+            break;
+        case 'countScooters':
             await count('scooters');
             break;
     }
