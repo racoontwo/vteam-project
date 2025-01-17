@@ -10,13 +10,12 @@ import { startSimulateTrip, simulateWithUsers } from './scooter_pool.js'
 
 //update all scooters to "available" in start of simulation?
 
-//implement a 'clear all to fresh-button'
-
 //simulation       | Scooter could not be rented
 //simulation exited with code 0
 
 
 //teo - går det att få de som är tillgängliga att vara gröna, de som är rented att vara röda?
+//när karta uppdaterar sig i admin så går den direkt till Malmö.
 
 
 // Detta program är tänkt att köra i varje cykel och styra/övervaka den. CHECK

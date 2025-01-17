@@ -29,7 +29,7 @@ export default class Scooter {
                 this.updateInterval = setInterval(() => {
                     this.save();
                 }, UPDATE_INTERVAL); // Update every 10 seconds
-                console.log(`Interval started for scooter: "${this.scooterID}"`);
+                // console.log(`Interval started for scooter: "${this.scooterID}"`);
             }
         } else {
             if (this.updateInterval !== null) { // Clear the interval if it exists
@@ -178,9 +178,9 @@ export default class Scooter {
             const result = await database.updateScooter(updatedScooterData);
             // const result = await database.updateScooter(this.scooterID, updatedScooterData);
 
-            if (result) {
-                console.log(`Scooter "${this.scooterID}" updated successfully.`);
-            }
+            // if (result) {
+            //     console.log(`Scooter "${this.scooterID}" updated successfully.`);
+            // }
         } catch (error) {
             console.error('Error saving scooter:', error.message);
             throw new Error('Failed to save scooter');
