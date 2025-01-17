@@ -127,10 +127,19 @@ async function dropScooters() {
 async function updateScooter(updatedStats) {
     try {
         const { collection, client } = await getCollection('scooters');
+        
+        if (!updatedStats || !updatedStats._id) {
+            throw new Error("Missing or invalid '_id' in updatedStats.");
+        }
+
+        console.log('Updated stats:', updatedStats);
+
+        // Ensure _id is not part of the $set object
+        const { _id, ...fieldsToUpdate } = updatedStats;
 
         const result = await collection.updateOne(
-            { _id: updatedStats._id },
-            { $set: updatedStats }
+            { _id: new ObjectId(_id) },
+            { $set: fieldsToUpdate }
         );
 
         await client.close();
@@ -139,12 +148,39 @@ async function updateScooter(updatedStats) {
             throw new Error("Error updating scooter stats. Scooter not found.");
         }
 
+        console.log('Update result:', result);
         return true;
     } catch (e) {
         console.error('Failed to update scooter stats:', e);
         return false;
     }
 }
+
+// async function updateScooter(updatedStats) {
+//     try {
+//         const { collection, client } = await getCollection('scooters');
+
+//         console.log(updatedStats);
+
+//         const result = await collection.updateOne(
+//             { _id: new ObjectId(updatedStats._id) },
+//             { $set: updatedStats }
+//         );
+
+        
+
+//         await client.close();
+
+//         if (result.matchedCount !== 1) {
+//             throw new Error("Error updating scooter stats. Scooter not found.");
+//         }
+
+//         return true;
+//     } catch (e) {
+//         console.error('Failed to update scooter stats:', e);
+//         return false;
+//     }
+// }
 
 async function countScooters() {
     try {

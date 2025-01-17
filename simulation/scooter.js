@@ -166,6 +166,7 @@ export default class Scooter {
     async save() {
         try {
             const updatedScooterData = {
+                _id:    this.scooterID,
                 location: this.location,
                 user: this.user,
                 status: this.status,
@@ -174,10 +175,11 @@ export default class Scooter {
                 tripLog: this.tripLog
             };
 
-            const result = await database.updateScooter(this.scooterID, updatedScooterData);
+            const result = await database.updateScooter(updatedScooterData);
+            // const result = await database.updateScooter(this.scooterID, updatedScooterData);
 
             if (result) {
-                // console.log(`Scooter "${this.scooterID}" updated successfully.`);
+                console.log(`Scooter "${this.scooterID}" updated successfully.`);
             }
         } catch (error) {
             console.error('Error saving scooter:', error.message);
