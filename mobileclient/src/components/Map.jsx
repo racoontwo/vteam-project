@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
 import { TbScooter } from "react-icons/tb";
 import { GiBattery50 } from "react-icons/gi";
+import ReactDOMServer from "react-dom/server";
 
 function Map() {
     const [scooters, setScooters] = useState(null);
@@ -70,12 +71,17 @@ function Map() {
         return () => clearInterval(interval);
     }, [baseUrl]);
 
-    const scooterIcon = new L.Icon({
-        iconUrl: 'scooter.png',
+    const scooterIcon = new L.DivIcon({
+        html: ReactDOMServer.renderToString(
+          <div className="map-scooter-icon">
+              <TbScooter className="icon"  size={24} color="white" />
+          </div>
+        ),
+        className: "custom-icon",
         iconSize: [30, 30],
-        iconAnchor: [12, 25],
-        popupAnchor: [0, -30]
-    });
+        iconAnchor: [15, 15],
+        popupAnchor: [0, -15],
+      });
 
 
     return (
@@ -120,7 +126,7 @@ function Map() {
                         <Circle
                             key={index}
                             center={[zone.latitude, zone.longitude]}
-                            pathOptions={{ color: 'blue' }}
+                            pathOptions={{ color: '' }}
                             stroke={false}
                             radius={1000} // TODO: Change to zone.radius_km2 * 1000
                         >

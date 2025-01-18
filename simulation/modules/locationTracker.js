@@ -85,8 +85,8 @@ export function simulateMovementWithSpeed(start, end, speedKmh) {
     const stepDistance = speedPerMs * updateInterval; // Distance covered per update interval
     let fraction = 0; // Start at the beginning
 
-    console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
-    console.log(`Starting simulation at ${speedKmh} km/h...`);
+    // console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
+    // console.log(`Starting simulation at ${speedKmh} km/h...`);
 
     return new Promise((resolve) => {
         const intervalId = setInterval(() => {
@@ -116,8 +116,8 @@ export async function simulateMovementWithScooter(scooter, destination) {
     let distanceTraveled = 0; // Track total distance traveled
 
     const depletionRate = parseFloat(process.env.BATTERY_DEPLETION_RATE) || 1; // Default to 1 if not set
-    console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
-    console.log(`Starting simulation at ${scooter.speed} km/h with ${scooter.battery}% battery.`);
+    // console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
+    // console.log(`Starting simulation at ${scooter.speed} km/h with ${scooter.battery}% battery.`);
 
     return new Promise((resolve) => {
         const intervalId = setInterval(() => {
