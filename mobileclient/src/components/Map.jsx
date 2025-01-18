@@ -73,7 +73,7 @@ function Map() {
 
     const scooterIcon = new L.DivIcon({
         html: ReactDOMServer.renderToString(
-          <div className="scooter-icon">
+          <div className="map-scooter-icon">
               <TbScooter className="icon"  size={24} color="white" />
           </div>
         ),
