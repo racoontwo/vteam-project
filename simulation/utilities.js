@@ -7,17 +7,6 @@ import cities from './modules/cities_db.js'
 import { faker } from '@faker-js/faker';
 
 
-
-export const jondoe = {
-    _id: "id123456789",
-    name: "Jon Doe",
-    email: "jondoe@odduser.com",
-    balance: "456 (kontosaldo)",
-    rentalHistory: "[Objectld], (referens till Trips)",
-    paymentHistory: "[Objectld], (referens till Betalningar)"
-    }
-
-
 export const randomUser = {
         // Generate random first name, last name, and email
         firstName: faker.person.firstName(),

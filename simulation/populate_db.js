@@ -9,7 +9,6 @@ import { faker } from '@faker-js/faker';
 
 // Collections: [ 'apiKeys', 'customers', 'cities_locations', 'scooters' ]
 
-
 //set up the objects
 export const randomUser = {
         // Generate random first name, last name, and email
@@ -39,6 +38,34 @@ export async function newScooter(cityName) {
         city: cityName,
     };
     return scooterObject;
+}
+
+export async function resetAllScooters() {
+    try {
+        const scooters = await database.getAll('scooters');
+        
+        if (!scooters || scooters.length === 0) {
+            console.log('No scooters found in the database.');
+            return;
+        }
+
+        const updatedScooters = scooters.map(scooter => ({
+            ...scooter,
+            status: 'available',
+            user: null,
+            battery: 100,
+            speed: 0,
+        }));
+
+        for (const scooter of updatedScooters) {
+            await scooter_db.updateScooter(scooter);
+            console.log(`Scooter: "${scooter._id}" was reset to factory settings.`)
+        }
+
+        console.log(`${updatedScooters.length} scooters have been reset to default values.`);
+    } catch (error) {
+        console.error('Error resetting scooters:', error);
+    }
 }
 
 //common functions
@@ -133,7 +160,9 @@ async function utils() {
             if (isNaN(num) || num <= 0) {
                 console.log('Please provide a valid number of customers to add.');
             } else {
-                await addMultipleScooters(num, 'Karlskrona centrum');
+                await addMultipleScooters(num, 'Malmö');
+                // await addMultipleScooters(num, 'Karlskrona centrum');
+                await addMultipleScooters(num, 'Växjö');
             }
             break;
         case 'randomUser':
@@ -143,8 +172,9 @@ async function utils() {
             await deleteAll('scooters');
             break;
         case 'addScooter':
-            console.log(await newScooter('Malmö'));
-            // await addScooter(newScooter);
+            // console.log(await newScooter('Malmö'));
+            const aScooter = await newScooter('Malmö');
+            await addScooter(aScooter);
             break;
         case 'addCustomer':
             console.log(randomUser);
@@ -156,8 +186,14 @@ async function utils() {
         case 'showScooters':
             await showAll('scooters');
             break;
-        case 'count':
+        case 'countCustomers':
+            await count('customers');
+            break;
+        case 'countScooters':
             await count('scooters');
+            break;
+        case 'resetScooters':
+            await resetAllScooters();
             break;
     }
 }
