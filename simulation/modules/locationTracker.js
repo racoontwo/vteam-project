@@ -85,8 +85,8 @@ export function simulateMovementWithSpeed(start, end, speedKmh) {
     const stepDistance = speedPerMs * updateInterval; // Distance covered per update interval
     let fraction = 0; // Start at the beginning
 
-    console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
-    console.log(`Starting simulation at ${speedKmh} km/h...`);
+    // console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
+    // console.log(`Starting simulation at ${speedKmh} km/h...`);
 
     return new Promise((resolve) => {
         const intervalId = setInterval(() => {
