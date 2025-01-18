@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, Rectangle, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
+import { TbScooter } from "react-icons/tb";
+import { GiBattery50 } from "react-icons/gi";
 
 function Map() {
     const [scooters, setScooters] = useState(null);
@@ -81,22 +83,26 @@ function Map() {
             {loading && <h2>Loading...</h2>}
             {error && <p>{error}</p>}
             {selectedCity && scooters && (
-                <MapContainer className="map-container" center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]} zoom={12}>
+                <MapContainer center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]} zoom={12}>
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
-                    {scooters.data.map(scooter => (
+                    {scooters.data.filter(scooter => scooter.status === 'available').map(scooter => (
                         <Marker
                             key={scooter._id}
                             position={[scooter.location.latitude, scooter.location.longitude]}
                             icon={scooterIcon}
                         >
                             <Popup>
-                                <h2>{scooter._id}</h2>
-                                <p>Status: {scooter.status}</p>
-                                <p>Battery: {scooter.battery}</p>
-                                <p>Speed: {scooter.speed}</p>
+                                <div className="popup-content">
+                                    <TbScooter className="scooter-icon" />
+                                    <div className="scooter-info">
+                                        <h3>Scooter</h3>
+                                        <p><GiBattery50 />{scooter.battery}%</p>
+                                    </div>
+                                </div>
+                                    <button>Rent</button>
                             </Popup>
                         </Marker>
                     ))}
