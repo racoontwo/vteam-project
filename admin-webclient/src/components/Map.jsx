@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, Rectangle, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
+import { TbScooter } from "react-icons/tb";
+import ReactDOMServer from "react-dom/server";
 
 function Map({ isLoggedIn }) {
     const [scooters, setScooters] = useState(null);
@@ -99,12 +102,30 @@ function Map({ isLoggedIn }) {
         }
     };
 
-    const scooterIcon = new L.Icon({
-        iconUrl: 'scooter.png',
+    const scooterIconGreen = new L.DivIcon({
+        html: ReactDOMServer.renderToString(
+          <div className="scooter-icon" style={{ backgroundColor: 'darkgreen' }}>
+              <TbScooter className="icon"  size={24} color="white" />
+          </div>
+        ),
+        className: "custom-icon",
         iconSize: [30, 30],
-        iconAnchor: [12, 25],
-        popupAnchor: [0, -30]
-    });
+        iconAnchor: [15, 15],
+        popupAnchor: [0, -15],
+      });
+
+    const scooterIconRed = new L.DivIcon({
+        html: ReactDOMServer.renderToString(
+          <div className="scooter-icon" style={{ backgroundColor: 'darkred' }}>
+              <TbScooter className="icon"  size={24} color="white" />
+          </div>
+        ),
+        className: "custom-icon",
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        popupAnchor: [0, -15],
+      });
+        
 
     const ChangeMapCenter = ({ center }) => {
         const map = useMap();
@@ -149,7 +170,7 @@ function Map({ isLoggedIn }) {
                         <Marker
                             key={scooter._id}
                             position={[scooter.location.latitude, scooter.location.longitude]}
-                            icon={scooterIcon}
+                            icon={scooter.status === 'available' ? scooterIconGreen : scooterIconRed}
                         >
                             <Popup>
                                 <h2>{scooter._id}</h2>
