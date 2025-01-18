@@ -35,7 +35,7 @@ export default class Scooter {
             if (this.updateInterval !== null) { // Clear the interval if it exists
                 clearInterval(this.updateInterval);
                 this.updateInterval = null;
-                console.log(`Interval stopped for scooter: "${this.scooterID}"`);
+                // console.log(`Interval stopped for scooter: "${this.scooterID}"`);
             }
         }
     }
