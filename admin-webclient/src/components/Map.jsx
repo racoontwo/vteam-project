@@ -197,7 +197,7 @@ function Map({ isLoggedIn }) {
                             center={[zone.latitude, zone.longitude]}
                             pathOptions={{ color: 'blue' }}
                             stroke={false}
-                            radius={1000} // TODO: Change to zone.radius_km2 * 1000
+                            radius={zone.radius_km2 * 1000}
                         >
                             <Popup>
                                 <h2>{zone.name}</h2>
