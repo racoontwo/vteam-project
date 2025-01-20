@@ -10,9 +10,9 @@
             {
                 "_id": "1",
                 "scooterId": "1",
-                "startTime": "2021-09-01T12:00:00",
-                "endTime": "2021-09-01T13:00:00",
-                "durationMinutes": 60,
+                "startTime": "2025-01-01T12:00:00",
+                "endTime": "2025-01-01T13:00:00",
+                "durationMinutes": 20,
                 "startLocation": {
                     "latitude": "-61.475072",
                     "longitude": "-103.978585"
@@ -21,14 +21,14 @@
                     "latitude": "-61.475072",
                     "longitude": "-103.978585"
                 },
-                "cost": 10
+                "cost": 40
             },
             {
                 "_id": "2",
                 "scooterId": "2",
-                "startTime": "2021-09-01T14:00:00",
-                "endTime": "2021-09-01T15:00:00",
-                "durationMinutes": 60,
+                "startTime": "2025-01-01T14:00:00",
+                "endTime": "2025-01-01T15:00:00",
+                "durationMinutes": 30,
                 "startLocation": {
                     "latitude": "-61.475072",
                     "longitude": "-103.978585"
@@ -37,7 +37,7 @@
                     "latitude": "-61.475072",
                     "longitude": "-103.978585"
                 },
-                "cost": 20
+                "cost": 60
             }
         ]
     },
@@ -51,9 +51,9 @@
             {
                 "_id": "1",
                 "scooterId": "1",
-                "startTime": "2021-09-01T12:00:00",
-                "endTime": "2021-09-01T13:00:00",
-                "durationMinutes": 60,
+                "startTime": "2025-01-01T12:00:00",
+                "endTime": "2025-01-01T13:00:00",
+                "durationMinutes": 20,
                 "startLocation": {
                     "latitude": "-61.475072",
                     "longitude": "-103.978585"
@@ -62,14 +62,14 @@
                     "latitude": "-61.475072",
                     "longitude": "-103.978585"
                 },
-                "cost": 10
+                "cost": 40
             },
             {
                 "_id": "2",
                 "scooterId": "2",
-                "startTime": "2021-09-01T14:00:00",
-                "endTime": "2021-09-01T15:00:00",
-                "durationMinutes": 60,
+                "startTime": "2025-01-01T14:00:00",
+                "endTime": "2025-01-01T15:00:00",
+                "durationMinutes": 30,
                 "startLocation": {
                     "latitude": "-61.475072",
                     "longitude": "-103.978585"
@@ -78,7 +78,7 @@
                     "latitude": "-61.475072",
                     "longitude": "-103.978585"
                 },
-                "cost": 20
+                "cost": 60
             }
         ]
     }

@@ -15,7 +15,7 @@ import AddFunds from './components/AddFunds';
 import { CustomerProvider } from './context/CustomerContext';
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(true); // Change to false to test login
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const customerId = 1;
 
     const handleLogin = () => {

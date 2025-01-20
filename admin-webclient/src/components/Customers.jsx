@@ -6,6 +6,7 @@ function Customers({ isLoggedIn }) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [expandedRows, setExpandedRows] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const apiKey = import.meta.env.VITE_API_KEY;
 
@@ -66,6 +67,12 @@ function Customers({ isLoggedIn }) {
         }
     };
 
+    // Filter customers based on search term
+    const filteredCustomers = customers ? customers.data.filter(customer =>
+        customer.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customer.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+    ) : [];
+
     // Show a message if the user is not logged in
     if (!isLoggedIn) {
         return (
@@ -83,6 +90,12 @@ function Customers({ isLoggedIn }) {
                     <button>Add Customer</button>
                 </Link>
             </div>
+            <input
+                type="text"
+                placeholder="Search customers..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
             {loading && <h2>Loading...</h2>}
             {error && <p>{error}</p>}
             {customers && (
@@ -95,7 +108,7 @@ function Customers({ isLoggedIn }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {customers.data.map(customer => (
+                        {filteredCustomers.map(customer => (
                             <React.Fragment key={customer._id}>
                                 <tr onClick={() => handleExpand(customer._id)}>
                                     <td>{customer._id}</td>
