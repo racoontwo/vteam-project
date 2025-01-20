@@ -53,7 +53,7 @@ async function updateAll(collectionName, operations) {
         const { collection, client } = await getCollection(collectionName);
         
         // Find the scooters that are going to be updated (based on the operations)
-        const scooterIdsToUpdate = operations.filter(op => op.updateOne).map(op => op.updateOne.filter._id); // Assuming you're updating by _id
+        const scooterIdsToUpdate = operations.filter(op => op.updateOne).map(op => op.updateOne.filter._id);
         const scootersBeforeUpdate = await collection.find({ '_id': { $in: scooterIdsToUpdate } }).toArray();
         
         console.log('Scooters before update:', scootersBeforeUpdate); // Log the scooters before update

@@ -6,6 +6,7 @@ import database from './modules/db.js';
 import cities from './modules/cities_db.js';
 import { startSimulateTrip, simulateWithUsers } from './scooter_pool.js'
 import Scooter from './scooter.js';
+import { simulateMovementWithScooter, moveScooters } from './modules/locationTracker.js';
 
 //need to configure the gathering/update
 // 1 - getAllScooters
@@ -16,6 +17,17 @@ import Scooter from './scooter.js';
 // 5 - set 1 second interval for each update for every scooter?
 // 
 
+
+// docker compose up --build
+
+//update all scooters to "available" in start of simulation?
+
+//simulation       | Scooter could not be rented
+//simulation exited with code 0
+
+
+//teo - går det att få de som är tillgängliga att vara gröna, de som är rented att vara röda?
+//när karta uppdaterar sig i admin så går den direkt till Malmö.
 
 // simulation process -> 
 // --> check if rented?, if it is, check the next one until "available".
@@ -36,6 +48,8 @@ async function bulkUpdateScooters(scooterObjects) {
                 }
             }
         }));
+
+        console.log(bulkOps);
         // Perform the bulk update
         if (bulkOps.length > 0) {
             await database.updateAll('scooters', bulkOps);
@@ -44,92 +58,96 @@ async function bulkUpdateScooters(scooterObjects) {
     } catch (error) {
         console.error('Error during bulk update:', error.message);
     }
+}
+
+async function runSimulation() {
+    let rentedScooters = await assignUsers();
+    let cityData = await cities.getAllCities();
+    //start live updating?
+    await moveScooters(rentedScooters, cityData);
+
+    
+}
+
+//assign users /set rented, user.
+//make movement /set speed, update location
+//arrival /set speed, arrived=true
+//park /set user=null, status=available
 
 
-}async function runSimulation() {
-    const scooterObjects = [];
+async function assignUsers() {
+    let scooterObjects = [];
     const MAX_SIMULATIONS = parseInt(process.env.MAX_SIMULATIONS, 10) || 10; // Default max 10
     try {
-        if (process.env.NODE_ENV === 'dev') {
-            console.log('Running simulation in development mode...');
+        let scooters = await database.getAll('scooters');
+        let customers = await database.getAll('customers');
 
-            let scooters = await database.getAll('scooters');
-            let customers = await database.getAll('customers');
+        if (scooters && scooters.length > 0) {
+            // Create scooter objects with a maximum limit
+            scooterObjects = Scooter.createScootersFromJSON(scooters, MAX_SIMULATIONS);
 
-            if (scooters && scooters.length > 0) {
-                // Loop through and create scooter objects, respecting MAX_SIMULATIONS
-                for (let i = 0; i < Math.min(scooters.length, MAX_SIMULATIONS); i++) {
-                    const scooterData = scooters[i];
-                    try {
-                        const newScooter = Scooter.createFromJSON(scooterData);
-                        scooterObjects.push(newScooter);
-                        console.log(`Scooter ${newScooter.scooterID} added to simulation.`);
-                    } catch (error) {
-                        console.error(`Failed to create scooter from data at index ${i}:`, error.message);
-                    }
-                }
+            // Assign customer IDs to scooters
+            scooterObjects.forEach((scooter, i) => {
+                scooter.rent(customers[i]?._id || null);
+                scooter.printInfo();
+            });
 
-                console.log(`${scooterObjects.length} scooters added to simulation.`);
 
-                // Function to simulate scooter updates sequentially with 1-second interval
-                async function updateScooter(index) {
-                    if (index >= scooterObjects.length) return;
 
-                    const scooter = scooterObjects[index];
-                    // Update scooter location
-                    scooter.location = await cities.getRandomCityCoordinates(scooter.city);
-
-                    // Perform bulk update for this scooter
-                    await bulkUpdateScooters([scooter]);
-
-                    // Call the next update with a delay
-                    setTimeout(() => updateScooter(index + 1), 1000); // 1 second interval
-                }
-
-                // Start updating scooters
-                updateScooter(0); // Start with the first scooter
-
-            } else {
-                console.log('No scooters found in the collection.');
-            }
-        } else if (process.env.NODE_ENV === 'prod') {
-            console.log('Running simulation with users in production mode...');
-            // await simulateWithUsers();
-        } else {
-            console.warn('NODE_ENV is not set or has an invalid value. Please set it to "dev" or "prod".');
+            console.log(`${scooterObjects.length} scooters added to simulation.`);
         }
     } catch (error) {
         console.error('Error during simulation:', error.message);
     }
+
+    return scooterObjects; // Return the scooter objects if no errors occurred
 }
 
 
+            // bulkUpdateScooters(scooterObjects);
+
+        
+
+            // Function to simulate scooter updates sequentially with 1-second interval
+            // async function updateScooter(index) {
+            //     if (index >= scooterObjects.length) return;
+
+            //     const scooter = scooterObjects[index];
+            //     // Update scooter location
+            //     scooter.location = await cities.getRandomCityCoordinates(scooter.city);
+
+            //     // Perform bulk update for this scooter
+            //     await bulkUpdateScooters([scooter]);
+
+            //     console.log(`Scooter ${scooter.scooterID} location updated.`);
+
+            //     // Call the next update with a delay using Promise and setTimeout
+            //     await new Promise(resolve => setTimeout(resolve, 1000));
+            //     await updateScooter(index + 1); // Continue with the next scooter
+            // }
+
+            // // Start updating scooters
+            // await updateScooter(0); // Start with the first scooter
+
+//         } else {
+//             console.log('No scooters found in the collection.');
+//         }
+//     } catch (error) {
+//         console.error('Error during simulation:', error.message);
+//     }
+// }
 
 
-// docker compose up --build
-
-//update all scooters to "available" in start of simulation?
-
-//simulation       | Scooter could not be rented
-//simulation exited with code 0
 
 
-//teo - går det att få de som är tillgängliga att vara gröna, de som är rented att vara röda?
-//när karta uppdaterar sig i admin så går den direkt till Malmö.
 
 // Main function to initialize the simulation
 (async function main() {
     try {
         if (process.env.NODE_ENV === 'dev') {
             console.log('Running simulation in development mode...');
-            
-            // Check if scooters exist and run the simulation
-            let scooters = await database.getAll('scooters');
-            if (scooters && scooters.length > 0) {
                 runSimulation();
-            } else {
-                console.log('No scooters found in the collection.');
-            }
+
         } else if (process.env.NODE_ENV === 'prod') {
             console.log('Running simulation with users in production mode...');
             // await simulateWithUsers();

@@ -1,33 +1,197 @@
 
 import cities from './cities_db.js'
 
-// Location tracker module
-export const locationTracker = {
-    location: "Initial Location",
-    printLiveLocation() {
-        console.log(this.location);
-    },
-    startLiveLocation() {
-        this.liveLocationInterval = setInterval(() => {
-            this.printLiveLocation();
-        }, 10000);
-    },
-    stopLiveLocation() {
-        clearInterval(this.liveLocationInterval);
+export async function moveScooters(scooterObjects, citiesData) {
+    // Start the status logging every 10 seconds
+    const statusInterval = setInterval(() => {
+        logScooterStatuses(scooterObjects);
+    }, 10000); // Log every 10 seconds
+
+    const movementPromises = scooterObjects.map(async (scooter) => {
+        const cityData = citiesData.find(city => city.city === scooter.city);
+
+        if (cityData) {
+            let destination = getRandomCoordinates(cityData.driveZone);
+            scooter.setSpeed(process.env.SCOOTER_SPEED);
+
+            const result = await simulateMovement(scooter, destination);
+            
+            if (result.arrived) {
+                console.log(`Scooter in ${scooter.city} has successfully arrived!`);
+            } else {
+                console.log(`Scooter in ${scooter.city} could not reach the destination.`);
+            }
+            console.log("Final Scooter State:", result.scooter);
+        } else {
+            console.error(`City not found for scooter: ${scooter.city}`);
+        }
+    });
+
+    await Promise.all(movementPromises);
+    
+    // Stop logging once all scooters have finished their movement
+    clearInterval(statusInterval);
+}
+
+// Function to simulate movement recursively
+export async function simulateMovement(scooter, destination) {
+    const SIMULATION_SPEED = process.env.SIMULATION_SPEED || 1000; // Default value of 1 second 
+    const speedPerSecond = scooter.speed / 3600; // Convert km/h to km/s
+
+    if (scooter.battery <= 0) {
+        console.log("Battery depleted. Scooter cannot continue.");
+        return { arrived: false, scooter };
     }
-};
 
-// Start live location tracking
-// locationTracker.startLiveLocation();
+    const distance = getDistance(scooter.location, destination);
 
-// Stop tracking after 30 seconds
-// setTimeout(() => {
-//     locationTracker.stopLiveLocation();
-//     console.log("Stopped tracking location.");
-// }, 30000);
+    if (distance <= 0.01) { // Consider arrival if within 10 meters
+        console.log(`Arrived at Destination: { latitude: ${destination.latitude}, longitude: ${destination.longitude} }`);
+        return { arrived: true, scooter };
+    }
+
+    // Update scooter position towards destination
+    scooter.location.latitude += (destination.latitude - scooter.location.latitude) * (speedPerSecond / distance);
+    scooter.location.longitude += (destination.longitude - scooter.location.longitude) * (speedPerSecond / distance);
+    scooter.battery -= 1;
+
+    // console.log(`Current Position: { latitude: ${scooter.location.latitude}, longitude: ${scooter.location.longitude} }, Battery: ${scooter.battery}`);
+
+    await new Promise(resolve => setTimeout(resolve, SIMULATION_SPEED));
+
+    return simulateMovement(scooter, destination);
+}
+
+// Function to log the current status of all scooters
+function logScooterStatuses(scooterObjects) {
+    console.log("---- Scooter Status Update ----");
+    scooterObjects.forEach((scooter, index) => {
+        console.log(`Scooter ${index + 1} in ${scooter.city}:`);
+        console.log(`  Location: { latitude: ${scooter.location.latitude}, longitude: ${scooter.location.longitude} }`);
+        console.log(`  Battery: ${scooter.battery}`);
+    });
+    console.log("--------------------------------");
+}
+
+
+// export async function moveScooters(scooterObjects, citiesData) {
+//     const movementPromises = scooterObjects.map(async (scooter) => {
+//         const cityData = citiesData.find(city => city.city === scooter.city);
+
+//         if (cityData) {
+//             let destination = getRandomCoordinates(cityData.driveZone);
+//             scooter.setSpeed(process.env.SCOOTER_SPEED);
+
+//             const result = await simulateMovement(scooter, destination);
+            
+//             if (result.arrived) {
+//                 console.log("Scooter has successfully arrived!");
+//             } else {
+//                 console.log("Scooter could not reach the destination.");
+//             }
+//             console.log("Final Scooter State:", result.scooter);
+//         } else {
+//             console.error(`City not found for scooter: ${scooter.city}`);
+//         }
+//     });
+
+//     await Promise.all(movementPromises);
+// }
+
+// export async function simulateMovement(scooter, destination) {
+//     const SIMULATION_SPEED = process.env.SIMULATION_SPEED || 1000; //Default value of 1 second 
+//     const speedPerSecond = scooter.speed / 3600; // Convert km/h to km/s
+
+//     if (scooter.battery <= 0) {
+//         console.log("Battery depleted. Scooter cannot continue.");
+//         return { arrived: false, scooter };
+//     }
+
+//     const distance = getDistance(scooter.location, destination);
+
+//     if (distance <= 0.01) { // Consider arrival if within 10 meters
+//         console.log(`Arrived at Destination: { latitude: ${destination.latitude}, longitude: ${destination.longitude} }`);
+//         return { arrived: true, scooter };
+//     }
+
+//     // Update scooter position towards destination
+//     scooter.location.latitude += (destination.latitude - scooter.location.latitude) * (speedPerSecond / distance);
+//     scooter.location.longitude += (destination.longitude - scooter.location.longitude) * (speedPerSecond / distance);
+//     scooter.battery -= 1;
+
+//     console.log(`Current Position: { latitude: ${scooter.location.latitude}, longitude: ${scooter.location.longitude} }, Battery: ${scooter.battery}`);
+
+//     await new Promise(resolve => setTimeout(resolve, SIMULATION_SPEED));
+
+//     return simulateMovement(scooter, destination);
+// }
+
+
+
+// export async function moveScooters(scooterObjects, citiesData) {
+//     const movementPromises = scooterObjects.map(async (scooter) => {
+//         const cityData = citiesData.find(city => city.city === scooter.city);
+
+//         if (cityData) {
+//             let destination = getRandomCoordinates(cityData.driveZone);
+//             scooter.setSpeed(process.env.SCOOTER_SPEED);
+
+
+//             simulateMovement(scooter, destination).then(result => {
+//                 if (result.arrived) {
+//                     console.log("Scooter has successfully arrived!");
+//                 } else {
+//                     console.log("Scooter could not reach the destination.");
+//                 }
+//                 console.log("Final Scooter State:", result.scooter);
+//             });
+
+
+//             // console.log("Location:", scooter.location);
+//             // console.log("Destination:", destination);
+//             // let distance = calculateDistance(scooter.location, destination);
+//             // console.log("The distance is:", distance);
+
+//             // let arrived = await simulateMovementWithScooter(scooter, destination);
+//             // console.log(arrived);
+//         } else {
+//             console.error(`City not found for scooter: ${scooter.city}`);
+//         }
+//     });
+
+//     await Promise.all(movementPromises);
+// }
+
+// export async function simulateMovement(scooter, destination) {
+//     if (scooter.battery <= 0) {
+//         console.log("Battery depleted. Scooter cannot continue.");
+//         return;
+//     }
+
+//     const speedPerSecond = scooter.speed / 3600; // Convert km/h to km/s
+//     const distance = getDistance(scooter.location, destination);
+
+//     if (distance <= 0.01) {
+//         console.log(`Arrived at Destination: { latitude: ${destination.latitude}, longitude: ${destination.longitude} }`);
+//         return;
+//     }
+
+//     scooter.location.latitude += (destination.latitude - scooter.location.latitude) * (speedPerSecond / distance);
+//     scooter.location.longitude += (destination.longitude - scooter.location.longitude) * (speedPerSecond / distance);
+//     scooter.battery -= 1;
+
+//     console.log(`Current Position: { latitude: ${scooter.location.latitude}, longitude: ${scooter.location.longitude} }, Battery: ${scooter.battery}`);
+
+//     // setTimeout(() => simulateMovement(scooter, destination), 100);
+//     await new Promise(resolve => setTimeout(resolve, 1000));
+//         return updateScooter();
+//     }
+
+//     return await updateScooter();
+// // }
 
 // Function to calculate the distance between two points using the Haversine formula
-export function calculateDistance(coordA, coordB) {
+export function getDistance(coordA, coordB) {
     const R = 6371; // Earth's radius in km
     const toRadians = angle => angle * (Math.PI / 180);
     const dLat = toRadians(coordB.latitude - coordA.latitude);
@@ -116,7 +280,7 @@ export async function simulateMovementWithScooter(scooter, destination) {
     let distanceTraveled = 0; // Track total distance traveled
 
     const depletionRate = parseFloat(process.env.BATTERY_DEPLETION_RATE) || 1; // Default to 1 if not set
-    // console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
+    console.log(`Total distance: ${totalDistance.toFixed(2)} km`);
     console.log(`Starting simulation at ${scooter.speed} km/h with ${scooter.battery}% battery.`);
 
     return new Promise((resolve) => {
@@ -147,7 +311,7 @@ export async function simulateMovementWithScooter(scooter, destination) {
                 // Interpolate the current position
                 const currentCoords = interpolateCoords(scooter.location, destination, fraction);
                 scooter.location = currentCoords; // Update the scooter's location
-                // console.log(`Current position: Latitude: ${currentCoords.latitude}, Longitude: ${currentCoords.longitude}, Battery: ${scooter.battery}%`);
+                console.log(`Current position: Latitude: ${currentCoords.latitude}, Longitude: ${currentCoords.longitude}, Battery: ${scooter.battery}%`);
             }
         }, updateInterval);
     });
@@ -199,35 +363,32 @@ export async function simulateMovementWithScooter(scooter, destination) {
 //     });
 // }
 
-export async function getRandomCoordinates(cityName) {
-    try {
-        const center = await cities.getDriveZone(cityName);
-        const { latitude, longitude, radius_km2 } = center;
+export function getRandomCoordinates(cityCenter) {
 
-        // Convert radius from square kilometers to a circular radius in kilometers
-        const radius = Math.sqrt(radius_km2);
+    // const center = await cities.getDriveZone(cityName);
+    const { latitude, longitude, radius_km2 } = cityCenter;
 
-        // Convert radius to degrees (approximately, assuming Earth is a sphere)
-        const radiusInDegrees = radius / 111; // 111 km ~ 1 degree of latitude
 
-        const angle = Math.random() * 2 * Math.PI;
+    // Convert radius from square kilometers to a circular radius in kilometers
+    const radius = Math.sqrt(radius_km2);
 
-        const distance = Math.random() * radiusInDegrees;
+    // Convert radius to degrees (approximately, assuming Earth is a sphere)
+    const radiusInDegrees = radius / 111; // 111 km ~ 1 degree of latitude
 
-        const deltaLat = distance * Math.cos(angle);
-        const deltaLon = distance * Math.sin(angle) / Math.cos(latitude * (Math.PI / 180));
+    const angle = Math.random() * 2 * Math.PI;
 
-        const randomLat = latitude + deltaLat;
-        const randomLon = longitude + deltaLon;
+    const distance = Math.random() * radiusInDegrees;
 
-        return {
-        latitude: randomLat,
-        longitude: randomLon,
-        };
-    } catch (error) {
-        console.error(`Error fetching drive zone for "${cityName}":`, error);
-        throw error;
-    }
+    const deltaLat = distance * Math.cos(angle);
+    const deltaLon = distance * Math.sin(angle) / Math.cos(latitude * (Math.PI / 180));
+
+    const randomLat = latitude + deltaLat;
+    const randomLon = longitude + deltaLon;
+
+    return {
+    latitude: randomLat,
+    longitude: randomLon,
+    };
 }
 
 export async function canIPark(cityName, location) {

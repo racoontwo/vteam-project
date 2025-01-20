@@ -40,7 +40,7 @@ export default class Scooter {
         }
     }
 
-    async rent(userID) {
+    rent(userID) {
         if (this.status !== "available") {
             console.log(`Scooter: "${this.scooterID}" cannot be rented. Current status: "${this.status}"`);
             return false;
@@ -49,7 +49,7 @@ export default class Scooter {
         this.setUser(userID);
         this.setStatus("rented");
 
-        await this.save();
+        // await this.save();
 
         return true;
     }
@@ -59,9 +59,9 @@ export default class Scooter {
             this.setStatus("available");
             this.setSpeed(0);
             this.setUser(null);
-            console.log('Saving scooter data...');
+            // console.log('Saving scooter data...');
 
-            await this.save();
+            // await this.save();
         } catch (error) {
             console.error("Error updating scooter status to 'available':", error.message);
             throw new Error("Failed to set scooter status to 'available'");
@@ -124,6 +124,28 @@ export default class Scooter {
             console.error("Error creating scooter from JSON:", error.message);
             throw error;
         }
+    }
+
+    static createScootersFromJSON(jsonList, amountOfScooters) {
+        if (!Array.isArray(jsonList)) {
+            throw new Error("Invalid input: jsonList must be an array.");
+        }
+    
+        if (typeof amountOfScooters !== 'number' || amountOfScooters <= 0) {
+            throw new Error("Invalid amount of scooters: must be a positive number.");
+        }
+    
+        const scooterObjects = [];
+        for (let i = 0; i < amountOfScooters && i < jsonList.length; i++) {
+            try {
+                const scooter = Scooter.createFromJSON(jsonList[i]);
+                scooterObjects.push(scooter);
+            } catch (error) {
+                console.error(`Error creating scooter from JSON at index ${i}:`, error.message);
+            }
+        }
+    
+        return scooterObjects;
     }
     
 
@@ -227,7 +249,7 @@ export default class Scooter {
         this.status = newStatus;
     
         // Call updateIntervals to manage the interval based on the new status
-        this.updateIntervals();
+        // this.updateIntervals();
     }
 
     setBattery(newBattery) {

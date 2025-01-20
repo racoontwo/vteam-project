@@ -160,9 +160,9 @@ async function utils() {
             if (isNaN(num) || num <= 0) {
                 console.log('Please provide a valid number of customers to add.');
             } else {
-                await addMultipleScooters(num, 'Malmö');
-                // await addMultipleScooters(num, 'Karlskrona centrum');
-                await addMultipleScooters(num, 'Växjö');
+                // await addMultipleScooters(num, 'Malmö');
+                await addMultipleScooters(num, 'Karlskrona centrum');
+                // await addMultipleScooters(num, 'Växjö');
             }
             break;
         case 'randomUser':

@@ -3,12 +3,11 @@ import Scooter from '../scooter.js';
 
 describe('Scooter Class', () => {
     describe('setStatus', () => {
-        it('should set a valid status and update speed', () => {
+        it('should set a valid status', () => {
             const scooter = new Scooter();
             scooter.setStatus('rented');
             
             assert.strictEqual(scooter.status, 'rented', 'Status is not set to "rented"');
-            assert.ok(scooter.speed > 0, 'Speed is not updated when status is "rented"');
         });
 
         it('should throw error for invalid status', () => {
