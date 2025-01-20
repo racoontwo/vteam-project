@@ -3,7 +3,107 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import database from './modules/db.js';
+import cities from './modules/cities_db.js';
 import { startSimulateTrip, simulateWithUsers } from './scooter_pool.js'
+import Scooter from './scooter.js';
+
+//need to configure the gathering/update
+// 1 - getAllScooters
+// 2 - getAllUsers
+// 2.5 - create Objects of all the scooters.
+// 3 - assign a user to each scooter
+// 4 - start the renting process
+// 5 - set 1 second interval for each update for every scooter?
+// 
+
+
+// simulation process -> 
+// --> check if rented?, if it is, check the next one until "available".
+
+async function bulkUpdateScooters(scooterObjects) {
+    try {
+        const bulkOps = scooterObjects.map(scooter => ({
+            updateOne: {
+                filter: { _id: scooter.scooterID }, // Assuming the scooter has a unique scooterID
+                update: {
+                    $set: {
+                        location: scooter.location,
+                        status: scooter.status,
+                        speed: scooter.speed,
+                        battery: scooter.battery,
+                        tripLog: scooter.tripLog
+                    }
+                }
+            }
+        }));
+        // Perform the bulk update
+        if (bulkOps.length > 0) {
+            await database.updateAll('scooters', bulkOps);
+            console.log(`Bulk update successful for ${bulkOps.length} scooters.`);
+        }
+    } catch (error) {
+        console.error('Error during bulk update:', error.message);
+    }
+
+
+}async function runSimulation() {
+    const scooterObjects = [];
+    const MAX_SIMULATIONS = parseInt(process.env.MAX_SIMULATIONS, 10) || 10; // Default max 10
+    try {
+        if (process.env.NODE_ENV === 'dev') {
+            console.log('Running simulation in development mode...');
+
+            let scooters = await database.getAll('scooters');
+            let customers = await database.getAll('customers');
+
+            if (scooters && scooters.length > 0) {
+                // Loop through and create scooter objects, respecting MAX_SIMULATIONS
+                for (let i = 0; i < Math.min(scooters.length, MAX_SIMULATIONS); i++) {
+                    const scooterData = scooters[i];
+                    try {
+                        const newScooter = Scooter.createFromJSON(scooterData);
+                        scooterObjects.push(newScooter);
+                        console.log(`Scooter ${newScooter.scooterID} added to simulation.`);
+                    } catch (error) {
+                        console.error(`Failed to create scooter from data at index ${i}:`, error.message);
+                    }
+                }
+
+                console.log(`${scooterObjects.length} scooters added to simulation.`);
+
+                // Function to simulate scooter updates sequentially with 1-second interval
+                async function updateScooter(index) {
+                    if (index >= scooterObjects.length) return;
+
+                    const scooter = scooterObjects[index];
+                    // Update scooter location
+                    scooter.location = await cities.getRandomCityCoordinates(scooter.city);
+
+                    // Perform bulk update for this scooter
+                    await bulkUpdateScooters([scooter]);
+
+                    // Call the next update with a delay
+                    setTimeout(() => updateScooter(index + 1), 1000); // 1 second interval
+                }
+
+                // Start updating scooters
+                updateScooter(0); // Start with the first scooter
+
+            } else {
+                console.log('No scooters found in the collection.');
+            }
+        } else if (process.env.NODE_ENV === 'prod') {
+            console.log('Running simulation with users in production mode...');
+            // await simulateWithUsers();
+        } else {
+            console.warn('NODE_ENV is not set or has an invalid value. Please set it to "dev" or "prod".');
+        }
+    } catch (error) {
+        console.error('Error during simulation:', error.message);
+    }
+}
+
+
 
 
 // docker compose up --build
@@ -16,6 +116,32 @@ import { startSimulateTrip, simulateWithUsers } from './scooter_pool.js'
 
 //teo - går det att få de som är tillgängliga att vara gröna, de som är rented att vara röda?
 //när karta uppdaterar sig i admin så går den direkt till Malmö.
+
+// Main function to initialize the simulation
+(async function main() {
+    try {
+        if (process.env.NODE_ENV === 'dev') {
+            console.log('Running simulation in development mode...');
+            
+            // Check if scooters exist and run the simulation
+            let scooters = await database.getAll('scooters');
+            if (scooters && scooters.length > 0) {
+                runSimulation();
+            } else {
+                console.log('No scooters found in the collection.');
+            }
+        } else if (process.env.NODE_ENV === 'prod') {
+            console.log('Running simulation with users in production mode...');
+            // await simulateWithUsers();
+        } else {
+            console.warn('NODE_ENV is not set or has an invalid value. Please set it to "dev" or "prod".');
+        }
+    } catch (error) {
+        console.error('Error during simulation:', error.message);
+    }
+})();
+
+
 
 
 // Detta program är tänkt att köra i varje cykel och styra/övervaka den. CHECK
@@ -30,29 +156,30 @@ import { startSimulateTrip, simulateWithUsers } from './scooter_pool.js'
 // Cykeln sparar en logg över sina resor med start (plats, tid) och slut (plats, tid) samt kund.
 // När cykeln tas in för underhåll eller laddning så markeras det att cykeln är i underhållsläge. En cykel som laddas på en laddstation kan inte hyras av en kund och en röd lampa visar att den inte är tillgänglig.
 
-// Main function to initialize the simulation
-(async function main() {
-    try {
-        if (process.env.NODE_ENV === 'dev') {
-            console.log('Running simulation in development mode...');
-            
-            let scooters = await database.getAll('scooters');
-            let customers = await database.getAll('customers');
 
-            if (scooters && scooters.length > 0) {
-                let firstScooterID = scooters[0]._id;
-                let firstCustomerID = customers[0]._id;
-                await startSimulateTrip(firstCustomerID, firstScooterID);
-            } else {
-                console.log('No scooters found in the collection.');
-            }
-        } else if (process.env.NODE_ENV === 'prod') {
-            console.log('Running simulation with users in production mode...');
-            await simulateWithUsers();
-        } else {
-            console.warn('NODE_ENV is not set or has an invalid value. Please set it to "dev" or "prod".');
-        }
-    } catch (error) {
-        console.error('Error during simulation:', error.message);
-    }
-})();
+// (async function main() {
+//     try {
+//         if (process.env.NODE_ENV === 'dev') {
+//             console.log('Running simulation in development mode...');
+            
+//             let scooters = await database.getAll('scooters');
+//             console.log(scooters);
+//             let customers = await database.getAll('customers');
+
+//             if (scooters && scooters.length > 0) {
+//                 let firstScooterID = scooters[0]._id;
+//                 let firstCustomerID = customers[0]._id;
+//                 await startSimulateTrip(firstCustomerID, firstScooterID);
+//             } else {
+//                 console.log('No scooters found in the collection.');
+//             }
+//         } else if (process.env.NODE_ENV === 'prod') {
+//             console.log('Running simulation with users in production mode...');
+//             // await simulateWithUsers();
+//         } else {
+//             console.warn('NODE_ENV is not set or has an invalid value. Please set it to "dev" or "prod".');
+//         }
+//     } catch (error) {
+//         console.error('Error during simulation:', error.message);
+//     }
+// })();

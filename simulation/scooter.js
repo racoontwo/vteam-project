@@ -109,36 +109,23 @@ export default class Scooter {
         return this.battery < 10;
     }
 
-
-    // static createFromDb(jsonObject) {
-    //     try {
-    //         if (!jsonObject || typeof jsonObject !== "object") {
-    //             throw new Error("Invalid JSON object provided.");
-    //         }
-
-    //         const {
-    //             _id = null,
-    //             location = {},
-    //             user = "[ObjectID], referens till User",
-    //             status = "Off",
-    //             speed = 0,
-    //             battery = 100,
-    //             tripLog = [],
-    //         } = jsonObject;
-
-    //         const newScooter = new Scooter(location, _id);
-    //         newScooter.user = user;
-    //         newScooter.status = status;
-    //         newScooter.speed = speed;
-    //         newScooter.battery = battery;
-    //         newScooter.tripLog = tripLog;
-
-    //         return newScooter;
-    //     } catch (error) {
-    //         console.error("Error creating scooter from JSON:", error.message);
-    //         throw error;
-    //     }
-    // }
+    static createFromJSON(scooterData) {
+        try {
+            if (!scooterData || typeof scooterData !== "object") {
+                throw new Error("Invalid JSON object provided.");
+            }
+    
+            if (!scooterData._id || !scooterData.location) {
+                throw new Error("Missing required fields '_id' or 'location'.");
+            }
+    
+            return new Scooter(scooterData.location, scooterData._id).setData(scooterData);
+        } catch (error) {
+            console.error("Error creating scooter from JSON:", error.message);
+            throw error;
+        }
+    }
+    
 
     static async loadObjectScooter(scooterID) {
         try {
@@ -243,13 +230,22 @@ export default class Scooter {
         this.updateIntervals();
     }
 
-
     setBattery(newBattery) {
         if (typeof newBattery !== 'number' || newBattery < 0 || newBattery > 100) {
             throw new Error(`Invalid battery level: ${newBattery}. Must be a number between 0 and 100.`);
         }
         this.battery = newBattery;
     }
+
+    setData(data) {
+        this.user = data.user;
+        this.status = data.status;
+        this.speed = data.speed;
+        this.battery = data.battery;
+        this.tripLog = data.tripLog;
+        this.city = data.city;
+        return this;  // Allows method chaining
+    }    
 
     printInfo() {
         console.log("ScooterID:", this.scooterID);
