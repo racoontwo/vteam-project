@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function Customers({ isLoggedIn }) {
+    // State variables
     const [customers, setCustomers] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);

@@ -6,9 +6,11 @@ import { TbScooter } from "react-icons/tb";
 import ReactDOMServer from "react-dom/server";
 
 function Map({ isLoggedIn }) {
+    // State variables
     const [scooters, setScooters] = useState(null);
     const [cities, setCities] = useState(null);
     const [selectedCity, setSelectedCity] = useState(null);
+    const [filter, setFilter] = useState('all');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -79,6 +81,19 @@ function Map({ isLoggedIn }) {
         console.log("chargingZones", selectedCity.chargingZones);
     };
 
+    const handleFilterChange = (event) => {
+        setFilter(event.target.value);
+    };
+
+    const filteredScooters = scooters ? scooters.data.filter(scooter => {
+        if (filter === 'all') return true;
+        if (filter === 'lowBattery') return scooter.battery < 20;
+        if (filter === 'highBattery') return scooter.battery >= 20;
+        if (filter === 'rented') return scooter.status === 'rented';
+        if (filter === 'available') return scooter.status === 'available';
+        return true;
+    }) : [];
+
     const handleDelete = async (scooterId) => {
         try {
             const response = await fetch(`${baseUrl}/api/v1/scooters/delete-one-scooter`, {
@@ -148,16 +163,23 @@ function Map({ isLoggedIn }) {
             {cities && (
                 <div className="page-header">
                     <h1>Map</h1>
-                    <div className='city-select'>
+                    <div className='map-options'>
                         <label htmlFor="city-select">Choose a city:</label>
                         <select id="city-select" onChange={handleCityChange}>
                             {cities.data.map(city => (
                                 <option key={city._id} value={city._id}>{city.city}</option>
                             ))}
                         </select>
+                        <label htmlFor="filter">Filter by:</label>
+                        <select id="filter" value={filter} onChange={handleFilterChange}>
+                            <option value="all">All</option>
+                            <option value="lowBattery">Low Battery</option>
+                            <option value="highBattery">High Battery</option>
+                            <option value="rented">Rented</option>
+                            <option value="available">Available</option>
+                        </select>
                     </div>
                 </div>
-
             )}
             {selectedCity && scooters && (
                 <MapContainer center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]} zoom={12}>
@@ -166,7 +188,7 @@ function Map({ isLoggedIn }) {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
-                    {scooters.data.map(scooter => (
+                    {filteredScooters.map(scooter => (
                         <Marker
                             key={scooter._id}
                             position={[scooter.location.latitude, scooter.location.longitude]}

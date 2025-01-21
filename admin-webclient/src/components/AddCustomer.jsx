@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 function AddCustomer() {
+    // State variables
     const [newCustomer, setNewCustomer] = useState({ firstName: '', lastName: '' });
     const [error, setError] = useState(null);
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const apiKey = import.meta.env.VITE_API_KEY;
     const navigate = useNavigate();
 
+    // Add a new customer
     const handleAddCustomer = async (e) => {
         e.preventDefault();
         try {

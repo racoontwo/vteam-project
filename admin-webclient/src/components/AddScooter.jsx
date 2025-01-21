@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 function AddScooter() {
+    // State variables
     const [newScooter, setNewScooter] = useState({ latitude: '', longitude: '', battery: 100 });
     const [error, setError] = useState(null);
     const baseUrl = import.meta.env.VITE_BASE_URL;
     const apiKey = import.meta.env.VITE_API_KEY;
     const navigate = useNavigate();
 
+    // Add a new scooter
     const handleAddScooter = async (e) => {
         e.preventDefault();
         try {

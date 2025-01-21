@@ -7,6 +7,7 @@ import { GiBattery50 } from "react-icons/gi";
 import ReactDOMServer from "react-dom/server";
 
 function Map() {
+    // State variables
     const [scooters, setScooters] = useState(null);
     const [cities, setCities] = useState(null);
     const [selectedCity, setSelectedCity] = useState(null);
@@ -71,6 +72,7 @@ function Map() {
         return () => clearInterval(interval);
     }, [baseUrl]);
 
+    // Create custom scooter icon
     const scooterIcon = new L.DivIcon({
         html: ReactDOMServer.renderToString(
           <div className="map-scooter-icon">
@@ -89,7 +91,7 @@ function Map() {
             {loading && <h2>Loading...</h2>}
             {error && <p>{error}</p>}
             {selectedCity && scooters && (
-                <MapContainer center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]} zoom={12}>
+                <MapContainer center={[selectedCity.driveZone.latitude, selectedCity.driveZone.longitude]} zoom={14}>
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

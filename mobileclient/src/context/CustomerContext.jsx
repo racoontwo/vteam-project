@@ -9,7 +9,7 @@ export const CustomerProvider = ({ customerId, children }) => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     // const baseUrl = import.meta.env.VITE_BASE_URL;
-    const baseUrl = "http://localhost:4000";
+    const baseUrl = "http://localhost:4000"; // Using mock api
 
     useEffect(() => {
         if (!customerId) {
@@ -18,6 +18,7 @@ export const CustomerProvider = ({ customerId, children }) => {
             return;
         }
 
+        // Fetch customer from the API
         const fetchCustomer = async () => {
             try {
                 const response = await fetch(`${baseUrl}/customers?_id=${customerId}`);
