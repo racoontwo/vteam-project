@@ -130,7 +130,7 @@ function Map() {
                             center={[zone.latitude, zone.longitude]}
                             pathOptions={{ color: '' }}
                             stroke={false}
-                            radius={zone.radius_km2 * 1000}
+                            radius={zone.radius_km2 * 10000}
                         >
                             <Popup>
                                 <h2>{zone.name}</h2>
@@ -143,7 +143,7 @@ function Map() {
                             center={[zone.latitude, zone.longitude]}
                             pathOptions={{ color: 'red' }}
                             stroke={false}
-                            radius={zone.radius_km2 * 1000}
+                            radius={zone.radius_km2 * 10000}
                         >
                             <Popup>
                                 <h2>{zone.name}</h2>
