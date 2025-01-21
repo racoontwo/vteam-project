@@ -1,12 +1,55 @@
 
 import cities from './cities_db.js'
+import database from './db.js'
+
+
+async function bulkUpdateScooters(scooterObjects) {
+    try {
+        const bulkOps = scooterObjects.map(scooter => ({
+            updateOne: {
+                filter: { _id: scooter.scooterID }, // Assuming the scooter has a unique scooterID
+                update: {
+                    $set: {
+                        location: scooter.location,
+                        status: scooter.status,
+                        speed: scooter.speed,
+                        battery: scooter.battery,
+                        tripLog: scooter.tripLog
+                    }
+                }
+            }
+        }));
+
+        // console.log(bulkOps);
+        // Perform the bulk update
+        if (bulkOps.length > 0) {
+            await database.updateAll('scooters', bulkOps);
+            console.log(`Bulk update successful for ${bulkOps.length} scooters.`);
+        }
+    } catch (error) {
+        console.error('Error during bulk update:', error.message);
+    }
+}
+
+// Function to log the current status of all scooters
+export async function logScooterStatuses(scooterObjects) {
+    await bulkUpdateScooters(scooterObjects);
+
+    console.log("---- Scooter Status Update ----");
+    scooterObjects.forEach((scooter, index) => {
+        console.log(`Scooter ${index + 1} in ${scooter.city}:`);
+        console.log(`  Location: { latitude: ${scooter.location.latitude}, longitude: ${scooter.location.longitude} }`);
+        console.log(`  Battery: ${scooter.battery}`);
+    });
+    console.log("--------------------------------");
+}
 
 export async function moveScooters(scooterObjects, citiesData) {
-    // Start the status logging every 10 seconds
+
+        // Start the status logging every 10 seconds
     const statusInterval = setInterval(() => {
         logScooterStatuses(scooterObjects);
     }, 10000); // Log every 10 seconds
-
     const movementPromises = scooterObjects.map(async (scooter) => {
         const cityData = citiesData.find(city => city.city === scooter.city);
 
@@ -17,9 +60,9 @@ export async function moveScooters(scooterObjects, citiesData) {
             const result = await simulateMovement(scooter, destination);
             
             if (result.arrived) {
-                console.log(`Scooter in ${scooter.city} has successfully arrived!`);
+                console.log("Scooter has successfully arrived!");
             } else {
-                console.log(`Scooter in ${scooter.city} could not reach the destination.`);
+                console.log("Scooter could not reach the destination.");
             }
             console.log("Final Scooter State:", result.scooter);
         } else {
@@ -28,12 +71,10 @@ export async function moveScooters(scooterObjects, citiesData) {
     });
 
     await Promise.all(movementPromises);
-    
     // Stop logging once all scooters have finished their movement
     clearInterval(statusInterval);
 }
 
-// Function to simulate movement recursively
 export async function simulateMovement(scooter, destination) {
     const SIMULATION_SPEED = process.env.SIMULATION_SPEED || 1000; // Default value of 1 second 
     const speedPerSecond = scooter.speed / 3600; // Convert km/h to km/s
@@ -44,16 +85,22 @@ export async function simulateMovement(scooter, destination) {
     }
 
     const distance = getDistance(scooter.location, destination);
+    console.log(`Distance: ${distance} scooter: ${scooter.scooterID}`);
 
     if (distance <= 0.01) { // Consider arrival if within 10 meters
+        scooter.location = { ...destination };  // Snap to destination
         console.log(`Arrived at Destination: { latitude: ${destination.latitude}, longitude: ${destination.longitude} }`);
         return { arrived: true, scooter };
     }
 
-    // Update scooter position towards destination
-    scooter.location.latitude += (destination.latitude - scooter.location.latitude) * (speedPerSecond / distance);
-    scooter.location.longitude += (destination.longitude - scooter.location.longitude) * (speedPerSecond / distance);
-    scooter.battery -= 1;
+    // Calculate proportional movement step
+    const maxMoveDistance = speedPerSecond;  // Distance scooter can travel per second
+    const ratio = Math.min(1, maxMoveDistance / distance); // Ensure we don't overshoot
+
+    // Update scooter position proportionally
+    scooter.location.latitude += (destination.latitude - scooter.location.latitude) * ratio;
+    scooter.location.longitude += (destination.longitude - scooter.location.longitude) * ratio;
+    // scooter.battery -= 1;
 
     // console.log(`Current Position: { latitude: ${scooter.location.latitude}, longitude: ${scooter.location.longitude} }, Battery: ${scooter.battery}`);
 
@@ -61,70 +108,6 @@ export async function simulateMovement(scooter, destination) {
 
     return simulateMovement(scooter, destination);
 }
-
-// Function to log the current status of all scooters
-function logScooterStatuses(scooterObjects) {
-    console.log("---- Scooter Status Update ----");
-    scooterObjects.forEach((scooter, index) => {
-        console.log(`Scooter ${index + 1} in ${scooter.city}:`);
-        console.log(`  Location: { latitude: ${scooter.location.latitude}, longitude: ${scooter.location.longitude} }`);
-        console.log(`  Battery: ${scooter.battery}`);
-    });
-    console.log("--------------------------------");
-}
-
-
-// export async function moveScooters(scooterObjects, citiesData) {
-//     const movementPromises = scooterObjects.map(async (scooter) => {
-//         const cityData = citiesData.find(city => city.city === scooter.city);
-
-//         if (cityData) {
-//             let destination = getRandomCoordinates(cityData.driveZone);
-//             scooter.setSpeed(process.env.SCOOTER_SPEED);
-
-//             const result = await simulateMovement(scooter, destination);
-            
-//             if (result.arrived) {
-//                 console.log("Scooter has successfully arrived!");
-//             } else {
-//                 console.log("Scooter could not reach the destination.");
-//             }
-//             console.log("Final Scooter State:", result.scooter);
-//         } else {
-//             console.error(`City not found for scooter: ${scooter.city}`);
-//         }
-//     });
-
-//     await Promise.all(movementPromises);
-// }
-
-// export async function simulateMovement(scooter, destination) {
-//     const SIMULATION_SPEED = process.env.SIMULATION_SPEED || 1000; //Default value of 1 second 
-//     const speedPerSecond = scooter.speed / 3600; // Convert km/h to km/s
-
-//     if (scooter.battery <= 0) {
-//         console.log("Battery depleted. Scooter cannot continue.");
-//         return { arrived: false, scooter };
-//     }
-
-//     const distance = getDistance(scooter.location, destination);
-
-//     if (distance <= 0.01) { // Consider arrival if within 10 meters
-//         console.log(`Arrived at Destination: { latitude: ${destination.latitude}, longitude: ${destination.longitude} }`);
-//         return { arrived: true, scooter };
-//     }
-
-//     // Update scooter position towards destination
-//     scooter.location.latitude += (destination.latitude - scooter.location.latitude) * (speedPerSecond / distance);
-//     scooter.location.longitude += (destination.longitude - scooter.location.longitude) * (speedPerSecond / distance);
-//     scooter.battery -= 1;
-
-//     console.log(`Current Position: { latitude: ${scooter.location.latitude}, longitude: ${scooter.location.longitude} }, Battery: ${scooter.battery}`);
-
-//     await new Promise(resolve => setTimeout(resolve, SIMULATION_SPEED));
-
-//     return simulateMovement(scooter, destination);
-// }
 
 
 

@@ -156,32 +156,6 @@ async function updateScooter(updatedStats) {
     }
 }
 
-// async function updateScooter(updatedStats) {
-//     try {
-//         const { collection, client } = await getCollection('scooters');
-
-//         console.log(updatedStats);
-
-//         const result = await collection.updateOne(
-//             { _id: new ObjectId(updatedStats._id) },
-//             { $set: updatedStats }
-//         );
-
-        
-
-//         await client.close();
-
-//         if (result.matchedCount !== 1) {
-//             throw new Error("Error updating scooter stats. Scooter not found.");
-//         }
-
-//         return true;
-//     } catch (e) {
-//         console.error('Failed to update scooter stats:', e);
-//         return false;
-//     }
-// }
-
 async function countScooters() {
     try {
         const { collection, client } = await getCollection('scooters');

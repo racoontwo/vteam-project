@@ -8,6 +8,11 @@ import { startSimulateTrip, simulateWithUsers } from './scooter_pool.js'
 import Scooter from './scooter.js';
 import { simulateMovementWithScooter, moveScooters } from './modules/locationTracker.js';
 
+//remove console logs.
+//assign parking when arrival is done
+//look at battery depletion if possible
+//get teo to get them visible again.
+
 //need to configure the gathering/update
 // 1 - getAllScooters
 // 2 - getAllUsers
@@ -61,7 +66,9 @@ async function bulkUpdateScooters(scooterObjects) {
 }
 
 async function runSimulation() {
+    
     let rentedScooters = await assignUsers();
+    
     let cityData = await cities.getAllCities();
     //start live updating?
     await moveScooters(rentedScooters, cityData);
