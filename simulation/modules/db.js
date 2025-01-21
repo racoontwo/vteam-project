@@ -46,6 +46,7 @@ async function getAll(collectionName) {
     }
 }
 
+
 // Fetches all documents and then performs a bulkWrite operation, logging the scooters before and after the update
 async function updateAll(collectionName, operations) {
     try {
@@ -53,20 +54,10 @@ async function updateAll(collectionName, operations) {
         const { collection, client } = await getCollection(collectionName);
         
         // Find the scooters that are going to be updated (based on the operations)
-        const scooterIdsToUpdate = operations.filter(op => op.updateOne).map(op => op.updateOne.filter._id);
-        const scootersBeforeUpdate = await collection.find({ '_id': { $in: scooterIdsToUpdate } }).toArray();
-        
-        console.log('Scooters before update:', scootersBeforeUpdate); // Log the scooters before update
-
+        // const scooterIdsToUpdate = operations.filter(op => op.updateOne).map(op => op.updateOne.filter._id);
+        // const scootersBeforeUpdate = await collection.find({ '_id': { $in: scooterIdsToUpdate } }).toArray();
         // Perform the bulkWrite operations (e.g., update, delete, insert)
         const result = await collection.bulkWrite(operations);
-
-        // Fetch the scooters after the update
-        const scootersAfterUpdate = await collection.find({ '_id': { $in: scooterIdsToUpdate } }).toArray();
-        
-        console.log('Scooters after update:', scootersAfterUpdate); // Log the scooters after update
-
-        // Close the database connection
         await client.close();
 
         return result;
@@ -75,6 +66,37 @@ async function updateAll(collectionName, operations) {
         throw new Error(`Failed to perform update on collection "${collectionName}"`);
     }
 }
+
+
+// // Fetches all documents and then performs a bulkWrite operation, logging the scooters before and after the update
+// async function updateAll(collectionName, operations) {
+//     try {
+//         // Retrieve the collection
+//         const { collection, client } = await getCollection(collectionName);
+        
+//         // Find the scooters that are going to be updated (based on the operations)
+//         const scooterIdsToUpdate = operations.filter(op => op.updateOne).map(op => op.updateOne.filter._id);
+//         const scootersBeforeUpdate = await collection.find({ '_id': { $in: scooterIdsToUpdate } }).toArray();
+        
+//         console.log('Scooters before update:', scootersBeforeUpdate); // Log the scooters before update
+
+//         // Perform the bulkWrite operations (e.g., update, delete, insert)
+//         const result = await collection.bulkWrite(operations);
+
+//         // Fetch the scooters after the update
+//         const scootersAfterUpdate = await collection.find({ '_id': { $in: scooterIdsToUpdate } }).toArray();
+        
+//         console.log('Scooters after update:', scootersAfterUpdate); // Log the scooters after update
+
+//         // Close the database connection
+//         await client.close();
+
+//         return result;
+//     } catch (error) {
+//         console.error(`Error performing update on collection "${collectionName}":`, error);
+//         throw new Error(`Failed to perform update on collection "${collectionName}"`);
+//     }
+// }
 
 
 // // Fetches all documents and then performs a bulkWrite operation

@@ -3,7 +3,7 @@ dotenv.config();
 
 import database from './modules/db.js';
 import Scooter from './scooter.js';
-import { canIPark, getRandomCoordinates } from './modules/locationTracker.js';
+import { canIPark, getRandomCoordinates } from './modules/simulation.js';
 
 const RENTING_PERCENTAGE = parseFloat(process.env.RENTING_PERCENTAGE) || 50;
 const MAX_SIMULATIONS = parseInt(process.env.MAX_SIMULATIONS, 10) || 100; // Default max 100

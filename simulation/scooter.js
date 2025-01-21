@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import database from './modules/scooter_db.js';
-import { simulateMovementWithScooter, simulateMovementWithSpeed } from './modules/locationTracker.js';
+// import { simulateMovementWithScooter, simulateMovementWithSpeed } from './modules/simulation.js';
 
 const UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 10000;  // Default to 10000 ms
 const SCOOTER_SPEED = process.env.SCOOTER_SPEED || 20;
@@ -68,11 +68,11 @@ export default class Scooter {
         }
     }
 
-    async rideToDestination(destination) {
-        this.setSpeed(SCOOTER_SPEED);
-        const arrived = await simulateMovementWithScooter(this, destination);
-        return arrived
-    }
+    // async rideToDestination(destination) {
+    //     this.setSpeed(SCOOTER_SPEED);
+    //     const arrived = await simulateMovementWithScooter(this, destination);
+    //     return arrived
+    // }
 
     async turnOff() {
         try {

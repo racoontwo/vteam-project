@@ -4,9 +4,9 @@ dotenv.config();
 
 import database from './modules/db.js';
 import cities from './modules/cities_db.js';
-import { startSimulateTrip, simulateWithUsers } from './scooter_pool.js'
+// import { startSimulateTrip, simulateWithUsers } from './scooter_pool.js'
 import Scooter from './scooter.js';
-import { simulateMovementWithScooter, moveScooters } from './modules/locationTracker.js';
+import { moveScooters } from './modules/simulation.js';
 
 //remove console logs.
 //assign parking when arrival is done
@@ -23,6 +23,12 @@ import { simulateMovementWithScooter, moveScooters } from './modules/locationTra
 // 
 
 
+//assign users /set rented, user.
+//make movement /set speed, update location
+//arrival /set speed, arrived=true
+//park /set user=null, status=available
+
+
 // docker compose up --build
 
 //update all scooters to "available" in start of simulation?
@@ -37,51 +43,6 @@ import { simulateMovementWithScooter, moveScooters } from './modules/locationTra
 // simulation process -> 
 // --> check if rented?, if it is, check the next one until "available".
 
-async function bulkUpdateScooters(scooterObjects) {
-    try {
-        const bulkOps = scooterObjects.map(scooter => ({
-            updateOne: {
-                filter: { _id: scooter.scooterID }, // Assuming the scooter has a unique scooterID
-                update: {
-                    $set: {
-                        location: scooter.location,
-                        status: scooter.status,
-                        speed: scooter.speed,
-                        battery: scooter.battery,
-                        tripLog: scooter.tripLog
-                    }
-                }
-            }
-        }));
-
-        console.log(bulkOps);
-        // Perform the bulk update
-        if (bulkOps.length > 0) {
-            await database.updateAll('scooters', bulkOps);
-            console.log(`Bulk update successful for ${bulkOps.length} scooters.`);
-        }
-    } catch (error) {
-        console.error('Error during bulk update:', error.message);
-    }
-}
-
-async function runSimulation() {
-    
-    let rentedScooters = await assignUsers();
-    
-    let cityData = await cities.getAllCities();
-    //start live updating?
-    await moveScooters(rentedScooters, cityData);
-
-    
-}
-
-//assign users /set rented, user.
-//make movement /set speed, update location
-//arrival /set speed, arrived=true
-//park /set user=null, status=available
-
-
 async function assignUsers() {
     let scooterObjects = [];
     const MAX_SIMULATIONS = parseInt(process.env.MAX_SIMULATIONS, 10) || 10; // Default max 10
@@ -95,11 +56,11 @@ async function assignUsers() {
 
             // Assign customer IDs to scooters
             scooterObjects.forEach((scooter, i) => {
+                console.log("rented by:", customers[i]?._id);
+                scooter.setStatus('available');
                 scooter.rent(customers[i]?._id || null);
                 scooter.printInfo();
             });
-
-
 
             console.log(`${scooterObjects.length} scooters added to simulation.`);
         }
@@ -110,42 +71,13 @@ async function assignUsers() {
     return scooterObjects; // Return the scooter objects if no errors occurred
 }
 
+async function runSimulation() {
+    
+    let rentedScooters = await assignUsers();
+    let cityData = await cities.getAllCities();
+    await moveScooters(rentedScooters, cityData);
 
-            // bulkUpdateScooters(scooterObjects);
-
-        
-
-            // Function to simulate scooter updates sequentially with 1-second interval
-            // async function updateScooter(index) {
-            //     if (index >= scooterObjects.length) return;
-
-            //     const scooter = scooterObjects[index];
-            //     // Update scooter location
-            //     scooter.location = await cities.getRandomCityCoordinates(scooter.city);
-
-            //     // Perform bulk update for this scooter
-            //     await bulkUpdateScooters([scooter]);
-
-            //     console.log(`Scooter ${scooter.scooterID} location updated.`);
-
-            //     // Call the next update with a delay using Promise and setTimeout
-            //     await new Promise(resolve => setTimeout(resolve, 1000));
-            //     await updateScooter(index + 1); // Continue with the next scooter
-            // }
-
-            // // Start updating scooters
-            // await updateScooter(0); // Start with the first scooter
-
-//         } else {
-//             console.log('No scooters found in the collection.');
-//         }
-//     } catch (error) {
-//         console.error('Error during simulation:', error.message);
-//     }
-// }
-
-
-
+}
 
 
 // Main function to initialize the simulation
@@ -153,7 +85,7 @@ async function assignUsers() {
     try {
         if (process.env.NODE_ENV === 'dev') {
             console.log('Running simulation in development mode...');
-                runSimulation();
+                await runSimulation();
 
         } else if (process.env.NODE_ENV === 'prod') {
             console.log('Running simulation with users in production mode...');
@@ -165,9 +97,6 @@ async function assignUsers() {
         console.error('Error during simulation:', error.message);
     }
 })();
-
-
-
 
 // Detta program är tänkt att köra i varje cykel och styra/övervaka den. CHECK
 // Cykeln meddelar dess position med jämna mellanrum.
