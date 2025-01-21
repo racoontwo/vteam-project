@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import database from './modules/scooter_db.js';
-import { simulateMovementWithScooter, simulateMovementWithSpeed } from './modules/locationTracker.js';
+// import { simulateMovementWithScooter, simulateMovementWithSpeed } from './modules/simulation.js';
 
 const UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 10000;  // Default to 10000 ms
 const SCOOTER_SPEED = process.env.SCOOTER_SPEED || 20;
@@ -40,7 +40,7 @@ export default class Scooter {
         }
     }
 
-    async rent(userID) {
+    rent(userID) {
         if (this.status !== "available") {
             console.log(`Scooter: "${this.scooterID}" cannot be rented. Current status: "${this.status}"`);
             return false;
@@ -49,7 +49,7 @@ export default class Scooter {
         this.setUser(userID);
         this.setStatus("rented");
 
-        await this.save();
+        // await this.save();
 
         return true;
     }
@@ -59,20 +59,20 @@ export default class Scooter {
             this.setStatus("available");
             this.setSpeed(0);
             this.setUser(null);
-            console.log('Saving scooter data...');
+            // console.log('Saving scooter data...');
 
-            await this.save();
+            // await this.save();
         } catch (error) {
             console.error("Error updating scooter status to 'available':", error.message);
             throw new Error("Failed to set scooter status to 'available'");
         }
     }
 
-    async rideToDestination(destination) {
-        this.setSpeed(SCOOTER_SPEED);
-        const arrived = await simulateMovementWithScooter(this, destination);
-        return arrived
-    }
+    // async rideToDestination(destination) {
+    //     this.setSpeed(SCOOTER_SPEED);
+    //     const arrived = await simulateMovementWithScooter(this, destination);
+    //     return arrived
+    // }
 
     async turnOff() {
         try {
@@ -109,36 +109,45 @@ export default class Scooter {
         return this.battery < 10;
     }
 
+    static createFromJSON(scooterData) {
+        try {
+            if (!scooterData || typeof scooterData !== "object") {
+                throw new Error("Invalid JSON object provided.");
+            }
+    
+            if (!scooterData._id || !scooterData.location) {
+                throw new Error("Missing required fields '_id' or 'location'.");
+            }
+    
+            return new Scooter(scooterData.location, scooterData._id).setData(scooterData);
+        } catch (error) {
+            console.error("Error creating scooter from JSON:", error.message);
+            throw error;
+        }
+    }
 
-    // static createFromDb(jsonObject) {
-    //     try {
-    //         if (!jsonObject || typeof jsonObject !== "object") {
-    //             throw new Error("Invalid JSON object provided.");
-    //         }
-
-    //         const {
-    //             _id = null,
-    //             location = {},
-    //             user = "[ObjectID], referens till User",
-    //             status = "Off",
-    //             speed = 0,
-    //             battery = 100,
-    //             tripLog = [],
-    //         } = jsonObject;
-
-    //         const newScooter = new Scooter(location, _id);
-    //         newScooter.user = user;
-    //         newScooter.status = status;
-    //         newScooter.speed = speed;
-    //         newScooter.battery = battery;
-    //         newScooter.tripLog = tripLog;
-
-    //         return newScooter;
-    //     } catch (error) {
-    //         console.error("Error creating scooter from JSON:", error.message);
-    //         throw error;
-    //     }
-    // }
+    static createScootersFromJSON(jsonList, amountOfScooters) {
+        if (!Array.isArray(jsonList)) {
+            throw new Error("Invalid input: jsonList must be an array.");
+        }
+    
+        if (typeof amountOfScooters !== 'number' || amountOfScooters <= 0) {
+            throw new Error("Invalid amount of scooters: must be a positive number.");
+        }
+    
+        const scooterObjects = [];
+        for (let i = 0; i < amountOfScooters && i < jsonList.length; i++) {
+            try {
+                const scooter = Scooter.createFromJSON(jsonList[i]);
+                scooterObjects.push(scooter);
+            } catch (error) {
+                console.error(`Error creating scooter from JSON at index ${i}:`, error.message);
+            }
+        }
+    
+        return scooterObjects;
+    }
+    
 
     static async loadObjectScooter(scooterID) {
         try {
@@ -240,9 +249,8 @@ export default class Scooter {
         this.status = newStatus;
     
         // Call updateIntervals to manage the interval based on the new status
-        this.updateIntervals();
+        // this.updateIntervals();
     }
-
 
     setBattery(newBattery) {
         if (typeof newBattery !== 'number' || newBattery < 0 || newBattery > 100) {
@@ -250,6 +258,16 @@ export default class Scooter {
         }
         this.battery = newBattery;
     }
+
+    setData(data) {
+        this.user = data.user;
+        this.status = data.status;
+        this.speed = data.speed;
+        this.battery = data.battery;
+        this.tripLog = data.tripLog;
+        this.city = data.city;
+        return this;  // Allows method chaining
+    }    
 
     printInfo() {
         console.log("ScooterID:", this.scooterID);

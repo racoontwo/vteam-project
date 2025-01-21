@@ -142,6 +142,27 @@ export async function count(collectionName) {
     console.log(result);
 }
 
+export async function addMultipleScootersRotatingCities(number) {
+    const citiesList = ['Malmö', 'Växjö', 'Karlskrona centrum'];
+    for (let i = 0; i < number; i++) {
+        const city = citiesList[i % citiesList.length];
+        const newScooter = {
+            location: await cities.getRandomCityCoordinates(city),
+            user: null,
+            status: 'available',
+            speed: 0,
+            battery: faker.number.int({ min: 10, max: 100 }),
+            tripLog: 'tripObject',
+            city: city,
+        };
+
+        await addScooter(newScooter);
+        console.log(`Added scooter ${i + 1} in ${city}: Location [${newScooter.location.latitude}, ${newScooter.location.longitude}]`);
+    }
+
+    console.log(`${number} scooters have been added across Malmö, Växjö, and Karlskrona Centrum.`);
+}
+
 
 //this function will be called
 async function utils() {
@@ -160,9 +181,17 @@ async function utils() {
             if (isNaN(num) || num <= 0) {
                 console.log('Please provide a valid number of customers to add.');
             } else {
-                await addMultipleScooters(num, 'Malmö');
+                // await addMultipleScooters(num, 'Malmö');
                 // await addMultipleScooters(num, 'Karlskrona centrum');
                 await addMultipleScooters(num, 'Växjö');
+            }
+            break;
+        case 'tripleAdd':
+            const number = parseInt(args[1], 10);
+            if (isNaN(number) || number <= 0) {
+                console.log('Please provide a valid number of customers to add.');
+            } else {
+            addMultipleScootersRotatingCities(number)
             }
             break;
         case 'randomUser':
