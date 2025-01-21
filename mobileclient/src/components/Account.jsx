@@ -4,6 +4,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { useCustomer } from '../context/CustomerContext';
 
 function Account({ onLogout }) {
+    // State variables
     const { customer, error, loading } = useCustomer();
     const [customerInfo, setCustomerInfo] = useState({
         firstName: '',
@@ -12,6 +13,7 @@ function Account({ onLogout }) {
     });
 
     useEffect(() => {
+        // Set customer info
         if (customer) {
             setCustomerInfo({
                 firstName: customer.firstName,
@@ -21,6 +23,7 @@ function Account({ onLogout }) {
         }
     }, [customer]);
 
+    // Handle input change
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCustomerInfo({
@@ -29,6 +32,7 @@ function Account({ onLogout }) {
         });
     };
 
+    // Handle form submit
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("submit", customerInfo);

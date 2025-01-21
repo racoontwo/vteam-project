@@ -17,7 +17,7 @@
             border-top: 2px solid variables.$table-outline;
         }
 
-        tr:hover {
+        tbody tr:hover {
             background-color: variables.$table-outline;
             cursor: pointer;
         }

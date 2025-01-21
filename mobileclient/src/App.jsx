@@ -18,11 +18,13 @@ function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const customerId = 1;
 
+    // handle login
     const handleLogin = () => {
         setIsLoggedIn(true);
         console.log('Logged in');
     };
 
+    // handle logout
     const handleLogout = () => {
         setIsLoggedIn(false);
         console.log('Logged out');

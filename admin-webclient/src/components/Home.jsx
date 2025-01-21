@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function Home({ isLoggedIn }) {
+    // State variables
     const [scooters, setScooters] = useState(null);
     const [customers, setCustomers] = useState(null);
     const [error, setError] = useState(null);
@@ -65,6 +66,7 @@ function Home({ isLoggedIn }) {
         return () => clearInterval(interval);
     }, [baseUrl]);
 
+    // If the user is not logged in, show a message
     if (!isLoggedIn) {
         return (
             <div className="overview">
